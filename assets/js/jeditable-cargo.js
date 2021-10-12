@@ -26,12 +26,19 @@ $(document).ready(function() {
         }
     });
 
-    $('.editable-select').editable('api/updateField.php', {
+    $('.editable-select-1').editable('api/updateField.php', {
         type           : 'select',
         indicator      : 'Saving ...',
         loadurl        : 'api/cargoDeliveryInstructions.php',
         selectcssclass : 'form-control',
-        style          : 'background-color: red',
+        cssclass       : 'form'
+    });
+
+    $('.editable-select-2').editable('api/updateField.php', {
+        type           : 'select',
+        indicator      : 'Saving ...',
+        loadurl        : 'api/cargoOrderType.php',
+        selectcssclass : 'form-control',
         cssclass       : 'form'
     });
 

@@ -112,19 +112,17 @@ class Audit {
     public static function readTruck(int $id): ?TruckUpdates
     {
         $for_whom = $_SESSION['role'] ?? 'unknown';
-
         $filename = $_SERVER["DOCUMENT_ROOT"] . '/notifications/cargo_truck_' . $for_whom.'_'.$id . '.bin';
+        $a = new TruckUpdates();
 
         try {
             if (!is_file($filename)) {
-                error_log("File not found: " . $filename);
-                return null;
+                error_log("File not found: " . $filename . ". Returning an empty object.");
+                return $a;
             }
 
             $data = file_get_contents($filename);
             error_log("Data read: " . $data);
-
-            $a = new TruckUpdates();
 
             if (Utils::$DEBUG) {
                 $a->mergeFromJsonString($data);

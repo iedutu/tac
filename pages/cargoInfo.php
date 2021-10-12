@@ -177,7 +177,7 @@ $class_text_default = '';
                                     <td>
                                         <?php
                                         if($editable['originator']) {
-                                            echo '<b style="display: inline" id="instructions" class="editable-select '.($audit->getInstructions()?$class_text_new:$class_text_default).'">'.$cargo->getInstructions().'</b>';
+                                            echo '<b style="display: inline" id="instructions" class="editable-select-1 '.($audit->getInstructions()?$class_text_new:$class_text_default).'">'.$cargo->getInstructions().'</b>';
                                         }
                                         else {
                                             echo '<p style="display: inline" id="instructions" class="'.($audit->getInstructions()?$class_text_new:$class_text_default).'">'.$cargo->getInstructions().'</p>';
@@ -277,7 +277,7 @@ $class_text_default = '';
                                     <td>
                                         <?php
                                         if($editable['originator']) {
-                                            echo '<b style="display: inline" id="order_type" class="editable-select '.($audit->getOrderType()?$class_text_new:$class_text_default).'">'.$cargo->getOrderType().'</b>';
+                                            echo '<b style="display: inline" id="order_type" class="editable-select-2 '.($audit->getOrderType()?$class_text_new:$class_text_default).'">'.$cargo->getOrderType().'</b>';
                                         }
                                         else {
                                             echo '<p style="display: inline" id="order_type" class="'.($audit->getOrderType()?$class_text_new:$class_text_default).'">'.$cargo->getOrderType().'</p>';

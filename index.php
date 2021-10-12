@@ -7,16 +7,21 @@ $page = "";
 
 if (! isset ( $_SESSION ['operator_id'] )) {
     // No-one logged-in
-    header ( 'Location: custom/pages/login/login.php' );
+    header ( 'Location: pages/login.php' );
     return;
 }
 else {
     if (isset ($_GET ['page'])) {
         switch ($_GET ['page']) {
+            case 'login':
+            {
+                header('Location: pages/login.php');
+                return;
+            }
             case 'logout':
             {
                 Utils::logout();
-                header('Location: custom/pages/login/login.php');
+                header('Location: pages/login.php');
                 return;
             }
             case 'admin':
