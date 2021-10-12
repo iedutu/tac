@@ -33,6 +33,8 @@ if(isset($_POST['id'])) {
 
         Utils::cargo_audit($table, $_POST['id'], $_SESSION['entry-id'], $_POST['value']);
         Utils::email_notification($_POST['id'], $_POST['value'], $_SESSION['entry-id']);
+        Utils::audit_update($table, $_POST['id'], $_SESSION['entry-id']);
+
         DB::getMDB()->commit();
     }
     catch (MeekroDBException $mdbe) {

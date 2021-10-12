@@ -27,42 +27,54 @@ include $_SERVER['DOCUMENT_ROOT'] . "/lib/db-settings.php";
 
 class DB_utils
 {
-    public static function isEditable(string $originator, string $recipient): array
+    public static function originatorCountryMatch(string $originator): bool
     {
-        $originator_country_match = 0;
-        $recipient_country_match = 0;
-
-        $result['originator'] = false;
-        $result['recipient'] = false;
-
         try {
             $originator_country_match = DB::getMDB()->queryOneField($_SESSION['operator_class']['country'], "SELECT ".$_SESSION['operator_class']['country']." FROM cargo_users WHERE username=%s", $originator);
+        }
+        catch (MeekroDBException $mdbe) {
+            error_log("Database error: ".$mdbe->getMessage());
+            return false;
+        }
+        catch (Exception $e) {
+            error_log("Database error: ".$e->getMessage());
+
+            return false;
+        }
+
+        return $originator_country_match == 1;
+    }
+
+    public static function recipientCountryMatch(string $recipient): bool
+    {
+        try {
             $recipient_country_match = DB::getMDB()->queryOneField($_SESSION['operator_class']['country'], "SELECT ".$_SESSION['operator_class']['country']." FROM cargo_users WHERE username=%s", $recipient);
         }
         catch (MeekroDBException $mdbe) {
             error_log("Database error: ".$mdbe->getMessage());
-            $_SESSION['alert']['type'] = 'error';
-            $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
-
-            return $result;
+            return false;
         }
         catch (Exception $e) {
             error_log("Database error: ".$e->getMessage());
-            $_SESSION['alert']['type'] = 'error';
-            $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
-
-            return $result;
+            return false;
         }
 
-        $result['originator'] = false;
+        return $recipient_country_match == 1;
+    }
 
+    public static function isEditable(string $originator, string $recipient): array
+    {
         // Who can edit the cargo
         // 1. The one who created it
-        if (($_SESSION['operator'] == $originator) || ($originator_country_match == '1')){
+        error_log('isEditable: ['.$originator.']['.$recipient.']');
+        if (($_SESSION['operator'] == $originator) || (self::originatorCountryMatch($originator) == '1')){
             $result['originator'] = true;
         }
+        else {
+            $result['originator'] = false;
+        }
 
-        $result['recipient'] = $recipient_country_match;
+        $result['recipient'] = self::recipientCountryMatch($recipient);
 
         return $result;
     }

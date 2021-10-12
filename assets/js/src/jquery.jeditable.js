@@ -673,11 +673,11 @@
                     }
 
                     /* Apply css or style or both. */
-                    if (settings.inputcssclass) {
-                        if ('inherit' === settings.inputcssclass) {
+                    if (settings.selectcssclass) {
+                        if ('inherit' === settings.selectcssclass) {
                             select.attr('class', $(self).attr('class'));
                         } else {
-                            select.attr('class', settings.inputcssclass);
+                            select.attr('class', settings.selectcssclass);
                         }
                     }
 

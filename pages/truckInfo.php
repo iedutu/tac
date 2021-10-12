@@ -51,6 +51,10 @@ switch($truck->getStatus()) {
         break;
     }
 }
+
+$audit = Audit::readTruck($truck->getId());
+$class_text_new = 'text-primary';
+$class_text_default = '';
 ?>
 
 <div class="row">
@@ -89,91 +93,91 @@ switch($truck->getStatus()) {
                         <table class="table table-borderless" id="kt_truck_details">
                             <tbody>
                             <tr>
-                                <td align="right">Truck originator</td>
+                                <td class="text-right">Truck originator</td>
                                 <td>
                                     <p style="display: inline"><?=$truck->getOriginator()?></p>
                                 </td>
                             </tr>
                             <tr>
-                                <td align="right">Origin city</td>
+                                <td class="text-right">Origin city</td>
                                 <td>
                                     <?php
                                     if($editable['originator']) {
-                                        echo '<b style="display: inline" id="from_city" class="editable-text">'.$truck->getFromCity().'</b>';
+                                        echo '<b style="display: inline" id="from_city" class="editable-text '.($audit->getFromCity()?$class_text_new:$class_text_default).'">'.$truck->getFromCity().'</b>';
                                     }
                                     else {
-                                        echo '<p style="display: inline" id="from_city">'.$truck->getFromCity().'</p>';
+                                        echo '<p style="display: inline" id="from_city" class="'.($audit->getFromCity()?$class_text_new:$class_text_default).'">'.$truck->getFromCity().'</p>';
                                     }
                                     ?>
                                 </td>
                             </tr>
                             <tr>
-                                <td align="right">Loading date</td>
+                                <td class="text-right">Loading date</td>
                                 <td>
                                     <?php
                                     if($editable['originator']) {
-                                        echo '<b style="display: inline" id="loading_date" class="editable-date">'.date(Utils::$DATE_FORMAT, $truck->getLoadingDate()).'</b>';
+                                        echo '<b style="display: inline" id="loading_date" class="editable-date '.($audit->getLoadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$DATE_FORMAT, $truck->getLoadingDate()).'</b>';
                                     }
                                     else {
-                                        echo '<p style="display: inline" id="loading_date">'.date(Utils::$DATE_FORMAT, $truck->getLoadingDate()).'</p>';
+                                        echo '<p style="display: inline" id="loading_date" class="'.($audit->getLoadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$DATE_FORMAT, $truck->getLoadingDate()).'</p>';
                                     }
                                     ?>
                                 </td>
                             </tr>
                             <tr>
-                                <td align="right">Status</td>
+                                <td class="text-right">Status</td>
                                 <td>
                                     <?=$status_code?>
                                 </td>
                             </tr>
                             <tr>
-                                <td align="right">License plate</td>
+                                <td class="text-right">License plate</td>
                                 <td>
                                     <?php
                                     if($editable['originator']) {
-                                        echo '<b style="display: inline" id="plate_number" class="editable-text">'.$truck->getPlateNumber().'</b>';
+                                        echo '<b style="display: inline" id="plate_number" class="editable-text '.($audit->getPlateNumber()?$class_text_new:$class_text_default).'">'.$truck->getPlateNumber().'</b>';
                                     }
                                     else {
-                                        echo '<p style="display: inline" id="plate_number">'.$truck->getPlateNumber().'</p>';
+                                        echo '<p style="display: inline" id="plate_number" class="'.($audit->getPlateNumber()?$class_text_new:$class_text_default).'">'.$truck->getPlateNumber().'</p>';
                                     }
                                     ?>
                                 </td>
                             </tr>
                             <tr>
-                                <td align="right">Ameta</td>
+                                <td class="text-right">Ameta</td>
                                 <td>
                                     <?php
                                     if($editable['originator']) {
-                                        echo '<b style="display: inline" id="ameta" class="editable-text">'.$truck->getAmeta().'</b>';
+                                        echo '<b style="display: inline" id="ameta" class="editable-text '.($audit->getAmeta()?$class_text_new:$class_text_default).'">'.$truck->getAmeta().'</b>';
                                     }
                                     else {
-                                        echo '<p style="display: inline" id="ameta">'.$truck->getAmeta().'</p>';
+                                        echo '<p style="display: inline" id="ameta" class="'.($audit->getAmeta()?$class_text_new:$class_text_default).'">'.$truck->getAmeta().'</p>';
                                     }
                                     ?>
                                 </td>
                             </tr>
                             <tr>
-                                <td align="right">Truck recipient</td>
+                                <td class="text-right">Truck recipient</td>
                                 <td>
-                                    <p style="display: inline"><?=$truck->getRecipient()?></p>
+                                    <p style="display: inline" class="<?=($audit->getRecipient()?$class_text_new:$class_text_default)?>"><?=$truck->getRecipient()?></p>
                                 </td>
                             </tr>
                             <tr>
-                                <td align="right">Unloading date</td>
+                                <td class="text-right">Unloading date</td>
                                 <td>
                                     <?php
                                     if($editable['originator']) {
                                         // TODO: See if you can add validators for date format here (add a form, add the JS to validate the fields)
-                                        echo '<b style="display: inline" id="loading_date" class="editable-date">'.date(Utils::$DATE_FORMAT, $truck->getUnloadingDate()).'</b>';
+                                        echo '<b style="display: inline" id="loading_date" class="editable-date '.($audit->getUnloadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$DATE_FORMAT, $truck->getUnloadingDate()).'</b>';
                                     }
                                     else {
-                                        echo '<p style="display: inline" id="unloading_date">'.date(Utils::$DATE_FORMAT, $truck->getUnoadingDate()).'</p>';
+                                        echo '<p style="display: inline" id="unloading_date" class="'.($audit->getUnloadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$DATE_FORMAT, $truck->getUnloadingDate()).'</p>';
                                     }
                                     ?>
                                 </td>
                             </tr>
                             <tr>
-                                <td align="right">ADR</td>
+                                <td class="text-right">ADR</td>
                                 <td>
                                     <?php
                                     $_adr = 'N/A';
@@ -182,36 +186,36 @@ switch($truck->getStatus()) {
                                     }
 
                                     if($editable['originator']) {
-                                        echo '<b style="display: inline" id="adr" class="editable-text">'.$_adr.'</b>';
+                                        echo '<b style="display: inline" id="adr" class="editable-text '.($audit->getAdr()?$class_text_new:$class_text_default).'">'.$_adr.'</b>';
                                     }
                                     else {
-                                        echo '<p style="display: inline" id="adr">'.$_adr.'</p>';
+                                        echo '<p style="display: inline" id="adr" class="'.($audit->getAdr()?$class_text_new:$class_text_default).'">'.$_adr.'</p>';
                                     }
                                     ?>
                                 </td>
                             </tr>
                             <tr>
-                                <td align="right">Freight</td>
+                                <td class="text-right">Freight</td>
                                 <td>
                                     <?php
                                     if($editable['originator']) {
-                                        echo '<b style="display: inline" id="freight" class="editable-text">'.$truck->getFreight().'</b>';
+                                        echo '<b style="display: inline" id="freight" class="editable-text '.($audit->getFreight()?$class_text_new:$class_text_default).'">'.$truck->getFreight().'</b>';
                                     }
                                     else {
-                                        echo '<p style="display: inline" id="freight">'.$truck->getFreight().'</p>';
+                                        echo '<p style="display: inline" id="freight" class="'.($audit->getFreight()?$class_text_new:$class_text_default).'">'.$truck->getFreight().'</p>';
                                     }
                                     ?>
                                 </td>
                             </tr>
                             <tr>
-                                <td align="right">Truck details</td>
+                                <td class="text-right">Truck details</td>
                                 <td>
                                     <?php
                                     if($editable['originator']) {
-                                        echo '<b style="display: inline" id="description" class="editable-text">'.$truck->getDetails().'</b>';
+                                        echo '<b style="display: inline" id="description" class="editable-text '.($audit->getDetails()?$class_text_new:$class_text_default).'">'.$truck->getDetails().'</b>';
                                     }
                                     else {
-                                        echo '<p style="display: inline" id="description">'.$truck->getDetails().'</p>';
+                                        echo '<p style="display: inline" id="description" class="'.($audit->getDetails()?$class_text_new:$class_text_default).'">'.$truck->getDetails().'</p>';
                                     }
                                     ?>
                                 </td>

@@ -3,6 +3,7 @@
     error_log('Object initialized.');
     $id = 3;
     $a->setId($id);
+    $a->setStatus(true);
 
     error_log('Status (a): '.$a->getStatus());
     if(!Audit::writeCargo($a)) {
@@ -15,11 +16,15 @@
         return;
     }
 
-    $b->setStatus(false);
-    $b->setWeight(false);
+    $b->setStatus(true);
+    $b->setWeight(true);
 
     error_log('Status (b): '.$b->getStatus());
     Audit::writeCargo($b);
 
     $c = Audit::readCargo($id);
     error_log('Status (c): '.$c->getStatus());
+
+    if($c->getPlateNumber()) {
+        error_log('Plate number is OK ');
+    }

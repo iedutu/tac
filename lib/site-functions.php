@@ -2,7 +2,9 @@
 
 use PHPMailer\PHPMailer\PHPMailer;
 use Rohel\Request;
+use Rohel\RequestUpdates;
 use Rohel\Truck;
+use Rohel\TruckUpdates;
 
 class Utils {
 	public static $DEBUG = true;
@@ -765,4 +767,94 @@ class Utils {
 			}
 		}
 	}
+
+    public static function audit_update(string $table, string $row, int $id) {
+	    switch($table) {
+            case 'cargo_request': {
+                if($_SESSION['role'] == 'originator') {
+                    $a = Audit::readCargo($id, 'recipient');
+                }
+                else {
+                    if($_SESSION['role'] == 'recipient') {
+                        $a = Audit::readCargo($id, 'originator');
+                    }
+                    else {
+                        error_log('Cannot determine to whom I shall write the audit file to.');
+                        return;
+                    }
+                }
+
+                switch($row) {
+                    case 'id':              { $a->setId(true); break;}
+                    case 'operator':        { $a->setOperator(true); break;}
+                    case 'originator':      { $a->setOriginator(true); break;}
+                    case 'client':          { $a->setClient(true); break;}
+                    case 'from_city':       { $a->setFromCity(true); break;}
+                    case 'from_address':    { $a->setFromAddress(true); break;}
+                    case 'to_city':         { $a->setToCity(true); break;}
+                    case 'to_address':      { $a->setToAddress(true); break;}
+                    case 'loading_date':    { $a->setLoadingDate(true); break;}
+                    case 'unloading_date':  { $a->setUnloadingDate(true); break;}
+                    case 'description':     { $a->setDescription(true); break;}
+                    case 'collies':         { $a->setCollies(true); break;}
+                    case 'weight':          { $a->setWeight(true); break;}
+                    case 'volume':          { $a->setVolume(true); break;}
+                    case 'loading_meters':  { $a->setLoadingMeters(true); break;}
+                    case 'freight':         { $a->setFreight(true); break;}
+                    case 'instructions':    { $a->setInstructions(true); break;}
+                    case 'acceptance':      { $a->setAcceptance(true); break;}
+                    case 'expiration':      { $a->setExpiration(true); break;}
+                    case 'plate_number':    { $a->setPlateNumber(true); break;}
+                    case 'ameta':           { $a->setAmeta(true); break;}
+                    case 'order_type':      { $a->setOrderType(true); break;}
+                    case 'adr':             { $a->setAdr(true); break;}
+                    case 'recipient':       { $a->setRecipient(true); break;}
+                    case 'status':          { $a->setStatus(true); break;}
+                    case 'accepted_by':     { $a->setAcceptedBy(true); break;}
+                    default:                { error_log('Wrong data row received: '.$row); break;}
+                }
+                Audit::writeCargo($a);
+
+                break;
+            }
+            case 'cargo_trucks': {
+                // TODO: Read it from file
+                $a = Audit::readTruck($id);
+
+                switch($row) {
+                    case 'id':              { $a->setId(true); break;}
+                    case 'operator':        { $a->setOperator(true); break;}
+                    case 'originator':      { $a->setOriginator(true); break;}
+                    case 'recipient':       { $a->setRecipient(true); break;}
+                    case 'accepted_by':     { $a->setAcceptedBy(true); break;}
+                    case 'status':          { $a->setStatus(true); break;}
+                    case 'from_city':       { $a->setFromCity(true); break;}
+                    case 'from_address':    { $a->setFromAddress(true); break;}
+                    case 'loading_date':    { $a->setLoadingDate(true); break;}
+                    case 'unloading_date':  { $a->setUnloadingDate(true); break;}
+                    case 'availability':    { $a->setAvailability(true); break;}
+                    case 'acceptance':      { $a->setAcceptance(true); break;}
+                    case 'expiration':      { $a->setExpiration(true); break;}
+                    case 'details':         { $a->setDetails(true); break;}
+                    case 'freight':         { $a->setFreight(true); break;}
+                    case 'plate_number':    { $a->setPlateNumber(true); break;}
+                    case 'ameta':           { $a->setAmeta(true); break;}
+                    case 'order_type':      { $a->setOrderType(true); break;}
+                    case 'cargo_type':      { $a->setCargoType(true); break;}
+                    case 'truck_type':      { $a->setTruckType(true); break;}
+                    case 'contract_type':   { $a->setContractType(true); break;}
+                    case 'adr':             { $a->setAdr(true); break;}
+                    default:                {error_log('Wrong data row received: '.$row); break;}
+                }
+                Audit::writeTruck($a);
+
+                break;
+            }
+            default: {
+                error_log('Wrong table received: '.$table);
+
+                break;
+            }
+        }
+    }
 }
