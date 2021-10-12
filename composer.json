@@ -1,0 +1,11 @@
+{
+    "require": {
+        "phpmailer/phpmailer": "^v6.5.1",
+        "phpoffice/phpspreadsheet": "^1.18.0",
+        "sergeytsalkov/meekrodb": "^2.4",
+        "google/protobuf": "^3.18",
+        "ext-json": "*",
+        "ext-zip" : "*",
+        "ext-gettext": "*"
+    }
+}

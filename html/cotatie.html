@@ -1,0 +1,36 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-Frame-Options" content="allow">
+</head>
+
+<body>
+Ati primit o cerere pentru o cotatie:
+<br><br>
+<h1>Date firma:</h1>
+<br>Nume firma: <?php echo $_REQUEST['_firma'] ?>
+<br>Persoana contact: <?php echo $_REQUEST['_contact'] ?>
+<br>Telefon/Fax: <?php echo $_REQUEST['_telefon'] ?>
+<br>E-mail: <?php echo $_REQUEST['_email'] ?>
+<br>
+<br><h1>Date transport</h1>
+<br>Expeditor:
+<br>Tara: <?php echo $_REQUEST['_tara_1'] ?> Oras: <?php echo $_REQUEST['_oras_1'] ?> Cod postal: <?php echo $_REQUEST['_codpostal_1']; ?>
+<br>Destinatar:
+<br>Tara: <?php echo $_REQUEST['_tara_2'] ?> Oras: <?php echo $_REQUEST['_oras_2'] ?> Cod postal: <?php echo $_REQUEST['_codpostal_2']; ?>
+<br>
+<br><h1>Date marfa</h1>
+<br>Denumire: <?php echo $_REQUEST['_marfa']; ?>
+<br>Numar colete: <?php echo $_REQUEST['_colete']; ?>
+<br>Greutate bruta: <?php echo $_REQUEST['_greutate']; ?> kg
+<br>Volum: <?php echo $_REQUEST['_volum']; ?> mc
+<br>Valoare: <?php echo $_REQUEST['_valoare']; ?> <?php echo $_REQUEST['_currency']; ?>
+<br>Conditii livrare: <?php echo $_REQUEST['_incoterms']; ?>
+<br>Marfuri periculoase (ADR): <?php echo $_adr; ?>
+<br>Alte observatii: <?php echo $_REQUEST['_observatii']; ?>
+<br>
+<br>
+<br>Succes!
+<br>Echipa ROHEL
+</body>
+</html>

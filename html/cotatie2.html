@@ -1,0 +1,43 @@
+﻿<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-Frame-Options" content="allow">
+</head>
+
+<body>
+	<h1><?=_("Buna ziua!");?></h1>
+	<br>
+		<?=_("Acest e-mail reprezinta confirmarea primirii cererii dumneavoastra pentru urmatoarea cotatie:");?>
+		<br>
+		<br>
+		<h2><?=_("Date firma:");?></h2>
+		<?=_("Firma dumneavoastra");?>: <?=$_REQUEST['_firma'] ?> 
+		<br><?=_("Persoana de contact");?>: <?=$_REQUEST['_contact'] ?>
+		<br><?=_("Telefon/Fax");?>: <?=$_REQUEST['_telefon'] ?>
+		<br><?=_("E-mail");?>: <?=$_REQUEST['_email'] ?>
+		<br>
+		<br>
+		<h2><?=_("Date transport");?></h2>
+		<h3><?=_("Expeditor");?></h3>
+		<?=_("Tara");?>: <?=$_REQUEST['_tara_1'] ?>
+		<br> <?=_("Oras");?>: <?=$_REQUEST['_oras_1'] ?>
+		<br> <?=_("Cod postal");?>: <?=$_REQUEST['_codpostal_1']; ?>
+		<h3><?=_("Destinatar");?></h3>
+		<?=_("Tara");?>: <?=$_REQUEST['_tara_2'] ?>
+		<br> <?=_("Oras");?>: <?=$_REQUEST['_oras_2'] ?>
+		<br> <?=_("Cod postal");?>: <?=$_REQUEST['_codpostal_2']; ?>
+		<br> 
+		<br><?=_("Denumire");?>: <?=$_REQUEST['_marfa']; ?>
+		<br><?=_("Colete");?>: <?=$_REQUEST['_colete']; ?>
+		<br><?=_("Greutate bruta");?>: <?=$_REQUEST['_greutate']; ?> kg
+		<br><?=_("Volum");?>: <?=$_REQUEST['_volum']; ?> mc
+		<br><?=_("Valoare");?>: <?=$_REQUEST['_valoare']; ?> <?=$_REQUEST['_currency']; ?>
+		<br><?=_("Conditie livrare");?>: <?=$_REQUEST['_incoterms']; ?>
+		<br><?=_("Marfuri periculoase");?>: <?=_($_adr); ?>
+		<br><?=_("Observatii");?>: <?=$_REQUEST['_observatii']; ?>
+		<br> 
+		<br> 
+		<br><?=_("Va multumim pentru interesul acordat.");?> 
+		<br><?=_("Echipa ROHEL");?>
+</body>
+</html>

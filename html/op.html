@@ -1,0 +1,25 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-Frame-Options" content="allow">
+</head>
+
+<body>
+<br>Hi,
+<br>
+<br>Please note that the following document is not OK. The payment can not be booked until the problem will be settled and the document will be OK.
+<br>
+<br>Ameta number <?=$ameta;?>
+<br>CMR Status: <b style="color:red"><?=$doc['status'];?></b>
+<br>Received on: <?=date('d/m/Y', strtotime($doc['reception_date']));?>
+<br>Received at: <?=$doc['agency'];?> 
+<br>Comments: <?=$doc['comments'];?>
+<br>
+<br> Do not reply to this e-mail, as the application e-mail address does not accept incoming mail. If you want to communicate with the sender, please access this link: <a href="mailto:<?=$_SESSION['operator'];?>"><?=$_SESSION['operator'];?></a> or simply forward the message.
+<br>
+<br>
+<br>
+<br>Thank you for your support!
+<br>ROHEL.ro Web Team
+</body>
+</html>

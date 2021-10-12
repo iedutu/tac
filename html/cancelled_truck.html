@@ -1,0 +1,21 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-Frame-Options" content="allow">
+</head>
+
+<body>
+<h1>Truck cancellation from <?=$_SESSION['operator'];?></h1>
+
+<br><?=$_SESSION['operator'];?> at <a href="<?=$url;?>">rohel.ro/new/truck</a> has cancelled the below truck request:
+<br>
+<?=$cargo_details;?>
+<br>
+<br>Do not reply to this e-mail, as the application e-mail address does not accept incoming mail. If you want to communicate with the sender, please access this link: <a href="mailto:<?=$_SESSION['operator'];?>"><?=$_SESSION['operator'];?></a> or simply forward the message.
+<br>
+<br>
+<br>
+<br>Have a nice day!
+<br>ROHEL.ro Web Team
+</body>
+</html>

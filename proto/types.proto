@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package Rohel;
+
+message Request {
+  int32 id = 1;
+  string operator = 2;
+  string originator = 3;
+  string client = 4;
+  string from_city = 5;
+  string from_address = 6;
+  string to_city = 7;
+  string to_address = 8;
+  uint64 loading_date = 9;
+  uint64 unloading_date = 10;
+  string description = 11;
+  string collies = 12;
+  float weight = 13;
+  float volume = 14;
+  float loading_meters = 15;
+  float freight = 16;
+  string instructions = 17;
+  uint64 acceptance = 18;
+  uint64 expiration = 19;
+  string plate_number = 20;
+  string ameta = 21;
+  string order_type = 22;
+  string adr = 23;
+  string recipient = 24;
+  int32 status = 25;
+  string accepted_by = 26;
+}
+
+message RequestUpdates {
+  int32 id = 1;
+  bool operator = 2;
+  bool originator = 3;
+  bool client = 4;
+  bool from_city = 5;
+  bool from_address = 6;
+  bool to_city = 7;
+  bool to_address = 8;
+  bool loading_date = 9;
+  bool unloading_date = 10;
+  bool description = 11;
+  bool collies = 12;
+  bool weight = 13;
+  bool volume = 14;
+  bool loading_meters = 15;
+  bool freight = 16;
+  bool instructions = 17;
+  bool acceptance = 18;
+  bool expiration = 19;
+  bool plate_number = 20;
+  bool ameta = 21;
+  bool order_type = 22;
+  bool adr = 23;
+  bool recipient = 24;
+  bool status = 25;
+  bool accepted_by = 26;
+}
+
+message Truck {
+  int32 id = 1;
+  string operator = 2;
+  string originator = 3;
+  string recipient = 4;
+  string accepted_by = 5;
+  int32 status = 6;
+  string from_city = 7;
+  string from_address = 8;
+  uint64 loading_date = 9;
+  uint64 unloading_date = 10;
+  uint64 availability = 11;
+  uint64 acceptance = 12;
+  uint64 expiration = 13;
+  string details = 14;
+  float freight = 15;
+  string plate_number = 16;
+  string ameta = 17;
+  string order_type = 18;
+  string cargo_type = 19;
+  string truck_type = 20;
+  string contract_type = 21;
+  string adr = 22;
+  repeated TruckStop stop = 23;
+}
+
+message TruckUpdates {
+  int32 id = 1;
+  bool operator = 2;
+  bool originator = 3;
+  bool recipient = 4;
+  bool accepted_by = 5;
+  bool status = 6;
+  bool from_city = 7;
+  bool from_address = 8;
+  bool loading_date = 9;
+  bool unloading_date = 10;
+  bool availability = 11;
+  bool acceptance = 12;
+  bool expiration = 13;
+  bool details = 14;
+  bool freight = 15;
+  bool plate_number = 16;
+  bool ameta = 17;
+  bool order_type = 18;
+  bool cargo_type = 19;
+  bool truck_type = 20;
+  bool contract_type = 21;
+  bool adr = 22;
+}
+
+message TruckStop {
+  int32 id = 1;
+  string city = 2;
+  int32 cmr = 3;
+  float loading_meters = 4;
+  float weight = 5;
+  float volume = 6;
+  int32 stop_id = 7;
+  int32 truck_id = 8;
+}
+
+message User {
+  int32 id = 1;
+  string username = 2;
+  string password = 3;
+  int32 class = 4;
+  int32 insert = 5;
+  int32 reports = 6;
+  int32 turkey = 7;
+  int32 greece = 8;
+  int32 serbia = 9;
+  int32 moldova = 10;
+  int32 romania = 11;
+  string filter = 12;
+}
