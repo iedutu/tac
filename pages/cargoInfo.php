@@ -72,7 +72,7 @@ $class_text_default = '';
 
 ?>
 <input type="hidden" id="kt_operator" value="<?=$_SESSION['operator']?>" />
-<input type="hidden" id="kt_today" value="<?=date(Utils::$DATE_FORMAT)?>" />
+<input type="hidden" id="kt_today" value="<?=date(Utils::$PHP_DATE_FORMAT)?>" />
 
 <div class="row">
     <div class="col-lg-8">
@@ -164,10 +164,10 @@ $class_text_default = '';
                                     <td>
                                         <?php
                                         if($editable['originator']) {
-                                            echo '<b style="display: inline" id="loading_date" class="editable-date '.($audit->getLoadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$DATE_FORMAT, $cargo->getLoadingDate()).'</b>';
+                                            echo '<b style="display: inline" id="loading_date" class="editable-date '.($audit->getLoadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$PHP_DATE_FORMAT, $cargo->getLoadingDate()).'</b>';
                                         }
                                         else {
-                                            echo '<p style="display: inline" id="loading_date" class="'.($audit->getLoadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$DATE_FORMAT, $cargo->getLoadingDate()).'</p>';
+                                            echo '<p style="display: inline" id="loading_date" class="'.($audit->getLoadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$PHP_DATE_FORMAT, $cargo->getLoadingDate()).'</p>';
                                         }
                                         ?>
                                     </td>
@@ -288,7 +288,7 @@ $class_text_default = '';
                                 <tr>
                                     <td class="text-right">Accepted at</td>
                                     <td id="kt_cargo_accepted_at">
-                                        <p style="display: inline" id="recipient" class="<?=$audit->getAcceptance()?$class_text_new:$class_text_default?>"><?=($cargo->getAcceptance()>0)?date(Utils::$DATE_FORMAT, $cargo->getAcceptance()):'N/A'?></p>
+                                        <p style="display: inline" id="recipient" class="<?=$audit->getAcceptance()?$class_text_new:$class_text_default?>"><?=($cargo->getAcceptance()>0)?date(Utils::$PHP_DATE_FORMAT, $cargo->getAcceptance()):'N/A'?></p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -310,10 +310,10 @@ $class_text_default = '';
                                         <?php
                                         if($editable['originator']) {
                                             // TODO: See if you can add validators for date format here (add a form, add the JS to validate the fields)
-                                            echo '<b style="display: inline" id="loading_date" class="editable-date '.($audit->getUnloadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$DATE_FORMAT, $cargo->getUnloadingDate()).'</b>';
+                                            echo '<b style="display: inline" id="loading_date" class="editable-date '.($audit->getUnloadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$PHP_DATE_FORMAT, $cargo->getUnloadingDate()).'</b>';
                                         }
                                         else {
-                                            echo '<p style="display: inline" id="unloading_date" class="'.($audit->getUnloadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$DATE_FORMAT, $cargo->getUnloadingDate()).'</p>';
+                                            echo '<p style="display: inline" id="unloading_date" class="'.($audit->getUnloadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$PHP_DATE_FORMAT, $cargo->getUnloadingDate()).'</p>';
                                         }
                                         ?>
                                     </td>

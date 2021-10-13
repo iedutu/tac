@@ -21,7 +21,8 @@ class Utils {
 	public static $DELETE_DOCS = 4;
 	public static $INSERT = 5;
 	public static $ADMIN = 6;
-	public static $DATE_FORMAT = 'Y/m/d';
+	public static $PHP_DATE_FORMAT = 'd/m/Y';
+    public static $SQL_DATE_FORMAT = '%d/%m/%Y';
 
 	public static $OP_APPROVE = 7;
 	public static $AC_APPROVE = 8;

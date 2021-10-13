@@ -26,10 +26,29 @@ if(isset($_POST['id'])) {
             }
         }
 
-        DB::getMDB()->update($table, array(
-            $_POST['id'] => $_POST['value'],
-            'operator' => $_SESSION['operator'],
-        ), "id=%d", $_SESSION['entry-id']);
+        switch($_POST['id']) {
+            case 'acceptance':
+            case 'availability':
+            case 'expiration':
+            case 'loading_date':
+            case 'unloading_date':
+            {
+                DB::getMDB()->update($table, array(
+                    $_POST['id'] => DB::getMDB()->sqleval("str_to_date(%s, %s)", $_POST['value'], Utils::$SQL_DATE_FORMAT),
+                    'operator' => $_SESSION['operator'],
+                ), "id=%d", $_SESSION['entry-id']);
+
+                break;
+            }
+            default: {
+                DB::getMDB()->update($table, array(
+                    $_POST['id'] => $_POST['value'],
+                    'operator' => $_SESSION['operator'],
+                ), "id=%d", $_SESSION['entry-id']);
+
+                break;
+            }
+        }
 
         Utils::cargo_audit($table, $_POST['id'], $_SESSION['entry-id'], $_POST['value']);
         Utils::email_notification($_POST['id'], $_POST['value'], $_SESSION['entry-id']);

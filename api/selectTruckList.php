@@ -2,6 +2,7 @@
 session_start();
 
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
+require_once $_SERVER["DOCUMENT_ROOT"]."/lib/class-list-util.php";
 
 if(!isset($_SESSION["operator_id"])) {
     header ( 'Location: index.php?page=login' );
@@ -31,6 +32,23 @@ if($_SESSION['operator_class']['moldova']) {
     $condition = $condition.$separator.'moldova = 1';
 }
 
+// Sorting
+// Cleaning up the request from the other pages.
+if(empty($_SESSION['previous_area'])) {
+    $_REQUEST['sort']['sort'] = 'desc';
+    $_REQUEST['sort']['field'] = 'id';
+
+    $_SESSION['previous_area'] = 'truck';
+}
+else {
+    if($_SESSION['previous_area'] == 'cargo') {
+        $_REQUEST['sort']['sort'] = 'desc';
+        $_REQUEST['sort']['field'] = 'id';
+
+        $_SESSION['previous_area'] = 'truck';
+    }
+}
+
 $sort  = ! empty($_REQUEST['sort']['sort']) ? $_REQUEST['sort']['sort'] : 'desc';
 $field = ! empty($_REQUEST['sort']['field']) ? $_REQUEST['sort']['field'] : 'id';
 
@@ -40,7 +58,7 @@ try {
                                         a.id id, 
                                         a.originator originator, 
                                         a.recipient recipient, 
-                                        DATE_FORMAT(a.expiration, '%%d-%%m-%%Y') expiration, 
+                                        DATE_FORMAT(a.expiration, %s) expiration, 
                                         a.from_city from_city, 
                                         b.city to_city, 
                                         a.details details, 
@@ -49,8 +67,12 @@ try {
                                         a.cargo_type cargo_type, 
                                         a.order_type order_type, 
                                         a.truck_type truck_type, 
-                                        DATE_FORMAT(a.loading_date, '%%d-%%m-%%Y') loading_date, 
-                                        DATE_FORMAT(a.unloading_date, '%%d-%%m-%%Y') unloading_date, 
+                                        a.originator_office originator_office,
+                                        a.recipient_office recipient_office,
+                                        a.originator_name originator_name,
+                                        a.recipient_name recipient_name,
+                                        DATE_FORMAT(a.loading_date, %s) loading_date, 
+                                        DATE_FORMAT(a.unloading_date, %s) unloading_date, 
                                         a.freight freight, 
                                         a.ameta ameta
                                      FROM 
@@ -66,13 +88,17 @@ try {
                                             )
                                         )
                                      AND
-                                        ((status = 0) OR (status = 1))
+                                        ((status = 1) OR (status = 2))
                                      AND
                                         (
                                            originator in (SELECT username FROM cargo_users WHERE ".$condition.") OR
                                            recipient in (SELECT username FROM cargo_users WHERE ".$condition.")
                                         )
-                                     order by ".$field." ".$sort, Utils::$CARGO_PERIOD);
+                                     order by ".$field." ".$sort,
+                                            Utils::$SQL_DATE_FORMAT,
+                                            Utils::$SQL_DATE_FORMAT,
+                                            Utils::$SQL_DATE_FORMAT,
+                                            Utils::$CARGO_PERIOD);
 
     // error_log(DB::getMDB()->lastQuery());
 }

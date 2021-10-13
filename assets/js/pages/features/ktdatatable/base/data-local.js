@@ -313,7 +313,11 @@ var KTDatatableDataLocalDemo = function() {
             datatable.search($(this).val().toLowerCase(), 'Type');
         });
 
-        $('#kt_datatable_search_status, #kt_datatable_search_type').selectpicker();
+        $('#kt_datatable_search_country').on('change', function() {
+            datatable.search($(this).val().toLowerCase(), 'Country');
+        });
+
+        $('#kt_datatable_search_status, #kt_datatable_search_type, #kt_datatable_search_country').selectpicker();
     };
 
     return {

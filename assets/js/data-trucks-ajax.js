@@ -1,13 +1,12 @@
 "use strict";
 // Class definition
 
-var KTDatatableRemoteAjaxDemo = function() {
+var KTDatatableTruckList = function() {
     // Private functions
 
-    // basic demo
-    var demo = function() {
+    var truckDatatable = function() {
 
-        var datatable = $('#kt_datatable').KTDatatable({
+        var datatable = $('#kt_datatable_truck_list').KTDatatable({
             // datasource definition
             data: {
                 type: 'remote',
@@ -61,14 +60,47 @@ var KTDatatableRemoteAjaxDemo = function() {
                     return '<a href="/?page=truckInfo&id='+row.id+'">'+row.id+'</a>';
                 },
             }, {
-                field: 'originator',
+                field: 'originator_office',
                 title: 'From',
+                width: 120,
+                template: function(row) {
+                    var user_img = 'background-image:url(\'assets/media/svg/flags/' + row.originator_office + '.svg\')';
+
+                    var output = '';
+                    output = '<div class="d-flex align-items-center">\
+								<div class="symbol symbol-25 flex-shrink-0">\
+									<div class="symbol-label" style="' + user_img + '"></div>\
+								</div>\
+								<div class="ml-2">\
+									<div class="text-dark-75 font-weight-bold line-height-sm">' + row.originator_office + '</div>\
+									<a href="#" class="font-size-sm text-dark-50 text-hover-primary">' + row.originator_name + '</a>\
+								</div>\
+							</div>';
+
+                    return output;
+                },
             }, {
-                field: 'recipient',
+                field: 'recipient_office',
                 title: 'To',
+                template: function(row) {
+                    var user_img = 'background-image:url(\'assets/media/svg/flags/' + row.recipient_office + '.svg\')';
+
+                    var output = '';
+                    output = '<div class="d-flex align-items-center">\
+								<div class="symbol symbol-25 flex-shrink-0">\
+									<div class="symbol-label" style="' + user_img + '"></div>\
+								</div>\
+								<div class="ml-2">\
+									<div class="text-dark-75 font-weight-bold line-height-sm">' + row.recipient_office + '</div>\
+									<a href="#" class="font-size-sm text-dark-50 text-hover-primary">' + row.recipient_name + '</a>\
+								</div>\
+							</div>';
+
+                    return output;
+                },
             }, {
                 field: 'from_city',
-                title: 'Available in',
+                title: 'Departure from',
             }, {
                 field: 'to_city',
                 title: 'Destination',
@@ -86,20 +118,23 @@ var KTDatatableRemoteAjaxDemo = function() {
                 field: 'plate_number',
                 title: 'License plate',
             }, {
+                field: 'ameta',
+                title: 'Ameta',
+            }, {
                 field: 'status',
                 title: 'Status',
                 // callback function support for column rendering
                 template: function(row) {
                     var status = {
-                        0: {
+                        1: {
                             'title': 'New',
                             'class': ' label-light-info'
                         },
-                        1: {
+                        2: {
                             'title': 'Accepted',
                             'class': ' label-light-success'
                         },
-                        2: {
+                        3: {
                             'title': 'Expired',
                             'class': ' label-light-danger'
                         },
@@ -110,21 +145,29 @@ var KTDatatableRemoteAjaxDemo = function() {
 
         });
 
-		$('#kt_datatable_search_status').on('change', function() {
-            datatable.search($(this).val().toLowerCase(), 'Status');
+        $('#kt_datatable_search_status').on('change', function() {
+            datatable.search($(this).val(), 'status');
         });
 
-        $('#kt_datatable_search_status, #kt_datatable_search_type').selectpicker();
+        $('#kt_datatable_search_to').on('change', function() {
+            datatable.search($(this).val(), 'recipient_office');
+        });
+
+        $('#kt_datatable_search_from').on('change', function() {
+            datatable.search($(this).val(), 'originator_office');
+        });
+
+        $('#kt_datatable_search_status, #kt_datatable_search_to, #kt_datatable_search_from').selectpicker();
     };
 
     return {
         // public functions
         init: function() {
-            demo();
+            truckDatatable();
         },
     };
 }();
 
 jQuery(document).ready(function() {
-    KTDatatableRemoteAjaxDemo.init();
+    KTDatatableTruckList.init();
 });

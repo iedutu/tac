@@ -48,6 +48,7 @@ switch($_SESSION['app']) {
         break;
     }
     case 'empty': {
+        echo '<script src="/assets/js/data-local.js"></script>';
         break;
     }
     default: {

@@ -27,13 +27,13 @@
                             <span class="form-text text-muted">Please select your colleague</span>
                         </div>
                         <div class="col-lg-4">
-                            <label>Origin:</label>
-                            <input type="text" id="from_address" name="from_address" class="form-control" placeholder="Company name & address"/>
+                            <label>Origin city:</label>
+                            <input type="text" id="from_city" name="from_city" class="form-control" placeholder="City name"/>
                             <span class="form-text text-muted">Please enter the cargo origin</span>
                         </div>
                         <div class="col-lg-4">
-                            <label>Destination:</label>
-                            <input type="text" id="to_address" name="to_address" class="form-control" placeholder="Company name & address"/>
+                            <label>Destination city:</label>
+                            <input type="text" id="to_city" name="to_city" class="form-control" placeholder="City name"/>
                             <span class="form-text text-muted">Please enter the cargo destination</span>
                         </div>
                     </div>
@@ -48,13 +48,13 @@
                             <span class="form-text text-muted">Please select the type of the order</span>
                         </div>
                         <div class="col-lg-4">
-                            <label>Origin city:</label>
-                            <input type="text" id="from_city" name="from_city" class="form-control" placeholder="City name"/>
+                            <label>Origin:</label>
+                            <input type="text" id="from_address" name="from_address" class="form-control" placeholder="Company name & address"/>
                             <span class="form-text text-muted">Please enter the cargo origin</span>
                         </div>
                         <div class="col-lg-4">
-                            <label>Destination city:</label>
-                            <input type="text" id="to_city" name="to_city" class="form-control" placeholder="City name"/>
+                            <label>Destination:</label>
+                            <input type="text" id="to_address" name="to_address" class="form-control" placeholder="Company name & address"/>
                             <span class="form-text text-muted">Please enter the cargo destination</span>
                         </div>
                     </div>

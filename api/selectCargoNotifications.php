@@ -16,13 +16,13 @@ $field = 'SYS_CREATION_DATE';
 try {
     $result = DB::getMDB()->query ( "SELECT
                             operator,
-                            DATE_FORMAT(SYS_CREATION_DATE, '%%Y/%%m/%%d') date,
+                            DATE_FORMAT(SYS_CREATION_DATE, %s) date,
                             comment
                        FROM 
                             cargo_comments 
                        WHERE
                             cargo_id=%d
-					   ORDER BY SYS_CREATION_DATE desc", $_SESSION['entry-id']);
+					   ORDER BY SYS_CREATION_DATE desc", Utils::$SQL_DATE_FORMAT, $_SESSION['entry-id']);
 
     // error_log(DB::getMDB()->lastQuery());
 }

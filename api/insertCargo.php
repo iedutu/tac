@@ -15,20 +15,28 @@ if (isset ( $_POST ['_submitted'] )) {
     error_log("Trying to insert.");
 
     try {
+        $row = DB::getMDB()->query('select a.name o_office, b.name o_name from cargo_offices a, cargo_users b where a.id=b.office_id and b.username=%s', $_SESSION['operator']);
+        $originator_name = $row[0]['o_name'];
+        $originator_office = $row[0]['o_office'];
+
+        $row = DB::getMDB()->query('select a.name r_office, b.name r_name from cargo_offices a, cargo_users b where a.id=b.office_id and b.username=%s', $_POST['recipient']);
+        $recipient_name = $row[0]['r_name'];
+        $recipient_office = $row[0]['r_office'];
+
         DB::getMDB()->insert('cargo_request', array(
             'originator' => $_SESSION['operator'],
             'operator' => $_SESSION['operator'],
             'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
-            'status' => 0,
+            'status' => 1,
             'client' => $_POST ['client'],
             'recipient' => $_POST ['recipient'],
             'from_city' => $_POST ['from_city'],
             'to_city' => $_POST ['to_city'],
             'from_address' => $_POST ['from_address'],
             'to_address' => $_POST ['to_address'],
-            'expiration' => (($_POST ['rohel_cargo_expiration'] == '') ? null : $_POST ['rohel_cargo_expiration']),
-            'loading_date' => (($_POST ['rohel_cargo_loading'] == '') ? null : $_POST ['rohel_cargo_loading']),
-            'unloading_date' => (($_POST ['rohel_cargo_unloading'] == '') ? null : $_POST ['rohel_cargo_unloading']),
+            'expiration' => (($_POST ['rohel_cargo_expiration'] == '') ? null : DB::getMDB()->sqleval("str_to_date(%s, %s)",$_POST ['rohel_cargo_expiration'], Utils::$SQL_DATE_FORMAT)),
+            'loading_date' => (($_POST ['rohel_cargo_loading'] == '') ? null : DB::getMDB()->sqleval("str_to_date(%s, %s)",$_POST ['rohel_cargo_loading'], Utils::$SQL_DATE_FORMAT)),
+            'unloading_date' => (($_POST ['rohel_cargo_unloading'] == '') ? null : DB::getMDB()->sqleval("str_to_date(%s, %s)",$_POST ['rohel_cargo_unloading'], Utils::$SQL_DATE_FORMAT)),
             'description' => $_POST ['description'],
             'collies' => $_POST ['collies'],
             'weight' => $_POST ['weight'],
@@ -37,7 +45,11 @@ if (isset ( $_POST ['_submitted'] )) {
             'instructions' => $_POST ['instructions'],
             'freight' => $_POST ['freight'],
             'order_type' => $_POST ['order_type'],
-            'adr' => $_POST ['adr']
+            'adr' => $_POST ['adr'],
+            'originator_name' => $originator_name,
+            'originator_office' => $originator_office,
+            'recipient_name' => $recipient_name,
+            'recipient_office' => $recipient_office
         ));
 
         Utils::cargo_audit('cargo_request', 'NEW-ENTRY', null, $_POST ['recipient']);

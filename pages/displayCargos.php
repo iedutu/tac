@@ -64,30 +64,49 @@
         </div>
     </div>
     <div class="card-body">
-        <!--begin: Search Form-->
         <!--begin::Search Form-->
         <div class="mb-7">
             <div class="row align-items-center">
-                <div class="col-lg-9 col-xl-8">
+                <div class="col-md-12">
                     <div class="row align-items-center">
-                        <div class="col-md-4 my-2 my-md-0">
+                        <div class="col-md-3">
                             <div class="input-icon">
                                 <input type="text" class="form-control" placeholder="Search..." id="kt_datatable_search_query" />
-                                <span>
-																	<i class="flaticon2-search-1 text-muted"></i>
-																</span>
+                                <span><i class="flaticon2-search-1 text-muted"></i></span>
                             </div>
                         </div>
-                        <div class="col-md-4 my-2 my-md-0">
+                        <div class="col-md-3">
                             <div class="d-flex align-items-center">
                                 <label class="mr-3 mb-0 d-none d-md-block">Status:</label>
                                 <select class="form-control" id="kt_datatable_search_status">
                                     <option value="">All</option>
-                                    <option value="0">New</option>
-                                    <option value="1">Accepted</option>
-                                    <option value="2">Closed</option>
+                                    <option value="1">New</option>
+                                    <option value="2">Accepted</option>
+                                    <option value="3">Closed</option>
                                     <option value="4">Expired</option>
-                                    <option value="3">Cancelled</option>
+                                    <option value="5">Cancelled</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="d-flex align-items-center">
+                                <label class="mr-3 mb-0 d-none d-md-block">From:</label>
+                                <select class="form-control" id="kt_datatable_search_from">
+                                    <option value="">All</option>
+                                    <option value="Bucuresti">Bucuresti</option>
+                                    <option value="Pucioasa">Pucioasa</option>
+                                    <option value="Crete">Crete</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="d-flex align-items-center">
+                                <label class="mr-3 mb-0 d-none d-md-block">To:</label>
+                                <select class="form-control" id="kt_datatable_search_to">
+                                    <option value="">All</option>
+                                    <option value="Bucuresti">Bucuresti</option>
+                                    <option value="Salonic">Salonic</option>
+                                    <option value="Crete">Crete</option>
                                 </select>
                             </div>
                         </div>
@@ -95,10 +114,9 @@
                 </div>
             </div>
         </div>
-        <!--end::Search Form-->
         <!--end: Search Form-->
         <!--begin: Datatable-->
-        <div class="datatable datatable-bordered datatable-head-custom" id="kt_datatable"></div>
+        <div class="datatable datatable-bordered datatable-head-custom" id="kt_datatable_cargo_list"></div>
         <!--end: Datatable-->
     </div>
 </div>

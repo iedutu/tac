@@ -27,6 +27,10 @@ include $_SERVER['DOCUMENT_ROOT'] . "/lib/db-settings.php";
 
 class DB_utils
 {
+    public static function selectCargoFromOptions() {
+
+    }
+
     public static function originatorCountryMatch(string $originator): bool
     {
         try {

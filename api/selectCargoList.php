@@ -2,6 +2,7 @@
 session_start();
 
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
+require_once $_SERVER["DOCUMENT_ROOT"]."/lib/class-list-util.php";
 
 if(!isset($_SESSION["operator_id"])) {
     header ( 'Location: index.php?page=login' );
@@ -33,37 +34,69 @@ if($_SESSION['operator_class']['moldova']) {
 
 error_log($_REQUEST['sort']['field']);
 
+// Sorting
+// Cleaning up the request from the other pages.
+if(empty($_SESSION['previous_area'])) {
+    $_REQUEST['sort']['sort'] = 'desc';
+    $_REQUEST['sort']['field'] = 'id';
+
+    $_SESSION['previous_area'] = 'cargo';
+}
+else {
+    if($_SESSION['previous_area'] == 'truck') {
+        $_REQUEST['sort']['sort'] = 'desc';
+        $_REQUEST['sort']['field'] = 'id';
+
+        $_SESSION['previous_area'] = 'cargo';
+    }
+}
+
 $sort  = ! empty($_REQUEST['sort']['sort']) ? $_REQUEST['sort']['sort'] : 'desc';
 $field = ! empty($_REQUEST['sort']['field']) ? $_REQUEST['sort']['field'] : 'id';
+
+// Filters
+$filter = '';
+
+$query = isset($_REQUEST['query']) && is_array($_REQUEST['query']) ? $_REQUEST['query'] : null;
+if (is_array($query)) {
+    $query = array_filter($query);
+    foreach ($query as $key => $val) {
+        $filter .= '('.$key.'="'.$val.'") and ';
+    }
+}
+
+error_log('Filter to be applied: '.$filter);
 
 // 25.01.2017. Removed the OR status=2 clause to clean-up the closed requests.
 try {
     $result = DB::getMDB()->query ( "
                        SELECT
                             id,
-                            originator,
-                            recipient,
-                            DATE_FORMAT(expiration, '%%d-%%m-%%Y') expiration,
+                            DATE_FORMAT(expiration, %s) expiration,
                             client,
                             from_city,
                             to_city,
                             status,
                             ameta,
                             plate_number,
-                            order_type
+                            order_type,
+                            originator_office,
+                            recipient_office,
+                            originator_name,
+                            recipient_name
                        FROM 
                             cargo_request 
                        WHERE 
 						(
-							((status = 0) AND (SYSDATE() < (expiration + INTERVAL 1 DAY))) OR
-							((status = 1) AND (SYSDATE() < (acceptance + INTERVAL %d DAY)))
+							((status = 1) AND (SYSDATE() < (expiration + INTERVAL 1 DAY))) OR
+							((status = 2) AND (SYSDATE() < (acceptance + INTERVAL %d DAY)))
 						)
 						AND
 						(
 							originator in (SELECT username FROM cargo_users WHERE ".$condition.") OR
 							recipient in (SELECT username FROM cargo_users WHERE ".$condition.")
 						)
-					    order by ".$field." ".$sort, Utils::$CARGO_PERIOD);
+					    order by ".$field." ".$sort, Utils::$SQL_DATE_FORMAT, Utils::$CARGO_PERIOD);
 
     // error_log(DB::getMDB()->lastQuery());
 }
@@ -106,6 +139,7 @@ if (is_array($query)) {
 }
 
 $meta    = [];
+
 $page    = ! empty($datatable['pagination']['page']) ? (int)$datatable['pagination']['page'] : 1;
 $perpage = ! empty($datatable['pagination']['perpage']) ? (int)$datatable['pagination']['perpage'] : -1;
 

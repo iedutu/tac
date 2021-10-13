@@ -116,10 +116,10 @@ $class_text_default = '';
                                 <td>
                                     <?php
                                     if($editable['originator']) {
-                                        echo '<b style="display: inline" id="loading_date" class="editable-date '.($audit->getLoadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$DATE_FORMAT, $truck->getLoadingDate()).'</b>';
+                                        echo '<b style="display: inline" id="loading_date" class="editable-date '.($audit->getLoadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$PHP_DATE_FORMAT, $truck->getLoadingDate()).'</b>';
                                     }
                                     else {
-                                        echo '<p style="display: inline" id="loading_date" class="'.($audit->getLoadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$DATE_FORMAT, $truck->getLoadingDate()).'</p>';
+                                        echo '<p style="display: inline" id="loading_date" class="'.($audit->getLoadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$PHP_DATE_FORMAT, $truck->getLoadingDate()).'</p>';
                                     }
                                     ?>
                                 </td>
@@ -168,10 +168,10 @@ $class_text_default = '';
                                     <?php
                                     if($editable['originator']) {
                                         // TODO: See if you can add validators for date format here (add a form, add the JS to validate the fields)
-                                        echo '<b style="display: inline" id="loading_date" class="editable-date '.($audit->getUnloadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$DATE_FORMAT, $truck->getUnloadingDate()).'</b>';
+                                        echo '<b style="display: inline" id="loading_date" class="editable-date '.($audit->getUnloadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$PHP_DATE_FORMAT, $truck->getUnloadingDate()).'</b>';
                                     }
                                     else {
-                                        echo '<p style="display: inline" id="unloading_date" class="'.($audit->getUnloadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$DATE_FORMAT, $truck->getUnloadingDate()).'</p>';
+                                        echo '<p style="display: inline" id="unloading_date" class="'.($audit->getUnloadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$PHP_DATE_FORMAT, $truck->getUnloadingDate()).'</p>';
                                     }
                                     ?>
                                 </td>

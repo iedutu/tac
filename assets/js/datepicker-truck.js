@@ -22,7 +22,7 @@ let KTBootstrapDatepicker = function () {
             orientation: "top right",
             todayHighlight: true,
             templates: arrows,
-            format: "yyyy/mm/dd"
+            format: "dd/mm/yyyy"
         });
 
         $('#rohel_truck_unloading').datepicker({
@@ -30,7 +30,7 @@ let KTBootstrapDatepicker = function () {
             orientation: "top right",
             todayHighlight: true,
             templates: arrows,
-            format: "yyyy/mm/dd"
+            format: "dd/mm/yyyy"
         });
     }
 
