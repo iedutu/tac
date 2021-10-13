@@ -41,9 +41,13 @@ switch($_SESSION['app']) {
         echo '<script src="/assets/js/src/jquery.jeditable.js"></script>';
         echo '<script src="/assets/js/src/jquery.jeditable.datepicker.js"></script>';
         echo '<script src="/assets/js/jeditable-truck.js"></script>';
-        echo '<script src="/assets/js/data-truck-stops-ajax.js"></script>';
-        echo '<script src="/assets/js/data-truck-stops-ajax-read-only.js"></script>';
-        echo '<script src="/assets/js/form-validation-truck_stop.js"></script>';
+        if(isset($_SESSION['originator'])) {
+            echo '<script src="/assets/js/data-truck-stops-ajax.js"></script>';
+            echo '<script src="/assets/js/form-validation-truck_stop.js"></script>';
+        }
+        else {
+            echo '<script src="/assets/js/data-truck-stops-ajax-read-only.js"></script>';
+        }
 
         break;
     }

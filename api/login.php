@@ -5,7 +5,6 @@ include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
 $success = false;
 $message = "Not attempted";
-$page = "/";
 
 $username = $_POST ['username'];
 $password = hash("sha256", $_POST ['password']);
@@ -32,38 +31,12 @@ if ($row == null) {
     $message = "No such valid username/password combination.";
 } else {
     $_SESSION['app'] = 'cargo';
-    $_SESSION['class'] = $row['class'];
-    $_SESSION['operator_id'] = $row['id'];
-    $_SESSION['operator'] = $row['username'];
-    $_SESSION['operator_class'] = array();
-    $_SESSION['operator_class']['insert'] = ($row['insert'] == 1) ? true : false;
-    $_SESSION['operator_class']['reports'] = ($row['reports'] == 1) ? true : false;
-
-// One country per username
-    if ($row['turkey'] == 1) {
-        $_SESSION['operator_class']['country'] = 'turkey';
-    }
-    if ($row['greece'] == 1) {
-        $_SESSION['operator_class']['country'] = 'greece';
-    }
-    if ($row['serbia'] == 1) {
-        $_SESSION['operator_class']['country'] = 'serbia';
-    }
-    if ($row['romania'] == 1) {
-        $_SESSION['operator_class']['country'] = 'romania';
-    }
-    if ($row['moldova'] == 1) {
-        $_SESSION['operator_class']['country'] = 'moldova';
-    }
-
-// Multiple countries per username
-    $_SESSION['operator_class']['turkey'] = $row['turkey'];
-    $_SESSION['operator_class']['serbia'] = $row['serbia'];
-    $_SESSION['operator_class']['romania'] = $row['romania'];
-    $_SESSION['operator_class']['greece'] = $row['greece'];
-    $_SESSION['operator_class']['moldova'] = $row['moldova'];
-
-    $_SESSION['login_error'] = 0;
+    $_SESSION['operator']['id'] = $row['id'];
+    $_SESSION['operator']['class'] = $row['class'];
+    $_SESSION['operator']['username]'] = $row['username'];
+    $_SESSION['operator']['insert'] = $row['insert'] == 1;
+    $_SESSION['operator']['reports'] = $row['reports'] == 1;
+    $_SESSION['operator']['country-id'] = $row['country_id'];
 
     $params = '';
     if (isset($_POST['page'])) {
@@ -77,7 +50,7 @@ if ($row == null) {
         }
     }
 
-    $page = "/index.php".$params;
+    $page = "/".$params;
     $success = true;
     $message = "Login successful!";
 

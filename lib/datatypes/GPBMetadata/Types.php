@@ -16,14 +16,14 @@ class Types
         }
         $pool->internalAddGeneratedFile(
             '
-ï
+¯
 types.protoRohel"ò
 Request
 
 id (
 operator (	
 
-originator (	
+originator (
 client (	
 	from_city (	
 from_address (	
@@ -49,7 +49,7 @@ expiration (
 
 order_type (	
 adr (	
-	recipient (	
+	recipient (
 status (
 accepted_by (	"ù
 RequestUpdates
@@ -91,8 +91,8 @@ order_type (
 id (
 operator (	
 
-originator (	
-	recipient (	
+originator (
+	recipient (
 accepted_by (	
 status (
 	from_city (	
@@ -158,7 +158,7 @@ truck_type (
 weight (
 volume (
 stop_id (
-truck_id ("È
+truck_id ("ˆ
 User
 
 id (
@@ -166,14 +166,10 @@ truck_type (
 password (	
 class (
 insert (
-reports (
-turkey (
-greece (
-serbia	 (
-moldova
- (
-romania (
-filter (	bproto3'
+reports (
+
+country_id (
+name (	bproto3'
         , true);
 
         static::$is_initialized = true;

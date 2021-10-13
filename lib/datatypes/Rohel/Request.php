@@ -22,9 +22,9 @@ class Request extends \Google\Protobuf\Internal\Message
      */
     protected $operator = '';
     /**
-     * Generated from protobuf field <code>string originator = 3;</code>
+     * Generated from protobuf field <code>int32 originator = 3;</code>
      */
-    protected $originator = '';
+    protected $originator = 0;
     /**
      * Generated from protobuf field <code>string client = 4;</code>
      */
@@ -106,9 +106,9 @@ class Request extends \Google\Protobuf\Internal\Message
      */
     protected $adr = '';
     /**
-     * Generated from protobuf field <code>string recipient = 24;</code>
+     * Generated from protobuf field <code>int32 recipient = 24;</code>
      */
-    protected $recipient = '';
+    protected $recipient = 0;
     /**
      * Generated from protobuf field <code>int32 status = 25;</code>
      */
@@ -126,7 +126,7 @@ class Request extends \Google\Protobuf\Internal\Message
      *
      *     @type int $id
      *     @type string $operator
-     *     @type string $originator
+     *     @type int $originator
      *     @type string $client
      *     @type string $from_city
      *     @type string $from_address
@@ -147,7 +147,7 @@ class Request extends \Google\Protobuf\Internal\Message
      *     @type string $ameta
      *     @type string $order_type
      *     @type string $adr
-     *     @type string $recipient
+     *     @type int $recipient
      *     @type int $status
      *     @type string $accepted_by
      * }
@@ -202,8 +202,8 @@ class Request extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string originator = 3;</code>
-     * @return string
+     * Generated from protobuf field <code>int32 originator = 3;</code>
+     * @return int
      */
     public function getOriginator()
     {
@@ -211,13 +211,13 @@ class Request extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string originator = 3;</code>
-     * @param string $var
+     * Generated from protobuf field <code>int32 originator = 3;</code>
+     * @param int $var
      * @return $this
      */
     public function setOriginator($var)
     {
-        GPBUtil::checkString($var, True);
+        GPBUtil::checkInt32($var);
         $this->originator = $var;
 
         return $this;
@@ -664,8 +664,8 @@ class Request extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string recipient = 24;</code>
-     * @return string
+     * Generated from protobuf field <code>int32 recipient = 24;</code>
+     * @return int
      */
     public function getRecipient()
     {
@@ -673,13 +673,13 @@ class Request extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string recipient = 24;</code>
-     * @param string $var
+     * Generated from protobuf field <code>int32 recipient = 24;</code>
+     * @param int $var
      * @return $this
      */
     public function setRecipient($var)
     {
-        GPBUtil::checkString($var, True);
+        GPBUtil::checkInt32($var);
         $this->recipient = $var;
 
         return $this;

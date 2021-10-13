@@ -5,7 +5,7 @@ include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
 use PHPMailer\PHPMailer\PHPMailer;
 
-if (! Utils::authorized(null, Utils::$INSERT)) {
+if (! Utils::authorized(Utils::$INSERT)) {
     error_log("User not authorized to insert data in the database.");
 	header ( 'Location: /' );
 	exit ();
@@ -14,7 +14,7 @@ if (! Utils::authorized(null, Utils::$INSERT)) {
 if (isset ( $_POST ['_submitted'] )) {
     try {
         DB::getMDB()->insert('cargo_comments', array(
-            'operator' => $_SESSION['operator'],
+            'operator' => $_SESSION['operator']['username'],
 //      'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
             'comment' => $_POST ['note'],
             'cargo_id' => $_POST ['id']

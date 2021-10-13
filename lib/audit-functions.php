@@ -86,8 +86,25 @@ class Audit {
         return $a;
     }
 
-    public static function writeTruck(TruckUpdates $a, string $for_whom): bool
+    public static function writeTruck(TruckUpdates $a): bool
     {
+        if(isset($_SESSION['role'])) {
+            if($_SESSION['role'] == 'originator') {
+                $for_whom = 'recipient';
+            }
+            else {
+                if($_SESSION['role'] == 'recipient') {
+                    $for_whom = 'originator';
+                }
+                else {
+                    $for_whom = 'unknown';
+                }
+            }
+        }
+        else {
+            $for_whom = 'unknown';
+        }
+
         $filename = $_SERVER["DOCUMENT_ROOT"] . '/notifications/cargo_truck_' . $for_whom.'_'.$a->getId() . '.bin';
         $ok = true;
 

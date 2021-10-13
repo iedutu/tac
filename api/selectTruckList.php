@@ -4,32 +4,8 @@ session_start();
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 require_once $_SERVER["DOCUMENT_ROOT"]."/lib/class-list-util.php";
 
-if(!isset($_SESSION["operator_id"])) {
-    header ( 'Location: index.php?page=login' );
+if(!isset($_SESSION['operator']['id'])) {
     exit ();
-}
-
-$condition = '';
-$separator = '';
-
-if($_SESSION['operator_class']['turkey']) {
-    $condition = $condition.'turkey = 1';
-    $separator = ' OR ';
-}
-if($_SESSION['operator_class']['greece']) {
-    $condition = $condition.$separator.'greece = 1';
-    $separator = ' OR ';
-}
-if($_SESSION['operator_class']['serbia']) {
-    $condition = $condition.$separator.'serbia = 1';
-    $separator = ' OR ';
-}
-if($_SESSION['operator_class']['romania']) {
-    $condition = $condition.$separator.'romania = 1';
-}
-
-if($_SESSION['operator_class']['moldova']) {
-    $condition = $condition.$separator.'moldova = 1';
 }
 
 // Sorting
@@ -56,44 +32,53 @@ $field = ! empty($_REQUEST['sort']['field']) ? $_REQUEST['sort']['field'] : 'id'
 try {
     $result = DB::getMDB()->query ( "SELECT
                                         a.id id, 
-                                        a.originator originator, 
-                                        a.recipient recipient, 
                                         DATE_FORMAT(a.expiration, %s) expiration, 
                                         a.from_city from_city, 
-                                        b.city to_city, 
+                                        f.city to_city, 
                                         a.details details, 
                                         a.status status, 
                                         a.plate_number plate_number, 
                                         a.cargo_type cargo_type, 
                                         a.order_type order_type, 
                                         a.truck_type truck_type, 
-                                        a.originator_office originator_office,
-                                        a.recipient_office recipient_office,
-                                        a.originator_name originator_name,
-                                        a.recipient_name recipient_name,
                                         DATE_FORMAT(a.loading_date, %s) loading_date, 
                                         DATE_FORMAT(a.unloading_date, %s) unloading_date, 
                                         a.freight freight, 
-                                        a.ameta ameta
+                                        a.ameta ameta,
+                                        b.name originator_name,
+                                        c.name recipient_name,
+                                        d.name originator_office,
+                                        e.name recipient_office 
                                      FROM 
                                         cargo_truck a,
-                                        cargo_truck_stops b
+                                        cargo_users b, 
+                                        cargo_users c, 
+                                        cargo_offices d, 
+                                        cargo_offices e,
+                                        cargo_truck_stops f
                                      WHERE
                                         (
-                                            (a.id = b.truck_id) 
+                                            (a.id = f.truck_id) 
                                             AND 
-                                            (b.stop_id = (
-                                                            SELECT max(stop_id) from cargo_truck_stops where truck_id=b.truck_id
+                                            (f.stop_id = (
+                                                            SELECT max(stop_id) from cargo_truck_stops where truck_id=f.truck_id
                                                          )
                                             )
                                         )
                                      AND
                                         ((status = 1) OR (status = 2))
                                      AND
-                                        (
-                                           originator in (SELECT username FROM cargo_users WHERE ".$condition.") OR
-                                           recipient in (SELECT username FROM cargo_users WHERE ".$condition.")
-                                        )
+                                     (
+                                         (a.originator_id=b.id and b.office_id=d.id)
+                                         AND
+                                         (a.recipient_id=c.id and c.office_id=e.id)
+                                     )
+                                     AND
+                                     (
+                                         (a.originator_id=b.id AND b.country_id=1)
+                                         OR
+                                         (a.recipient_id=c.id AND c.country_id=1)
+                                     )
                                      order by ".$field." ".$sort,
                                             Utils::$SQL_DATE_FORMAT,
                                             Utils::$SQL_DATE_FORMAT,

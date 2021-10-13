@@ -38,29 +38,13 @@ class User extends \Google\Protobuf\Internal\Message
      */
     protected $reports = 0;
     /**
-     * Generated from protobuf field <code>int32 turkey = 7;</code>
+     * Generated from protobuf field <code>int32 country_id = 7;</code>
      */
-    protected $turkey = 0;
+    protected $country_id = 0;
     /**
-     * Generated from protobuf field <code>int32 greece = 8;</code>
+     * Generated from protobuf field <code>string name = 8;</code>
      */
-    protected $greece = 0;
-    /**
-     * Generated from protobuf field <code>int32 serbia = 9;</code>
-     */
-    protected $serbia = 0;
-    /**
-     * Generated from protobuf field <code>int32 moldova = 10;</code>
-     */
-    protected $moldova = 0;
-    /**
-     * Generated from protobuf field <code>int32 romania = 11;</code>
-     */
-    protected $romania = 0;
-    /**
-     * Generated from protobuf field <code>string filter = 12;</code>
-     */
-    protected $filter = '';
+    protected $name = '';
 
     /**
      * Constructor.
@@ -74,12 +58,8 @@ class User extends \Google\Protobuf\Internal\Message
      *     @type int $class
      *     @type int $insert
      *     @type int $reports
-     *     @type int $turkey
-     *     @type int $greece
-     *     @type int $serbia
-     *     @type int $moldova
-     *     @type int $romania
-     *     @type string $filter
+     *     @type int $country_id
+     *     @type string $name
      * }
      */
     public function __construct($data = NULL) {
@@ -220,133 +200,45 @@ class User extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>int32 turkey = 7;</code>
+     * Generated from protobuf field <code>int32 country_id = 7;</code>
      * @return int
      */
-    public function getTurkey()
+    public function getCountryId()
     {
-        return $this->turkey;
+        return $this->country_id;
     }
 
     /**
-     * Generated from protobuf field <code>int32 turkey = 7;</code>
+     * Generated from protobuf field <code>int32 country_id = 7;</code>
      * @param int $var
      * @return $this
      */
-    public function setTurkey($var)
+    public function setCountryId($var)
     {
         GPBUtil::checkInt32($var);
-        $this->turkey = $var;
+        $this->country_id = $var;
 
         return $this;
     }
 
     /**
-     * Generated from protobuf field <code>int32 greece = 8;</code>
-     * @return int
-     */
-    public function getGreece()
-    {
-        return $this->greece;
-    }
-
-    /**
-     * Generated from protobuf field <code>int32 greece = 8;</code>
-     * @param int $var
-     * @return $this
-     */
-    public function setGreece($var)
-    {
-        GPBUtil::checkInt32($var);
-        $this->greece = $var;
-
-        return $this;
-    }
-
-    /**
-     * Generated from protobuf field <code>int32 serbia = 9;</code>
-     * @return int
-     */
-    public function getSerbia()
-    {
-        return $this->serbia;
-    }
-
-    /**
-     * Generated from protobuf field <code>int32 serbia = 9;</code>
-     * @param int $var
-     * @return $this
-     */
-    public function setSerbia($var)
-    {
-        GPBUtil::checkInt32($var);
-        $this->serbia = $var;
-
-        return $this;
-    }
-
-    /**
-     * Generated from protobuf field <code>int32 moldova = 10;</code>
-     * @return int
-     */
-    public function getMoldova()
-    {
-        return $this->moldova;
-    }
-
-    /**
-     * Generated from protobuf field <code>int32 moldova = 10;</code>
-     * @param int $var
-     * @return $this
-     */
-    public function setMoldova($var)
-    {
-        GPBUtil::checkInt32($var);
-        $this->moldova = $var;
-
-        return $this;
-    }
-
-    /**
-     * Generated from protobuf field <code>int32 romania = 11;</code>
-     * @return int
-     */
-    public function getRomania()
-    {
-        return $this->romania;
-    }
-
-    /**
-     * Generated from protobuf field <code>int32 romania = 11;</code>
-     * @param int $var
-     * @return $this
-     */
-    public function setRomania($var)
-    {
-        GPBUtil::checkInt32($var);
-        $this->romania = $var;
-
-        return $this;
-    }
-
-    /**
-     * Generated from protobuf field <code>string filter = 12;</code>
+     * Generated from protobuf field <code>string name = 8;</code>
      * @return string
      */
-    public function getFilter()
+    public function getName()
     {
-        return $this->filter;
+        return $this->name;
     }
 
     /**
-     * Generated from protobuf field <code>string filter = 12;</code>
+     * Generated from protobuf field <code>string name = 8;</code>
      * @param string $var
      * @return $this
      */
-    public function setFilter($var)
+    public function setName($var)
     {
         GPBUtil::checkString($var, True);
-        $this->filter = $var;
+        $this->name = $var;
 
         return $this;
     }

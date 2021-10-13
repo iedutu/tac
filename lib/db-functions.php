@@ -31,10 +31,48 @@ class DB_utils
 
     }
 
-    public static function originatorCountryMatch(string $originator): bool
+    public static function selectOffices() {
+        try {
+            $offices = DB::getMDB()->query('select * from cargo_offices order by importance asc');
+            echo '<option value="">All</option>';
+            foreach ($offices as $office) {
+                echo '<option value="'.$office['name'].'">'.$office['name'].'</option>';
+            }
+        }
+        catch (MeekroDBException $mdbe) {
+            error_log("Database error: ".$mdbe->getMessage());
+            return false;
+        }
+        catch (Exception $e) {
+            error_log("Database error: ".$e->getMessage());
+
+            return false;
+        }
+    }
+
+    public static function selectActiveUsers() {
+        try {
+            $users = DB::getMDB()->query('SELECT * FROM cargo_users where (id <> %s) and (class < 2) order by name asc', $_SESSION['operator']['id']);
+            foreach ($users as $user) {
+                echo '<option value="'.$user['id'].'">'.$user['name'].'</option>';
+            }
+        }
+        catch (MeekroDBException $mdbe) {
+            error_log("Database error: ".$mdbe->getMessage());
+            return false;
+        }
+        catch (Exception $e) {
+            error_log("Database error: ".$e->getMessage());
+
+            return false;
+        }
+    }
+
+    public static function countryMatch(int $other): bool
     {
         try {
-            $originator_country_match = DB::getMDB()->queryOneField($_SESSION['operator_class']['country'], "SELECT ".$_SESSION['operator_class']['country']." FROM cargo_users WHERE username=%s", $originator);
+            $country = DB::getMDB()->queryOneField('country_id', 'SELECT country_id FROM cargo_users WHERE id = %d', $other);
+            error_log('Country selected: '. $country);
         }
         catch (MeekroDBException $mdbe) {
             error_log("Database error: ".$mdbe->getMessage());
@@ -46,40 +84,24 @@ class DB_utils
             return false;
         }
 
-        return $originator_country_match == 1;
+        return $country == $_SESSION['operator']['country-id'];
     }
 
-    public static function recipientCountryMatch(string $recipient): bool
-    {
-        try {
-            $recipient_country_match = DB::getMDB()->queryOneField($_SESSION['operator_class']['country'], "SELECT ".$_SESSION['operator_class']['country']." FROM cargo_users WHERE username=%s", $recipient);
-        }
-        catch (MeekroDBException $mdbe) {
-            error_log("Database error: ".$mdbe->getMessage());
-            return false;
-        }
-        catch (Exception $e) {
-            error_log("Database error: ".$e->getMessage());
-            return false;
-        }
-
-        return $recipient_country_match == 1;
-    }
-
-    public static function isEditable(string $originator, string $recipient): array
+    public static function isEditable(int $originator, int $recipient): array
     {
         // Who can edit the cargo
         // 1. The one who created it
-        error_log('isEditable: ['.$originator.']['.$recipient.']');
-        if (($_SESSION['operator'] == $originator) || (self::originatorCountryMatch($originator) == '1')){
+        error_log('isEditable request: ['.$originator.']['.$recipient.']');
+        if (($_SESSION['operator']['id'] == $originator) || self::countryMatch($originator)){
             $result['originator'] = true;
         }
         else {
             $result['originator'] = false;
         }
 
-        $result['recipient'] = self::recipientCountryMatch($recipient);
+        $result['recipient'] = self::countryMatch($recipient);
 
+        error_log('isEditable response: ['.$result['originator'].']['.$result['recipient'].']');
         return $result;
     }
 
@@ -113,9 +135,9 @@ class DB_utils
             $request->setLoadingMeters($row['loading_meters']);
             $request->setOperator($row['operator']);
             $request->setOrderType($row['order_type']);
-            $request->setOriginator($row['originator']);
+            $request->setOriginator($row['originator_id']);
             $request->setPlateNumber($row['plate_number']);
-            $request->setRecipient($row['recipient']);
+            $request->setRecipient($row['recipient_id']);
             $request->setStatus($row['status']);
             $request->setToAddress($row['to_address']);
             $request->setToCity($row['to_city']);
@@ -221,10 +243,10 @@ class DB_utils
             if(!empty($row['loading_date'])) $truck->setLoadingDate(strtotime($row['loading_date']));
             $truck->setOperator($row['operator']);
             $truck->setOrderType($row['order_type']);
-            $truck->setOriginator($row['originator']);
+            $truck->setOriginator($row['originator_id']);
             $truck->setPlateNumber($row['plate_number']);
             $truck->setStatus($row['status']);
-            $truck->setRecipient($row['recipient']);
+            $truck->setRecipient($row['recipient_id']);
             $truck->setTruckType($row['truck_type']);
             if(!empty($row['unloading_date'])) $truck->setUnloadingDate(strtotime($row['unloading_date']));
 
@@ -334,13 +356,51 @@ class DB_utils
             $user->setId($row['id']);
             $user->setUsername($username);
             $user->setPassword($row['password']);
+            $user->setName($row['name']);
             $user->setClass($row['class']);
-            $user->setFilter($row['filter']);
-            $user->setGreece($row['greece']);
-            $user->setMoldova($row['moldova']);
-            $user->setRomania($row['romania']);
-            $user->setSerbia($row['serbia']);
-            $user->setTurkey($row['turkey']);
+            $user->setCountryId($row['country_id']);
+            $user->setInsert($row['insert']);
+            $user->setReports($row['reports']);
+
+            return $user;
+        }
+        catch (MeekroDBException $mdbe) {
+            error_log("Database error: ".$mdbe->getMessage());
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
+
+            return null;
+        }
+        catch (Exception $e) {
+            error_log("Database error: ".$e->getMessage());
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+
+            return null;
+        }
+    }
+
+    public static function selectUserById(int $id): ?User
+    {
+        try {
+            $row = DB::getMDB()->queryOneRow("select * 
+                                                  from 
+                                                     cargo_users 
+                                                  where 
+                                                     id=%s", $id);
+            if (is_null($row)) {
+                error_log("No cargo_users was found for id=".$id);
+
+                return null;
+            }
+
+            $user = new User();
+            $user->setId($row['id']);
+            $user->setUsername($row['username']);
+            $user->setPassword($row['password']);
+            $user->setName($row['name']);
+            $user->setClass($row['class']);
+            $user->setCountryId($row['country_id']);
             $user->setInsert($row['insert']);
             $user->setReports($row['reports']);
 

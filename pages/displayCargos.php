@@ -48,7 +48,7 @@
             </div>
             <!--end::Dropdown-->
             <!--begin::Button-->
-            <a href="/?page=newCargo" class="btn btn-primary font-weight-bolder <?=($_SESSION['operator_class']['insert']==0)?'disabled':''?>">
+            <a href="/?page=newCargo" class="btn btn-primary font-weight-bolder <?=($_SESSION['operator']['insert']==0)?'disabled':''?>">
 											<span class="svg-icon svg-icon-md">
 												<!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
 												<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -92,10 +92,7 @@
                             <div class="d-flex align-items-center">
                                 <label class="mr-3 mb-0 d-none d-md-block">From:</label>
                                 <select class="form-control" id="kt_datatable_search_from">
-                                    <option value="">All</option>
-                                    <option value="Bucuresti">Bucuresti</option>
-                                    <option value="Pucioasa">Pucioasa</option>
-                                    <option value="Crete">Crete</option>
+                                    <?php DB_utils::selectOffices(); ?>
                                 </select>
                             </div>
                         </div>
@@ -103,10 +100,7 @@
                             <div class="d-flex align-items-center">
                                 <label class="mr-3 mb-0 d-none d-md-block">To:</label>
                                 <select class="form-control" id="kt_datatable_search_to">
-                                    <option value="">All</option>
-                                    <option value="Bucuresti">Bucuresti</option>
-                                    <option value="Salonic">Salonic</option>
-                                    <option value="Crete">Crete</option>
+                                    <?php DB_utils::selectOffices(); ?>
                                 </select>
                             </div>
                         </div>

@@ -1,7 +1,7 @@
 // Class definition
-let KTFormControls = function () {
+let KTFormControlsTruckValidation = function () {
 	// Private functions
-	let _initNewCargo = function () {
+	let truckValidation = function () {
 		FormValidation.formValidation(
 			document.getElementById('kt_rohel_truck_stop_form'),
 			{
@@ -91,11 +91,11 @@ let KTFormControls = function () {
 	return {
 		// public functions
 		init: function() {
-			_initNewCargo();
+			truckValidation();
 		}
 	};
 }();
 
 jQuery(document).ready(function() {
-	KTFormControls.init();
+	KTFormControlsTruckValidation.init();
 });

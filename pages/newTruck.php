@@ -12,17 +12,7 @@
                         <div class="col-lg-4">
                             <label>Truck recipient</label>
                             <select class="form-control" id="recipient" name="recipient">
-                                <?php
-                                $limit = 2;
-                                if(isset($_SESSION['debug']) && ($_SESSION['debug'] == true)) {
-                                    $limit = 3;
-                                }
-
-                                $emails = DB::getMDB()->queryOneColumn ( 'username', "SELECT * FROM cargo_users where (username <> %s) and (class < %d) and (class > 0) order by username", $_SESSION ['operator'], $limit );
-                                foreach ( $emails as $email ) {
-                                    echo '<option value="'.$email.'">'.$email.'</option>';
-                                }
-                                ?>
+                                <?php DB_utils::selectActiveUsers(); ?>
                             </select>
                             <span class="form-text text-muted">Please select your colleague</span>
                         </div>

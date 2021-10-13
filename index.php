@@ -5,7 +5,7 @@ include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
 $page = "";
 
-if (! isset ( $_SESSION ['operator_id'] )) {
+if (! isset ( $_SESSION ['operator']['id'] )) {
     // No-one logged-in
     header ( 'Location: pages/login.php' );
     return;

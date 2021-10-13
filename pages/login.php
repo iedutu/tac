@@ -14,36 +14,12 @@ if (isset ( $_POST ['_submitted'] )) {
     if ($user != null) {    // user exists
         if(strtoupper($password) == strtoupper($user->getPassword())) {  // correct password
             $_SESSION['app'] = 'cargo';
-            $_SESSION['class'] = $user->getClass();
-            $_SESSION['operator_id'] = $user->getId();
-            $_SESSION['operator'] = $user->getUsername();
-            $_SESSION['operator_class'] = array();
-            $_SESSION['operator_class']['insert'] = $user->getInsert() == 1;
-            $_SESSION['operator_class']['reports'] = $user->getReports() == 1;
-
-// One country per username
-            if ($user->getTurkey() == 1) {
-                $_SESSION['operator_class']['country'] = 'turkey';
-            }
-            if ($user->getGreece() == 1) {
-                $_SESSION['operator_class']['country'] = 'greece';
-            }
-            if ($user->getSerbia() == 1) {
-                $_SESSION['operator_class']['country'] = 'serbia';
-            }
-            if ($user->getRomania() == 1) {
-                $_SESSION['operator_class']['country'] = 'romania';
-            }
-            if ($user->getMoldova() == 1) {
-                $_SESSION['operator_class']['country'] = 'moldova';
-            }
-
-// Multiple countries per username
-            $_SESSION['operator_class']['turkey'] = $user->getTurkey();
-            $_SESSION['operator_class']['serbia'] = $user->getSerbia();
-            $_SESSION['operator_class']['romania'] = $user->getRomania();
-            $_SESSION['operator_class']['greece'] = $user->getGreece();
-            $_SESSION['operator_class']['moldova'] = $user->getMoldova();
+            $_SESSION['operator']['id'] = $user->getId();
+            $_SESSION['operator']['username'] = $user->getUsername();
+            $_SESSION['operator']['name'] = $user->getName();
+            $_SESSION['operator']['insert'] = $user->getInsert() == 1;
+            $_SESSION['operator']['reports'] = $user->getReports() == 1;
+            $_SESSION['operator']['country-id'] = $user->getCountryId();
 
             header('Location: /');
             exit();
@@ -271,7 +247,7 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
 <script src="/assets/js/scripts.bundle.js"></script>
 <!--end::Global Theme Bundle-->
 <!--begin::Page Scripts(used by this page)-->
-<script src="/assets/js/pages/custom/login/login.js"></script>
+<script src="/assets/js/login.js"></script>
 <!--end::Page Scripts-->
 </body>
 <!--end::Body-->

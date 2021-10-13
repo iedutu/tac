@@ -5,7 +5,7 @@ package Rohel;
 message Request {
   int32 id = 1;
   string operator = 2;
-  string originator = 3;
+  int32 originator = 3;
   string client = 4;
   string from_city = 5;
   string from_address = 6;
@@ -26,7 +26,7 @@ message Request {
   string ameta = 21;
   string order_type = 22;
   string adr = 23;
-  string recipient = 24;
+  int32 recipient = 24;
   int32 status = 25;
   string accepted_by = 26;
 }
@@ -63,8 +63,8 @@ message RequestUpdates {
 message Truck {
   int32 id = 1;
   string operator = 2;
-  string originator = 3;
-  string recipient = 4;
+  int32 originator = 3;
+  int32 recipient = 4;
   string accepted_by = 5;
   int32 status = 6;
   string from_city = 7;
@@ -129,10 +129,6 @@ message User {
   int32 class = 4;
   int32 insert = 5;
   int32 reports = 6;
-  int32 turkey = 7;
-  int32 greece = 8;
-  int32 serbia = 9;
-  int32 moldova = 10;
-  int32 romania = 11;
-  string filter = 12;
+  int32 country_id = 7;
+  string name = 8;
 }

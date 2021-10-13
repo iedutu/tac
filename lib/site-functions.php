@@ -349,12 +349,12 @@ class Utils {
                     break;
                 }
             }
-            $mail->Subject = $entity.' modified by ' . $_SESSION ['operator'];
+            $mail->Subject = $entity.' modified by ' . $_SESSION ['operator']['username'];
 
             $url='http://rohel.iedutu.com/?page='.$_SESSION['app'].'&id='.$id;
 
             $mail->addAddress ( $_SESSION['email-recipient'], $_SESSION['email-recipient'] );
-            $mail->addAddress ( $_SESSION['operator'], $_SESSION['operator'] );
+            $mail->addAddress ( $_SESSION['operator']['username'], $_SESSION['operator']['username'] );
 
             ob_start ();
             include $_SERVER["DOCUMENT_ROOT"]."/html/updateField.html";
@@ -417,8 +417,8 @@ class Utils {
 
 	public static function audit($table, $field, $key, $new) {
 		DB::getMDB()->insert ( 'audit', array (
-				'operator_id' => $_SESSION ['operator_id'],
-				'operator' => $_SESSION ['operator'],
+				'operator_id' => $_SESSION ['operator']['id'],
+				'operator' => $_SESSION ['operator']['username'],
 				'APP' => $_SESSION ['application'],
 				'IP' => $_SERVER['REMOTE_ADDR'],
 				'table' => $table,
@@ -430,7 +430,7 @@ class Utils {
 
 	public static function trucks_audit($table, $field, $key, $new) {
 		DB::getMDB()->insert ( 'trucks_audit', array (
-				'operator' => $_SESSION ['operator'],
+				'operator' => $_SESSION ['operator']['username'],
 				'IP' => $_SERVER['REMOTE_ADDR'],
 				'table' => $table,
 				'field' => $field,
@@ -441,8 +441,8 @@ class Utils {
 
 	public static function cargo_audit($table, $field, $key, $new) {
 		DB::getMDB()->insert ( 'cargo_audit', array (
-				'operator_id' => $_SESSION ['operator_id'],
-				'operator' => $_SESSION ['operator'],
+				'operator_id' => $_SESSION ['operator']['id'],
+				'operator' => $_SESSION ['operator']['username'],
 				'IP' => $_SERVER['REMOTE_ADDR'],
 				'table' => $table,
 				'field' => $field,
@@ -480,7 +480,7 @@ class Utils {
 		$_SESSION = array();
 	}
 	
-	public static function authorized($page, $operation) {
+	public static function authorized($operation) {
 		if(is_string($operation)) {
 			$_operation = (int)$operation;
 		}
@@ -488,287 +488,27 @@ class Utils {
 			$_operation = $operation;
 		}
 		
-		if (!isset($_SESSION ['operator_id'])) {
+		if (!isset($_SESSION ['operator']['id'])) {
 			return false;
 		}
 
 		switch($_operation) {
 			case Utils::$QUERY: return true;
-			case Utils::$ADMIN: return ($_SESSION['class'] == 0)?true:false;
-			case Utils::$OPERATIONAL: return ($_SESSION['class'] == 1)?true:false;
+			case Utils::$ADMIN: return $_SESSION['operator']['class'] == 0;
+			case Utils::$OPERATIONAL: return $_SESSION['operator']['class'] == 1;
 
-			case Utils::$REPORTS: return $_SESSION['operator_class']['reports'];
-			case Utils::$INSERT: return $_SESSION['operator_class']['insert'];
-			case Utils::$ADD_DOCS: return $_SESSION['operator_class']['documents'];
-			case Utils::$DELETE_DOCS: return $_SESSION['operator_class']['documents'];
-			case Utils::$DELETE_TRIPS: return $_SESSION['operator_class']['remove'];
-			case Utils::$OP_APPROVE: return $_SESSION['operator_class']['operational'];
-			case Utils::$AC_APPROVE: return $_SESSION['operator_class']['accounting'];
-//			case Utils::$FN_APPROVE: return $_SESSION['operator_class']['financial'];
-			case Utils::$FN_APPROVE:
-									{
-										if($_SESSION['operator_class']['financial']) {
-											if($page == null) {
-												return true;
-											}
-											
-											if(($page == 'BUCHAREST') && ($_SESSION['operator'] == 'florentina.burnuz@rohel.ro')) {
-												return true;
-											}
-											
-											if(($page == 'BUCHAREST') && ($_SESSION['operator'] == 'raluca.rada@rohel.ro')) {
-												return true;
-											}
-											
-											if(($page == 'ATHENS') && ($_SESSION['operator'] == 'giannakou@unit-hellas.gr')) {
-												return true;
-											}
-											
-											if(($page == 'THESSALONIKI') && ($_SESSION['operator'] == 'vagia@unit-hellas.gr')) {
-												return true;
-											}
-											
-											if(($page == 'KISHINEV') && ($_SESSION['operator'] == 'tatiana@translink.md')) {
-												return true;
-											}
-										}
-										
-										return false;
-									 }
-			case Utils::$PY_APPROVE:
-									{
-										if($_SESSION['operator_class']['payments']) {
-											if($page == null) {
-												return true;
-											}
-											
-											if(($page == 'BUCHAREST') && ($_SESSION['operator'] == 'florentina.burnuz@rohel.ro')) {
-												return true;
-											}
-											
-											if(($page == 'BUCHAREST') && ($_SESSION['operator'] == 'raluca.rada@rohel.ro')) {
-												return true;
-											}
-											
-											if(($page == 'ATHENS') && ($_SESSION['operator'] == 'giannakou@unit-hellas.gr')) {
-												return true;
-											}
-											
-											if(($page == 'THESSALONIKI') && ($_SESSION['operator'] == 'vagia@unit-hellas.gr')) {
-												return true;
-											}
-											
-											if(($page == 'KISHINEV') && ($_SESSION['operator'] == 'tatiana@translink.md')) {
-												return true;
-											}
-										}
-										
-										return false;
-									 }
-//			case Utils::$PY_APPROVE: return $_SESSION['operator_class']['payments'];
-			case Utils::$SET_CUSTOMS: return $_SESSION['operator_class']['set_customs'];
-			case Utils::$SET_UNLOADING: return $_SESSION['operator_class']['set_unloading'];
+			case Utils::$REPORTS: return $_SESSION['operator']['reports'];
+			case Utils::$INSERT: return $_SESSION['operator']['insert'];
 			default: return false;
 		}
 	}
 	
 	public static function authorizedDocs() {		
-		if (!isset($_SESSION ['operator_id'])) {
+		if (!isset($_SESSION ['operator']['id'])) {
 			return false;
 		}
 	}
 	
-	public static function all_documents($trip_id, $number) {
-		$invoices = intval(DB::getMDB()->queryOneField('count(1)', 'select count(1) from documents where deleted=0 and trip_id=%d and type="INVOICE" and status="OK"', $trip_id));
-		$cmrs = intval(DB::getMDB()->queryOneField('count(1)', 'select count(1) from documents where deleted=0 and trip_id=%d and type="CMR" and status="OK"', $trip_id));
-		$custom_documents = intval(DB::getMDB()->queryOneField('count(1)', 'select count(1) from documents where deleted=0 and trip_id=%d and type="CUSTOMS" and status="OK"', $trip_id));
-		
-		if($_SESSION['application'] == 'BG') {
-			return (($invoices == 1) && ($cmrs == $number));
-		}
-		
-		if($_SESSION['application'] == 'RS') {
-			return ($cmrs == $number);
-		}
-		
-		if($_SESSION['application'] == 'RU') {
-			return (($invoices == 1) && ($cmrs == $number) && ($custom_documents == $number));
-		}
-		
-		return false;
-	}
-
-	public static function all_CMR_OK($trip_id) {
-		$row = DB::getMDB()->queryFirstRow('select * from trips where id=%d', $trip_id);
-		$customers = explode("+", $row['client']);
-		$cnumber = sizeof($customers);
-		
-		$cmr_nok = intval(DB::getMDB()->queryOneField('count(1)', 'select count(1) from documents where deleted=0 and trip_id=%d and type="CMR" and status="NOK"', $trip_id));
-		$cmr_ok = intval(DB::getMDB()->queryOneField('count(1)', 'select count(1) from documents where deleted=0 and trip_id=%d and type="CMR" and status="OK"', $trip_id));
-		
-		return (($cmr_ok == $cnumber) && ($cmr_nok == 0));
-	}
-	
-	public static function computePlannedPaymentDate_RU($trip_id) {
-		$row = DB::getMDB()->queryFirstRow('select * from trips where id=%d', $trip_id);
-		$original_date = date('Y-m-d', strtotime(DB::getMDB()->queryOneField('max(reception_date)', 'select max(reception_date) from documents where type="CMR" and status="OK" and deleted=0 and trip_id=%d', $trip_id)));
-		
-		// default
-		$planned_date = date('Y-m-d', strtotime($original_date. ' + 25 days'));
-		
-		if($row['due_agency'] == 'BUCHAREST') {
-			$planned_date = date('Y-m-d', strtotime($original_date. ' + 25 days'));
-		}
-		
-		if($row['due_agency'] == 'KISHINEV') {
-			$planned_date = date('Y-m-d', strtotime($original_date. ' + 21 days'));
-		}
-		
-		if(($row['registration'] == 'GREECE') && (($row['due_agency'] == 'ATHENS') || ($row['due_agency'] == 'SALONIC'))) {
-			$planned_date = date('Y-m-d', strtotime($original_date. ' + 45 days')); // Changed 04.01.2016 - original value = 60 days
-		}
-		
-		if((!($row['registration'] == 'GREECE')) && (($row['due_agency'] == 'ATHENS') || ($row['due_agency'] == 'SALONIC'))) {
-			$planned_date = date('Y-m-d', strtotime($original_date. ' + 30 days')); // Changed 04.01.2016 - original value = 37 days
-		}
-		
-//		$old_planned_date = DB::getMDB()->queryOneField('planned_payment_date', 'select planned_payment_date from trips where id=%d and status=0', $trip_id);		
-//		if(($old_planned_date == null) || ((($old_planned_date != null) && ($planned_date > date('Y-m-d', strtotime($old_planned_date)))))) {
-//			echo '<br>Original date: ['.$original_date.'], Old planned date: ['.$old_planned_date.'], Planned date: ['.$planned_date.']';
-		
-		DB::getMDB()->update('trips', array(
-			'planned_payment_date' => $planned_date,
-			'OPERATOR_ID' => $_SESSION['operator_id'],
-			'OPERATOR' => $_SESSION['operator'],
-			), "id=%d", $trip_id);
-		
-		Utils::audit ('trips', 'planned_payment_date', $trip_id, $planned_date);
-
-//		}		
-	}
-	
-	public static function computePlannedPaymentDate_BG($trip_id) {
-		/******
-		 * Manual entry only
-		 ******/
-	}
-	
-	public static function computePlannedPaymentDate_RS($trip_id) {
-		/******
-		 * Manual entry only
-		 ******/
-	}
-	
-	public static function alertOP($trip_id) {
-		$results = DB::getMDB()->query ( "SELECT * FROM users WHERE CLASS>0 AND APP_".$_SESSION['application']."=1 AND (approve_op=1 or OPERATOR_ID=(select originator from trips where id=".$trip_id."))" );
-		if ($results != null) {
-			$ameta = DB::getMDB()->queryOneField('ameta', "SELECT ameta FROM trips WHERE id=%d", $trip_id);
-			$doc = DB::getMDB()->queryFirstRow("SELECT * FROM documents WHERE trip_id=%d AND type='CMR' AND status='NOK' AND deleted=0 ORDER BY SYS_UPDATE_DATE DESC ", $trip_id);
-			
-			$mail = new PHPMailer ();
-			$mail->CharSet = 'utf-8';
-			/*
-			 * sendmail()
-			 *
-			$mail->isMail ();
-			$mail->setFrom ( "no-reply@rohel.ro", "ROHEL Web Team" );
-			$mail->addReplyTo ( "no-reply@rohel.ro", "ROHEL Web Team" );
-			 *
-			 *
-			 */
-			 
-			/*
-			 * smtp()
-			 */
-			$mail->isSMTP();
-			$mail->SMTPDebug = 2; // 0 = production
-			$mail->Debugoutput = 'html';
-			$mail->Host = "mail.rohel.ro";
-			$mail->Port = 465;
-			$mail->SMTPAuth = true;
-			$mail->Username = "webmaster@rohel.ro";
-			$mail->Password = "MST-web414";
-			$mail->setFrom('webmaster@rohel.ro', 'ROHEL Web Team');
-			$mail->addReplyTo('replyto@rohel.ro', 'No reply');
-
-			$mail->Subject = "NOK CMR added to AMETA ".$ameta;
-
-			foreach ( $results as $row ) {
-				$mail->addAddress ( $row['OPERATOR'], $row['OPERATOR'] );
-			}
-
-/*
-			$mail->addAddress ( 'cristian.ungureanu@gmail.com', '' );
-			$mail->addAddress ( 'jo.ioana.pavel@gmail.com', '' );
-*/
-
-			ob_start ();
-			include_once (dirname ( __FILE__ ) . "/../html/op.html");
-			$body = ob_get_clean ();
-			$mail->msgHTML ( $body, dirname ( __FILE__ ), true ); // Create message bodies and embed images
-		                                                      
-			// send the message, check for errors
-			if (! $mail->send ()) {
-				// error
-			}
-		}
-	}
-
-	public static function alertFN($trip_id) {
-		$results = DB::getMDB()->query ( "SELECT * FROM users WHERE CLASS>0 AND APP_".$_SESSION['application']."=1 AND approve_op=1" );
-		if ($results != null) {
-			$trip = DB::getMDB()->queryFirstRow("SELECT * FROM trips WHERE id=%d", $trip_id);
-			
-			$mail = new PHPMailer ();
-			$mail->CharSet = 'utf-8';
-
-			/*
-			 * sendmail()
-			 *
-			$mail->isMail ();
-			$mail->setFrom ( "no-reply@rohel.ro", "ROHEL Web Team" );
-			$mail->addReplyTo ( "no-reply@rohel.ro", "ROHEL Web Team" );
-			 *
-			 *
-			 */
-			 
-			/*
-			 * smtp()
-			 */
-			$mail->isSMTP();
-			$mail->SMTPDebug = 2; // 0 = production
-			$mail->Debugoutput = 'html';
-			$mail->Host = "mail.rohel.ro";
-			$mail->Port = 465;
-			$mail->SMTPAuth = true;
-			$mail->Username = "webmaster@rohel.ro";
-			$mail->Password = "MST-web414";
-			
-			$mail->setFrom('webmaster@rohel.ro', 'ROHEL Web Team');
-			$mail->addReplyTo('replyto@rohel.ro', 'No reply');
-			$mail->Subject = "New payment date for AMETA ".$trip['ameta'];
-
-			foreach ( $results as $row ) {
-				$mail->addAddress ( $row['OPERATOR'], $row['OPERATOR'] );
-			}
-
-/*
-			$mail->addAddress ( 'cristian.ungureanu@gmail.com', '' );
-			$mail->addAddress ( 'jo.ioana.pavel@gmail.com', '' );
-*/
-
-			ob_start ();
-			include_once (dirname ( __FILE__ ) . "/../html/fn.html");
-			$body = ob_get_clean ();
-			$mail->msgHTML ( $body, dirname ( __FILE__ ), true ); // Create message bodies and embed images
-		                                                      
-			// send the message, check for errors
-			if (! $mail->send ()) {
-				// error
-			}
-		}
-	}
-
     public static function audit_update(string $table, string $row, int $id) {
 	    error_log('audit_update with ['.$table.'], ['.$row.'], ['.$id.']');
 
@@ -822,7 +562,7 @@ class Utils {
 
                 break;
             }
-            case 'cargo_trucks': {
+            case 'cargo_truck': {
                 // TODO: Read it from file
                 $a = Audit::readTruck($id);
 

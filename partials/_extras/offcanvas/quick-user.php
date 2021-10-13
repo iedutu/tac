@@ -18,7 +18,7 @@
 				<!--begin::Header-->
 				<div class="d-flex align-items-center mt-5">
 					<div class="d-flex flex-column">
-						<div class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"><?=ucfirst($_SESSION['operator_class']['country']);?></div>
+						<div class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"><?=ucfirst($_SESSION['operator']['country-id']);?></div>
 						<div class="navi mt-1">
 							<a href="#" class="navi-item">
 								<span class="navi-link p-0 pb-2">
@@ -37,7 +37,7 @@
 											<!--end::Svg Icon-->
 										</span>
 									</span>
-									<span class="navi-text text-muted text-hover-primary"><?=$_SESSION['operator'];?></span>
+									<span class="navi-text text-muted text-hover-primary"><?=$_SESSION['operator']['username'];?></span>
 								</span>
 							</a>
 						</div>

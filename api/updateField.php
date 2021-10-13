@@ -35,7 +35,7 @@ if(isset($_POST['id'])) {
             {
                 DB::getMDB()->update($table, array(
                     $_POST['id'] => DB::getMDB()->sqleval("str_to_date(%s, %s)", $_POST['value'], Utils::$SQL_DATE_FORMAT),
-                    'operator' => $_SESSION['operator'],
+                    'operator' => $_SESSION['operator']['username'],
                 ), "id=%d", $_SESSION['entry-id']);
 
                 break;
@@ -43,7 +43,7 @@ if(isset($_POST['id'])) {
             default: {
                 DB::getMDB()->update($table, array(
                     $_POST['id'] => $_POST['value'],
-                    'operator' => $_SESSION['operator'],
+                    'operator' => $_SESSION['operator']['username'],
                 ), "id=%d", $_SESSION['entry-id']);
 
                 break;

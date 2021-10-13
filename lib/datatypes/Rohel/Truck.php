@@ -22,13 +22,13 @@ class Truck extends \Google\Protobuf\Internal\Message
      */
     protected $operator = '';
     /**
-     * Generated from protobuf field <code>string originator = 3;</code>
+     * Generated from protobuf field <code>int32 originator = 3;</code>
      */
-    protected $originator = '';
+    protected $originator = 0;
     /**
-     * Generated from protobuf field <code>string recipient = 4;</code>
+     * Generated from protobuf field <code>int32 recipient = 4;</code>
      */
-    protected $recipient = '';
+    protected $recipient = 0;
     /**
      * Generated from protobuf field <code>string accepted_by = 5;</code>
      */
@@ -114,8 +114,8 @@ class Truck extends \Google\Protobuf\Internal\Message
      *
      *     @type int $id
      *     @type string $operator
-     *     @type string $originator
-     *     @type string $recipient
+     *     @type int $originator
+     *     @type int $recipient
      *     @type string $accepted_by
      *     @type int $status
      *     @type string $from_city
@@ -187,8 +187,8 @@ class Truck extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string originator = 3;</code>
-     * @return string
+     * Generated from protobuf field <code>int32 originator = 3;</code>
+     * @return int
      */
     public function getOriginator()
     {
@@ -196,21 +196,21 @@ class Truck extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string originator = 3;</code>
-     * @param string $var
+     * Generated from protobuf field <code>int32 originator = 3;</code>
+     * @param int $var
      * @return $this
      */
     public function setOriginator($var)
     {
-        GPBUtil::checkString($var, True);
+        GPBUtil::checkInt32($var);
         $this->originator = $var;
 
         return $this;
     }
 
     /**
-     * Generated from protobuf field <code>string recipient = 4;</code>
-     * @return string
+     * Generated from protobuf field <code>int32 recipient = 4;</code>
+     * @return int
      */
     public function getRecipient()
     {
@@ -218,13 +218,13 @@ class Truck extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string recipient = 4;</code>
-     * @param string $var
+     * Generated from protobuf field <code>int32 recipient = 4;</code>
+     * @param int $var
      * @return $this
      */
     public function setRecipient($var)
     {
-        GPBUtil::checkString($var, True);
+        GPBUtil::checkInt32($var);
         $this->recipient = $var;
 
         return $this;

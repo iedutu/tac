@@ -4,35 +4,9 @@ session_start();
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 require_once $_SERVER["DOCUMENT_ROOT"]."/lib/class-list-util.php";
 
-if(!isset($_SESSION["operator_id"])) {
-    header ( 'Location: index.php?page=login' );
+if(!isset($_SESSION['operator']['id'])) {
     exit ();
 }
-
-$condition = '';
-$separator = '';
-
-if($_SESSION['operator_class']['turkey']) {
-    $condition = $condition.'turkey = 1';
-    $separator = ' OR ';
-}
-if($_SESSION['operator_class']['greece']) {
-    $condition = $condition.$separator.'greece = 1';
-    $separator = ' OR ';
-}
-if($_SESSION['operator_class']['serbia']) {
-    $condition = $condition.$separator.'serbia = 1';
-    $separator = ' OR ';
-}
-if($_SESSION['operator_class']['romania']) {
-    $condition = $condition.$separator.'romania = 1';
-}
-
-if($_SESSION['operator_class']['moldova']) {
-    $condition = $condition.$separator.'moldova = 1';
-}
-
-error_log($_REQUEST['sort']['field']);
 
 // Sorting
 // Cleaning up the request from the other pages.
@@ -51,6 +25,7 @@ else {
     }
 }
 
+// Settings
 $sort  = ! empty($_REQUEST['sort']['sort']) ? $_REQUEST['sort']['sort'] : 'desc';
 $field = ! empty($_REQUEST['sort']['field']) ? $_REQUEST['sort']['field'] : 'id';
 
@@ -65,38 +40,46 @@ if (is_array($query)) {
     }
 }
 
-error_log('Filter to be applied: '.$filter);
-
-// 25.01.2017. Removed the OR status=2 clause to clean-up the closed requests.
 try {
     $result = DB::getMDB()->query ( "
                        SELECT
-                            id,
-                            DATE_FORMAT(expiration, %s) expiration,
-                            client,
-                            from_city,
-                            to_city,
-                            status,
-                            ameta,
-                            plate_number,
-                            order_type,
-                            originator_office,
-                            recipient_office,
-                            originator_name,
-                            recipient_name
+                            a.id id,
+                            DATE_FORMAT(a.expiration, %s) expiration,
+                            a.client client,
+                            a.from_city from_city,
+                            a.to_city to_city,
+                            a.status status,
+                            a.ameta ameta,
+                            a.plate_number plate_number,
+                            a.order_type order_type,
+                            b.name originator_name,
+                            c.name recipient_name,
+                            d.name originator_office,
+                            e.name recipient_office 
                        FROM 
-                            cargo_request 
+                            cargo_request a,
+                            cargo_users b, 
+                            cargo_users c, 
+                            cargo_offices d, 
+                            cargo_offices e
                        WHERE 
 						(
-							((status = 1) AND (SYSDATE() < (expiration + INTERVAL 1 DAY))) OR
-							((status = 2) AND (SYSDATE() < (acceptance + INTERVAL %d DAY)))
+							((a.status = 1) AND (SYSDATE() < (a.expiration + INTERVAL 1 DAY))) OR
+							((a.status = 2) AND (SYSDATE() < (a.acceptance + INTERVAL %d DAY)))
 						)
 						AND
+                        (
+                            (a.originator_id=b.id and b.office_id=d.id)
+                            AND
+                            (a.recipient_id=c.id and c.office_id=e.id)
+                        )
+                        AND
 						(
-							originator in (SELECT username FROM cargo_users WHERE ".$condition.") OR
-							recipient in (SELECT username FROM cargo_users WHERE ".$condition.")
+                            (a.originator_id=b.id AND b.country_id=1)
+                            OR
+                            (a.recipient_id=c.id AND c.country_id=1)
 						)
-					    order by ".$field." ".$sort, Utils::$SQL_DATE_FORMAT, Utils::$CARGO_PERIOD);
+					    order by ".$field." ".$sort, Utils::$SQL_DATE_FORMAT, Utils::$CARGO_PERIOD, $_SESSION['operator']['country-id']);
 
     // error_log(DB::getMDB()->lastQuery());
 }

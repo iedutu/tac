@@ -2,8 +2,8 @@
 
 use PHPMailer\PHPMailer\PHPMailer;
 
-if (! isset ( $_SESSION ['operator_id'] )) {
-	header ( 'Location: index.php?page=login' );
+if (! isset ( $_SESSION ['operator']['id'] )) {
+	header ( 'Location: /?page=login' );
 	exit ();
 }
 

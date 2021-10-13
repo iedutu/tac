@@ -23,26 +23,27 @@ if(is_null($truck)) {
  * $editable['recipient]
  */
 $editable = DB_utils::isEditable($truck->getOriginator(), $truck->getRecipient());
-if($truck->getStatus() > 0) {
+
+if($truck->getStatus() > 1) {
     $editable['originator'] = false;
 }
 
 $status_code = '';
 
 switch($truck->getStatus()) {
-    case 0: {
+    case 1: {
         $status_code = '<span class="label label-lg label-info label-inline mr-2 font-weight-bolder">NEW</span>';
         break;
     }
-    case 1: {
+    case 2: {
         $status_code = '<span class="label label-lg label-success label-inline mr-2 font-weight-bolder">ACCEPTED</span>';
         break;
     }
-    case 2: {
+    case 3: {
         $status_code = '<span class="label label-lg label-warning label-inline mr-2">CLOSED</span>';
         break;
     }
-    case 3: {
+    case 4: {
         $status_code = '<span class="label label-lg label-danger label-inline mr-2">CANCELLED</span>';
         break;
     }
@@ -52,9 +53,31 @@ switch($truck->getStatus()) {
     }
 }
 
+if(DB_utils::countryMatch($truck->getOriginator())) {
+    $_SESSION['role'] = 'originator';
+}
+else {
+    if(DB_utils::countryMatch($truck->getRecipient())) {
+        $_SESSION['role'] = 'recipient';
+    }
+    else {
+        $_SESSION['role'] = 'outsider';
+    }
+}
+
+$originator = DB_utils::selectUserById($truck->getOriginator());
+$recipient = DB_utils::selectUserById($truck->getRecipient());
+
 $audit = Audit::readTruck($truck->getId());
 $class_text_new = 'text-primary';
 $class_text_default = '';
+
+if($editable['originator']) {
+    $_SESSION['originator'] = true;
+}
+else {
+    unset($_SESSION['originator']);
+}
 ?>
 
 <div class="row">
@@ -95,7 +118,7 @@ $class_text_default = '';
                             <tr>
                                 <td class="text-right">Truck originator</td>
                                 <td>
-                                    <p style="display: inline"><?=$truck->getOriginator()?></p>
+                                    <p style="display: inline"><?=$originator->getUsername()?></p>
                                 </td>
                             </tr>
                             <tr>
@@ -159,7 +182,7 @@ $class_text_default = '';
                             <tr>
                                 <td class="text-right">Truck recipient</td>
                                 <td>
-                                    <p style="display: inline" class="<?=($audit->getRecipient()?$class_text_new:$class_text_default)?>"><?=$truck->getRecipient()?></p>
+                                    <p style="display: inline"><?=$recipient->getUsername()?></p>
                                 </td>
                             </tr>
                             <tr>
@@ -244,8 +267,8 @@ $class_text_default = '';
                             <div class="row">
                                 <form class="form" id="kt_rohel_truck_stop_form" action="/api/insertTruckStop.php" method="post">
                                     <input type="hidden" name="_submitted" value="true" />
-                                    <input type="hidden" name="recipient" value="<?=$truck->getRecipient()?>" />
-                                    <input type="hidden" name="originator" value="<?=$truck->getOriginator()?>" />
+                                    <input type="hidden" name="recipient" value="<?=$recipient->getUsername()?>" />
+                                    <input type="hidden" name="originator" value="<?=$originator->getUsername()?>" />
                                     <div id="kt_new_stop">
                                         <div class="form-group row">
                                             <div class="col-md-2">
@@ -306,7 +329,7 @@ $class_text_default = '';
                                     <div class="col-lg-8">
                                         <?php
                                         // NEW truck - can be cancelled
-                                        if($truck->getStatus() == 0) {
+                                        if($truck->getStatus() == 1) {
                                             echo '<button type="submit" class="btn btn-primary btn-danger btn-lg" data-toggle="tooltip" title="Click to cancel!">Remove/Cancel truck</button>';
                                         }
                                         else {
@@ -327,3 +350,4 @@ $class_text_default = '';
             <!--end::Card-->
         </div>
     </div>
+</div>

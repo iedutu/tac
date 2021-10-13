@@ -45,7 +45,7 @@ try {
 
     // Redo the stop_id numbers on the remaining records
     // TODO: This might be MySQL specific!!!
-    DB::getMDB()->get()->multi_query('SET @num := -1; UPDATE cargo_truck_stops SET stop_id = @num := (@num+1) WHERE truck_id=1 ORDER BY stop_id;');
+    DB::getMDB()->get()->multi_query('SET @num := -1; UPDATE cargo_truck_stops SET stop_id = @num := (@num+1) WHERE truck_id='.$_SESSION['entry-id'].' ORDER BY stop_id;');
 }
 catch (MeekroDBException $mdbe) {
     error_log("Database error: ".$mdbe->getMessage());

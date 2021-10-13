@@ -28,23 +28,23 @@ if($cargo->getStatus() > 0) {
 $status_code = '';
 
 switch($cargo->getStatus()) {
-    case 0: {
+    case 1: {
         $status_code = '<span class="label label-lg label-info label-inline mr-2 font-weight-bolder">NEW</span>';
         break;
     }
-    case 1: {
+    case 2: {
         $status_code = '<span class="label label-lg label-success label-inline mr-2 font-weight-bolder">ACCEPTED</span>';
         break;
     }
-    case 2: {
+    case 3: {
         $status_code = '<span class="label label-lg label-warning label-inline mr-2">CLOSED</span>';
         break;
     }
-    case 3: {
+    case 4: {
         $status_code = '<span class="label label-lg label-danger label-inline mr-2">CANCELLED</span>';
         break;
     }
-    case 4: {
+    case 5: {
         $status_code = '<span class="label label-lg label-dark label-inline mr-2">EXPIRED</span>';
         break;
     }
@@ -54,11 +54,11 @@ switch($cargo->getStatus()) {
     }
 }
 
-if(DB_utils::originatorCountryMatch($cargo->getOriginator())) {
+if(DB_utils::countryMatch($cargo->getOriginator())) {
     $_SESSION['role'] = 'originator';
 }
 else {
-    if(DB_utils::recipientCountryMatch($cargo->getRecipient())) {
+    if(DB_utils::countryMatch($cargo->getRecipient())) {
         $_SESSION['role'] = 'recipient';
     }
     else {
@@ -66,12 +66,15 @@ else {
     }
 }
 
+$originator = DB_utils::selectUserById($cargo->getOriginator());
+$recipient = DB_utils::selectUserById($cargo->getRecipient());
+
 $audit = Audit::readCargo($cargo->getId(), $_SESSION['role']);
 $class_text_new = 'text-primary';
 $class_text_default = '';
 
 ?>
-<input type="hidden" id="kt_operator" value="<?=$_SESSION['operator']?>" />
+<input type="hidden" id="kt_operator" value="<?=$_SESSION['operator']['name']?>" />
 <input type="hidden" id="kt_today" value="<?=date(Utils::$PHP_DATE_FORMAT)?>" />
 
 <div class="row">
@@ -105,7 +108,7 @@ $class_text_default = '';
                                 <tr>
                                     <td class="text-right">Cargo originator</td>
                                     <td>
-                                        <p style="display: inline"><?=$cargo->getOriginator()?></p>
+                                        <p style="display: inline"><?=$originator->getUsername()?></p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -243,7 +246,7 @@ $class_text_default = '';
                                 <tr>
                                     <td class="text-right">Cargo recipient</td>
                                     <td>
-                                        <p style="display: inline"><?=$cargo->getRecipient()?></p>
+                                        <p style="display: inline"><?=$recipient->getUsername()?></p>
                                     </td>
                                 </tr>
                                 <tr>

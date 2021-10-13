@@ -5,7 +5,7 @@ include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
 use PHPMailer\PHPMailer\PHPMailer;
 
-if (! Utils::authorized(null, Utils::$INSERT)) {
+if (! Utils::authorized(Utils::$INSERT)) {
     error_log("User not authorized to insert data in the database.");
 	header ( 'Location: /' );
 	exit ();
@@ -15,21 +15,13 @@ if (isset ( $_POST ['_submitted'] )) {
     error_log("Trying to insert.");
 
     try {
-        $row = DB::getMDB()->query('select a.name o_office, b.name o_name from cargo_offices a, cargo_users b where a.id=b.office_id and b.username=%s', $_SESSION['operator']);
-        $originator_name = $row[0]['o_name'];
-        $originator_office = $row[0]['o_office'];
-
-        $row = DB::getMDB()->query('select a.name r_office, b.name r_name from cargo_offices a, cargo_users b where a.id=b.office_id and b.username=%s', $_POST['recipient']);
-        $recipient_name = $row[0]['r_name'];
-        $recipient_office = $row[0]['r_office'];
-
         DB::getMDB()->insert('cargo_request', array(
-            'originator' => $_SESSION['operator'],
-            'operator' => $_SESSION['operator'],
+            'originator_id' => $_SESSION['operator']['id'],
+            'operator' => $_SESSION['operator']['username'],
             'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
             'status' => 1,
             'client' => $_POST ['client'],
-            'recipient' => $_POST ['recipient'],
+            'recipient_id' => $_POST ['recipient'],
             'from_city' => $_POST ['from_city'],
             'to_city' => $_POST ['to_city'],
             'from_address' => $_POST ['from_address'],
@@ -45,11 +37,7 @@ if (isset ( $_POST ['_submitted'] )) {
             'instructions' => $_POST ['instructions'],
             'freight' => $_POST ['freight'],
             'order_type' => $_POST ['order_type'],
-            'adr' => $_POST ['adr'],
-            'originator_name' => $originator_name,
-            'originator_office' => $originator_office,
-            'recipient_name' => $recipient_name,
-            'recipient_office' => $recipient_office
+            'adr' => $_POST ['adr']
         ));
 
         Utils::cargo_audit('cargo_request', 'NEW-ENTRY', null, $_POST ['recipient']);

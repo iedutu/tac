@@ -5,7 +5,7 @@ include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
 use PHPMailer\PHPMailer\PHPMailer;
 
-if (! Utils::authorized(null, Utils::$INSERT)) {
+if (! Utils::authorized(Utils::$INSERT)) {
     error_log("User not authorized to insert data in the database.");
 	header ( 'Location: /' );
 	exit ();
@@ -16,11 +16,11 @@ if (isset ( $_POST ['_submitted'] )) {
 
     try {
         DB::getMDB()->insert('cargo_truck', array(
-            'originator' => $_SESSION['operator'],
-            'operator' => $_SESSION['operator'],
+            'originator_id' => $_SESSION['operator']['id'],
+            'operator' => $_SESSION['operator']['username'],
             'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
             'status' => 1,
-            'recipient' => $_POST ['recipient'],
+            'recipient_id' => $_POST ['recipient'],
             'from_city' => $_POST ['from_city'],
             'loading_date' => (($_POST ['rohel_truck_loading'] == '') ? null : DB::getMDB()->sqleval("str_to_date(%s, %s)",$_POST ['rohel_truck_loading'], Utils::$SQL_DATE_FORMAT)),
             'unloading_date' => (($_POST ['rohel_truck_unloading'] == '') ? null : DB::getMDB()->sqleval("str_to_date(%s, %s)",$_POST ['rohel_truck_unloading'], Utils::$SQL_DATE_FORMAT)),
