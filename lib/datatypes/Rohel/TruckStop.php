@@ -45,6 +45,18 @@ class TruckStop extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>int32 truck_id = 8;</code>
      */
     protected $truck_id = 0;
+    /**
+     * Generated from protobuf field <code>uint64 creation_date = 9;</code>
+     */
+    protected $creation_date = 0;
+    /**
+     * Generated from protobuf field <code>uint64 update_date = 10;</code>
+     */
+    protected $update_date = 0;
+    /**
+     * Generated from protobuf field <code>string operator = 11;</code>
+     */
+    protected $operator = '';
 
     /**
      * Constructor.
@@ -60,6 +72,9 @@ class TruckStop extends \Google\Protobuf\Internal\Message
      *     @type float $volume
      *     @type int $stop_id
      *     @type int $truck_id
+     *     @type int|string $creation_date
+     *     @type int|string $update_date
+     *     @type string $operator
      * }
      */
     public function __construct($data = NULL) {
@@ -239,6 +254,72 @@ class TruckStop extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkInt32($var);
         $this->truck_id = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>uint64 creation_date = 9;</code>
+     * @return int|string
+     */
+    public function getCreationDate()
+    {
+        return $this->creation_date;
+    }
+
+    /**
+     * Generated from protobuf field <code>uint64 creation_date = 9;</code>
+     * @param int|string $var
+     * @return $this
+     */
+    public function setCreationDate($var)
+    {
+        GPBUtil::checkUint64($var);
+        $this->creation_date = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>uint64 update_date = 10;</code>
+     * @return int|string
+     */
+    public function getUpdateDate()
+    {
+        return $this->update_date;
+    }
+
+    /**
+     * Generated from protobuf field <code>uint64 update_date = 10;</code>
+     * @param int|string $var
+     * @return $this
+     */
+    public function setUpdateDate($var)
+    {
+        GPBUtil::checkUint64($var);
+        $this->update_date = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>string operator = 11;</code>
+     * @return string
+     */
+    public function getOperator()
+    {
+        return $this->operator;
+    }
+
+    /**
+     * Generated from protobuf field <code>string operator = 11;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setOperator($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->operator = $var;
 
         return $this;
     }

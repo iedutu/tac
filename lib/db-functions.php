@@ -1,14 +1,5 @@
 <?php
 
-use Billing\Address;
-use Billing\Balance;
-use Billing\Card;
-use Billing\Car;
-use Billing\Notification;
-use Billing\Subscriber;
-use Billing\Vendor;
-use Billing\Station;
-
 include_once $_SERVER['DOCUMENT_ROOT'] . "/vendor/autoload.php";
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/lib/datatypes/GPBMetadata/Types.php";
@@ -16,24 +7,112 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/lib/datatypes/Rohel/Request.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/lib/datatypes/Rohel/Truck.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/lib/datatypes/Rohel/TruckStop.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/lib/datatypes/Rohel/User.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/lib/datatypes/Rohel/TruckMatch.php";
 
-use \Rohel\Request;
-use \Rohel\Truck;
+use Rohel\TruckMatch;
+use Rohel\Request;
+use Rohel\Truck;
 use Rohel\TruckStop;
-use \Rohel\User;
+use Rohel\User;
 
 
 include $_SERVER['DOCUMENT_ROOT'] . "/lib/db-settings.php";
 
 class DB_utils
 {
-    public static function selectCargoFromOptions() {
+    // Private functions
+    static function row2request($row): Request
+    {
+        $request = new Request();
 
+        if(!empty($row['SYS_CREATION_DATE'])) $request->setCreationDate(strtotime($row['SYS_CREATION_DATE']));
+        if(!empty($row['SYS_UPDATE_DATE'])) $request->setUpdateDate(strtotime($row['SYS_UPDATE_DATE']));
+        if(!empty($row['acceptance'])) $request->setAcceptance(strtotime($row['acceptance']));
+        $request->setAcceptedBy($row['accepted_by']);
+        $request->setAdr($row['adr']);
+        $request->setAmeta($row['ameta']);
+        $request->setClient($row['client']);
+        $request->setCollies($row['collies']);
+        $request->setDescription($row['description']);
+        if(!empty($row['expiration'])) $request->setExpiration(strtotime($row['expiration']));
+        $request->setFreight($row['freight']);
+        $request->setFromAddress($row['from_address']);
+        $request->setFromCity($row['from_city']);
+        $request->setId($row['id']);
+        $request->setInstructions($row['instructions']);
+        if(!empty($row['loading_date'])) $request->setLoadingDate(strtotime($row['loading_date']));
+        $request->setLoadingMeters($row['loading_meters']);
+        $request->setOperator($row['operator']);
+        $request->setOrderType($row['order_type']);
+        $request->setOriginator($row['originator_id']);
+        $request->setPlateNumber($row['plate_number']);
+        $request->setRecipient($row['recipient_id']);
+        $request->setStatus($row['status']);
+        $request->setToAddress($row['to_address']);
+        $request->setToCity($row['to_city']);
+        if(!empty($row['unloading_date'])) $request->setUnloadingDate(strtotime($row['unloading_date']));
+        $request->setVolume($row['volume']);
+        $request->setWeight($row['weight']);
+
+        return $request;
     }
 
-    public static function selectOffices() {
+    static function row2truck($row): Truck
+    {
+        $truck = new Truck();
+
+        if(!empty($row['SYS_CREATION_DATE'])) $truck->setCreationDate(strtotime($row['SYS_CREATION_DATE']));
+        if(!empty($row['SYS_UPDATE_DATE'])) $truck->setUpdateDate(strtotime($row['SYS_UPDATE_DATE']));
+        if(!empty($row['acceptance'])) $truck->setAcceptance(strtotime($row['acceptance']));
+        $truck->setAcceptedBy($row['accepted_by']);
+        $truck->setAdr($row['adr']);
+        $truck->setAmeta($row['ameta']);
+        if(!empty($row['availability'])) $truck->setAvailability(strtotime($row['availability']));
+        $truck->setCargoType($row['cargo_type']);
+        $truck->setContractType($row['contract_type']);
+        $truck->setDetails($row['details']);
+        if(!empty($row['expiration'])) $truck->setExpiration(strtotime($row['expiration']));
+        $truck->setFreight($row['freight']);
+        $truck->setFromAddress($row['from_address']);
+        $truck->setFromCity($row['from_city']);
+        $truck->setId($row['id']);
+        if(!empty($row['loading_date'])) $truck->setLoadingDate(strtotime($row['loading_date']));
+        $truck->setOperator($row['operator']);
+        $truck->setOrderType($row['order_type']);
+        $truck->setOriginator($row['originator_id']);
+        $truck->setPlateNumber($row['plate_number']);
+        $truck->setStatus($row['status']);
+        $truck->setRecipient($row['recipient_id']);
+        $truck->setTruckType($row['truck_type']);
+        if(!empty($row['unloading_date'])) $truck->setUnloadingDate(strtotime($row['unloading_date']));
+
+        return $truck;
+    }
+
+    static function row2stop($row): TruckStop
+    {
+        $stop = new TruckStop();
+
+        if(!empty($row['SYS_CREATION_DATE'])) $stop->setCreationDate(strtotime($row['SYS_CREATION_DATE']));
+        if(!empty($row['SYS_UPDATE_DATE'])) $stop->setUpdateDate(strtotime($row['SYS_UPDATE_DATE']));
+        $stop->setId($row['id']);
+        $stop->setOperator($row['operator']);
+        $stop->setLoadingMeters($row['loading_meters']);
+        $stop->setVolume($row['volume']);
+        $stop->setWeight($row['weight']);
+        $stop->setTruckId($row['truck_id']);
+        $stop->setStopId($row['stop_id']);
+        if(!empty($row['cmr'])) $stop->setCmr($row['cmr']);
+        $stop->setCity($row['city']);
+
+        return $stop;
+    }
+
+    // Public functions
+    public static function selectOffices(): bool
+    {
         try {
-            $offices = DB::getMDB()->query('select * from cargo_offices order by importance asc');
+            $offices = DB::getMDB()->query('select * from cargo_offices order by importance');
             echo '<option value="">All</option>';
             foreach ($offices as $office) {
                 echo '<option value="'.$office['name'].'">'.$office['name'].'</option>';
@@ -48,11 +127,14 @@ class DB_utils
 
             return false;
         }
+
+        return true;
     }
 
-    public static function selectActiveUsers() {
+    public static function selectActiveUsers(): bool
+    {
         try {
-            $users = DB::getMDB()->query('SELECT * FROM cargo_users where (id <> %s) and (class < 2) order by name asc', $_SESSION['operator']['id']);
+            $users = DB::getMDB()->query('SELECT * FROM cargo_users where (id <> %s) and (class < 2) order by name', $_SESSION['operator']['id']);
             foreach ($users as $user) {
                 echo '<option value="'.$user['id'].'">'.$user['name'].'</option>';
             }
@@ -66,6 +148,8 @@ class DB_utils
 
             return false;
         }
+
+        return true;
     }
 
     public static function countryMatch(int $other): bool
@@ -116,36 +200,8 @@ class DB_utils
                 return null;
             }
 
-            $request = new Request();
+            return self::row2request($row);
 
-            if(!empty($row['acceptance'])) $request->setAcceptance(strtotime($row['acceptance']));
-            $request->setAcceptedBy($row['accepted_by']);
-            $request->setAdr($row['adr']);
-            $request->setAmeta($row['ameta']);
-            $request->setClient($row['client']);
-            $request->setCollies($row['collies']);
-            $request->setDescription($row['description']);
-            if(!empty($row['expiration'])) $request->setExpiration(strtotime($row['expiration']));
-            $request->setFreight($row['freight']);
-            $request->setFromAddress($row['from_address']);
-            $request->setFromCity($row['from_city']);
-            $request->setId($row['id']);
-            $request->setInstructions($row['instructions']);
-            if(!empty($row['loading_date'])) $request->setLoadingDate(strtotime($row['loading_date']));
-            $request->setLoadingMeters($row['loading_meters']);
-            $request->setOperator($row['operator']);
-            $request->setOrderType($row['order_type']);
-            $request->setOriginator($row['originator_id']);
-            $request->setPlateNumber($row['plate_number']);
-            $request->setRecipient($row['recipient_id']);
-            $request->setStatus($row['status']);
-            $request->setToAddress($row['to_address']);
-            $request->setToCity($row['to_city']);
-            if(!empty($row['unloading_date'])) $request->setUnloadingDate(strtotime($row['unloading_date']));
-            $request->setVolume($row['volume']);
-            $request->setWeight($row['weight']);
-
-            return $request;
         }
         catch (MeekroDBException $mdbe) {
             error_log("Database error: ".$mdbe->getMessage());
@@ -166,7 +222,7 @@ class DB_utils
     public static function updateRequest(Request $request): bool
     {
         try {
-            $row = DB::getMDB()->update ( 'cargo_request', array (
+            $result = DB::getMDB()->update ( 'cargo_request', array (
                 'acceptance' => $request->getAcceptance(),
                 'accepted_by' => $request->getAcceptedBy(),
                 'adr' => $request->getAdr(),
@@ -193,6 +249,10 @@ class DB_utils
                 'volume' => $request->getVolume(),
                 'weight' => $request->getWeight()
             ), "id=%d", $request->getId() );
+
+            DB::getMDB()->commit();
+
+            return $result;
         }
         catch (MeekroDBException $mdbe) {
             error_log("Database error: ".$mdbe->getMessage());
@@ -208,8 +268,6 @@ class DB_utils
 
             return false;
         }
-
-        return true;
     }
 
     public static function selectTruck(int $id): ?Truck
@@ -226,29 +284,7 @@ class DB_utils
                 return null;
             }
 
-            $truck = new Truck();
-            if(!empty($row['acceptance'])) $truck->setAcceptance(strtotime($row['acceptance']));
-            $truck->setAcceptedBy($row['accepted_by']);
-            $truck->setAdr($row['adr']);
-            $truck->setAmeta($row['ameta']);
-            if(!empty($row['availability'])) $truck->setAvailability(strtotime($row['availability']));
-            $truck->setCargoType($row['cargo_type']);
-            $truck->setContractType($row['contract_type']);
-            $truck->setDetails($row['details']);
-            if(!empty($row['expiration'])) $truck->setExpiration(strtotime($row['expiration']));
-            $truck->setFreight($row['freight']);
-            $truck->setFromAddress($row['from_address']);
-            $truck->setFromCity($row['from_city']);
-            $truck->setId($id);
-            if(!empty($row['loading_date'])) $truck->setLoadingDate(strtotime($row['loading_date']));
-            $truck->setOperator($row['operator']);
-            $truck->setOrderType($row['order_type']);
-            $truck->setOriginator($row['originator_id']);
-            $truck->setPlateNumber($row['plate_number']);
-            $truck->setStatus($row['status']);
-            $truck->setRecipient($row['recipient_id']);
-            $truck->setTruckType($row['truck_type']);
-            if(!empty($row['unloading_date'])) $truck->setUnloadingDate(strtotime($row['unloading_date']));
+            $truck = self::row2truck($row);
 
             // Add the truck stops
             $results = DB::getMDB()->query("select * 
@@ -256,7 +292,7 @@ class DB_utils
                                                      cargo_truck_stops 
                                                   where 
                                                      truck_id=%d
-                                                  order by stop_id asc", $id);
+                                                  order by stop_id", $id);
             if (is_null($results)) {
                 error_log('No cargo_truck_stops was found for truck_id='.$id.' in selectTruck(). At least one is required.');
 
@@ -274,6 +310,8 @@ class DB_utils
                 if(!empty($row['weight'])) $stop->setWeight($result['weight']);
                 if(!empty($row['volume'])) $stop->setVolume($result['volume']);
                 if(!empty($row['loading_meters'])) $stop->setLoadingMeters($result['loading_meters']);
+                if(!empty($row['SYS_CREATION_DATE'])) $stop->setCreationDate(strtotime($row['SYS_CREATION_DATE']));
+                if(!empty($row['SYS_UPDATE_DATE'])) $stop->setUpdateDate(strtotime($row['SYS_UPDATE_DATE']));
 
                 $stops[$i] = $stop;
                 $i++;
@@ -292,10 +330,48 @@ class DB_utils
         }
     }
 
+    public static function insertMatch(TruckMatch $match): bool
+    {
+        try {
+            DB::getMDB()->insert('cargo_match', array(
+                'operator' => $match->getOperator(),
+                'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
+                'status' => $match->getStatus(),
+                'originator_id' => $match->getOriginatorId(),
+                'recipient_id' => $match->getRecipientId(),
+                'from_city' => $match->getFromCity(),
+                'to_city' => $match->getToCity(),
+                'availability' => (empty($match->getAvailability()) ? null : DB::getMDB()->sqleval("FROM_UNIXTIME(%d)",$match->getAvailability())),
+                'order_type' => $match->getOrderType(),
+                'adr' => $match->getAdr(),
+                'ameta' => $match->getAmeta(),
+                'item_kind' => $match->getItemKind(),
+                'item_id' => $match->getItemId(),
+                'item_date' => (empty($match->getItemDate()) ? null : DB::getMDB()->sqleval("FROM_UNIXTIME(%d)",$match->getItemDate())),
+                'loading_meters' => $match->getLoadingMeters(),
+                'volume' => $match->getVolume(),
+                'weight' => $match->getWeight(),
+                'plate_number' => $match->getPlateNumber()
+            ));
+
+            DB::getMDB()->commit();
+        }
+        catch (MeekroDBException $mdbe) {
+            error_log("Database error: ".$mdbe->getMessage());
+            return false;
+        }
+        catch (Exception $e) {
+            error_log("Database error: ".$e->getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
     public static function updateTruck(Truck $truck): bool
     {
         try {
-            $row = DB::getMDB()->update ( 'cargo_truck', array (
+            $result = DB::getMDB()->update ( 'cargo_truck', array (
                 'acceptance' => $truck->getAcceptance(),
                 'accepted_by' => $truck->getAcceptedBy(),
                 'adr' => $truck->getAdr(),
@@ -311,14 +387,16 @@ class DB_utils
                 'plate_number' => $truck->getPlateNumber(),
                 'recipient' => $truck->getRecipient(),
                 'status' => $truck->getStatus(),
-                'to_address' => $truck->getToAddress(),
-                'to_city' => $truck->getToCity(),
                 'unloading_date' => $truck->getUnloadingDate(),
                 'availability' => $truck->getAvailability(),
                 'cargo_type' => $truck->getCargoType(),
                 'truck_type' => $truck->getTruckType(),
                 'contract_type' => $truck->getContractType()
             ), "id=%d", $truck->getId() );
+
+            DB::getMDB()->commit();
+
+            return $result;
         }
         catch (MeekroDBException $mdbe) {
             error_log("Database error: ".$mdbe->getMessage());
@@ -334,18 +412,19 @@ class DB_utils
 
             return false;
         }
-
-        return true;
     }
 
     public static function selectUser(string $username): ?User
     {
         try {
-            $row = DB::getMDB()->queryOneRow("select * 
+            $row = DB::getMDB()->queryoneRow("select a.*, b.name office
                                                   from 
-                                                     cargo_users 
-                                                  where 
-                                                     username=%s", $username);
+                                                     cargo_users a,
+                                                     cargo_offices b
+                                                  where
+                                                     (a.office_id = b.id)
+                                                     and
+                                                     (a.username=%s)", $username);
             if (is_null($row)) {
                 error_log("No cargo_users was found for username=".$username);
 
@@ -361,6 +440,7 @@ class DB_utils
             $user->setCountryId($row['country_id']);
             $user->setInsert($row['insert']);
             $user->setReports($row['reports']);
+            $user->setOffice($row['office']);
 
             return $user;
         }
@@ -418,6 +498,72 @@ class DB_utils
             $_SESSION['alert']['type'] = 'error';
             $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
 
+            return null;
+        }
+    }
+
+    public static function generateMatches() {
+        // Select all NEW and ACCEPTED trucks
+        try {
+            // Clean-up the table
+            DB::getMDB()->query('TRUNCATE cargo_match');
+
+            $t_rows = DB::getMDB()->query ('SELECT * FROM cargo_truck WHERE (status = 1) OR (status = 2) ORDER BY SYS_CREATION_DATE DESC');
+            $i = 0;
+            foreach($t_rows as $t_row) {
+                $truck = self::row2truck($t_row);
+                error_log('Truck created: '.$truck->getFromCity());
+
+                $s_rows = DB::getMDB()->query ('SELECT * FROM cargo_truck_stops WHERE truck_id=%d ORDER BY stop_id', $truck->getId());
+                $j = 0;
+                foreach($s_rows as $s_row) {
+                    $stop = self::row2stop($s_row);
+
+                    // Create the match
+                    $match = new TruckMatch();
+
+                    $match->setWeight($stop->getWeight());
+                    $match->setVolume($stop->getVolume());
+                    $match->setLoadingMeters($stop->getLoadingMeters());
+                    $match->setAdr($truck->getAdr());
+                    $match->setOrderType($truck->getOrderType());
+                    $match->setPlateNumber($truck->getPlateNumber());
+                    $match->setAmeta($truck->getAmeta());
+                    $match->setAvailability($truck->getAvailability());
+                    $match->setFromCity($truck->getFromCity());
+                    $match->setToCity($stop->getCity());
+                    $match->setItemDate($truck->getUnloadingDate());
+                    $match->setItemId($truck->getId());
+                    $match->setOrderType($truck->getOrderType());
+                    $match->setItemKind('truck');
+                    $match->setOperator($_SESSION['operator']['username']);
+                    $match->setOriginatorId($truck->getOriginator());
+                    $match->setRecipientId($truck->getRecipient());
+
+                    if($truck->getContractType() == 'Round-trip') {
+                        $match->setStatus(1);
+                    }
+                    else {
+                        if($truck->getContractType() == 'One-way') {
+                            $match->setStatus(2);
+                        }
+                        else {
+                            $match->setStatus(3);
+                        }
+                    }
+
+                    error_log('Going to insert: '.$match->getToCity());
+                    DB_utils::insertMatch($match);
+                    // unset($match);
+                }
+            }
+        }
+        catch (MeekroDBException $mdbe) {
+            error_log("Database error: ".$mdbe->getMessage());
+            return null;
+        }
+        catch (Exception $e) {
+            error_log("Database error: ".$e->getMessage());
             return null;
         }
     }

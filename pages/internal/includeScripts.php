@@ -15,6 +15,11 @@ switch($_SESSION['app']) {
 
         break;
     }
+    case 'matches': {
+        echo '<script src="/assets/js/data-matches-ajax.js"></script>';
+
+        break;
+    }
     case 'newTruck': {
         echo '<script src="/assets/js/datepicker-truck.js"></script>';
         echo '<script src="/assets/js/form-validation-truck.js"></script>';
@@ -52,7 +57,7 @@ switch($_SESSION['app']) {
         break;
     }
     case 'empty': {
-        echo '<script src="/assets/js/data-local.js"></script>';
+
         break;
     }
     default: {

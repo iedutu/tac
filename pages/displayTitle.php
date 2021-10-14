@@ -25,6 +25,11 @@ switch($_SESSION['app']) {
         echo '<title>ROHEL | Trucks</title>';
         break;
     }
+    case 'matches':
+    {
+        echo '<title>ROHEL | Matches</title>';
+        break;
+    }
     case 'newTruck':
     {
         echo '<title>ROHEL | Trucks | New</title>';

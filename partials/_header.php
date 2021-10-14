@@ -33,7 +33,7 @@
                                             </a>
                                         </li>
                                         <li class="menu-item <?=(Utils::isMatch())?'menu-item-active':''?>" aria-haspopup="true">
-                                            <a href="/?page=match" class="menu-link">
+                                            <a href="/?page=matches" class="menu-link">
                                                 <span class="menu-text">Matching</span>
                                             </a>
                                         </li>

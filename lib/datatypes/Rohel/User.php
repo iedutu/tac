@@ -45,6 +45,10 @@ class User extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>string name = 8;</code>
      */
     protected $name = '';
+    /**
+     * Generated from protobuf field <code>string office = 9;</code>
+     */
+    protected $office = '';
 
     /**
      * Constructor.
@@ -60,6 +64,7 @@ class User extends \Google\Protobuf\Internal\Message
      *     @type int $reports
      *     @type int $country_id
      *     @type string $name
+     *     @type string $office
      * }
      */
     public function __construct($data = NULL) {
@@ -239,6 +244,28 @@ class User extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkString($var, True);
         $this->name = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>string office = 9;</code>
+     * @return string
+     */
+    public function getOffice()
+    {
+        return $this->office;
+    }
+
+    /**
+     * Generated from protobuf field <code>string office = 9;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setOffice($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->office = $var;
 
         return $this;
     }

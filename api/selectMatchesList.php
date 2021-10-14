@@ -14,20 +14,20 @@ if(empty($_SESSION['previous_area'])) {
     $_REQUEST['sort']['sort'] = 'desc';
     $_REQUEST['sort']['field'] = 'id';
 
-    $_SESSION['previous_area'] = 'cargo';
+    $_SESSION['previous_area'] = 'matches';
 }
 else {
-    if(($_SESSION['previous_area'] == 'matches') || ($_SESSION['previous_area'] == 'truck')){
+    if(($_SESSION['previous_area'] == 'cargo') || ($_SESSION['previous_area'] == 'truck')){
         $_REQUEST['sort']['sort'] = 'desc';
         $_REQUEST['sort']['field'] = 'id';
 
-        $_SESSION['previous_area'] = 'cargo';
+        $_SESSION['previous_area'] = 'matches';
     }
 }
 
 // Settings
 $sort  = ! empty($_REQUEST['sort']['sort']) ? $_REQUEST['sort']['sort'] : 'desc';
-$field = ! empty($_REQUEST['sort']['field']) ? $_REQUEST['sort']['field'] : 'id';
+$field = ! empty($_REQUEST['sort']['field']) ? $_REQUEST['sort']['field'] : 'availability';
 
 // Filters
 $filter = '';
@@ -43,31 +43,32 @@ if (is_array($query)) {
 try {
     $result = DB::getMDB()->query ( "
                        SELECT
-                            a.id id,
-                            DATE_FORMAT(a.expiration, %s) expiration,
-                            a.client client,
-                            a.from_city from_city,
-                            a.to_city to_city,
-                            a.status status,
-                            a.ameta ameta,
-                            a.plate_number plate_number,
-                            a.order_type order_type,
-                            b.name originator_name,
-                            c.name recipient_name,
-                            d.name originator_office,
-                            e.name recipient_office 
+                            a.id 'id',
+                            DATE_FORMAT(a.availability, %s) 'availability',
+                            DATE_FORMAT(a.item_date, %s) 'item_date',
+                            a.item_id 'item_id',
+                            a.item_kind 'item_kind',
+                            a.from_city 'from_city',
+                            a.to_city 'to_city',
+                            a.status 'status',
+                            a.ameta 'ameta',
+                            a.adr 'adr',
+                            a.loading_meters 'loading_meters',
+                            a.weight 'weight',
+                            a.volume 'volume',
+                            a.plate_number 'plate_number',
+                            a.order_type 'order_type',
+                            b.name 'originator_name',
+                            c.name 'recipient_name',
+                            d.name 'originator_office',
+                            e.name 'recipient_office' 
                        FROM 
-                            cargo_request a,
+                            cargo_match a,
                             cargo_users b, 
                             cargo_users c, 
                             cargo_offices d, 
                             cargo_offices e
                        WHERE 
-						(
-							((a.status = 1) AND (SYSDATE() < (a.expiration + INTERVAL 1 DAY))) OR
-							((a.status = 2) AND (SYSDATE() < (a.acceptance + INTERVAL %d DAY)))
-						)
-						AND
                         (
                             (a.originator_id=b.id and b.office_id=d.id)
                             AND
@@ -79,7 +80,7 @@ try {
                             OR
                             (a.recipient_id=c.id AND c.country_id=1)
 						)
-					    order by ".$field." ".$sort, Utils::$SQL_DATE_FORMAT, Utils::$CARGO_PERIOD, $_SESSION['operator']['country-id']);
+					    order by ".$field." ".$sort, Utils::$SQL_DATE_FORMAT, Utils::$SQL_DATE_FORMAT);
 
     // error_log(DB::getMDB()->lastQuery());
 }

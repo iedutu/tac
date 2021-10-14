@@ -29,6 +29,8 @@ message Request {
   int32 recipient = 24;
   int32 status = 25;
   string accepted_by = 26;
+  uint64 creation_date = 27;
+  uint64 update_date = 28;
 }
 
 message RequestUpdates {
@@ -84,6 +86,29 @@ message Truck {
   string contract_type = 21;
   string adr = 22;
   repeated TruckStop stop = 23;
+  uint64 creation_date = 24;
+  uint64 update_date = 25;
+}
+
+message TruckMatch {
+  int32 id = 1;
+  string operator = 2;
+  int32 status = 3;
+  string from_city = 4;
+  uint64 availability = 5;
+  string plate_number = 6;
+  string ameta = 7;
+  string order_type = 8;
+  string adr = 9;
+  uint64 item_date = 10;
+  int32 item_id = 11;
+  string item_kind = 12;
+  float loading_meters = 13;
+  float weight = 14;
+  float volume = 15;
+  string to_city = 16;
+  int32 originator_id = 17;
+  int32 recipient_id = 18;
 }
 
 message TruckUpdates {
@@ -120,6 +145,9 @@ message TruckStop {
   float volume = 6;
   int32 stop_id = 7;
   int32 truck_id = 8;
+  uint64 creation_date = 9;
+  uint64 update_date = 10;
+  string operator = 11;
 }
 
 message User {
@@ -131,4 +159,5 @@ message User {
   int32 reports = 6;
   int32 country_id = 7;
   string name = 8;
+  string office = 9;
 }

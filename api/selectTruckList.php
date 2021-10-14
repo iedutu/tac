@@ -17,7 +17,7 @@ if(empty($_SESSION['previous_area'])) {
     $_SESSION['previous_area'] = 'truck';
 }
 else {
-    if($_SESSION['previous_area'] == 'cargo') {
+    if(($_SESSION['previous_area'] == 'cargo') || ($_SESSION['previous_area'] == 'matches')){
         $_REQUEST['sort']['sort'] = 'desc';
         $_REQUEST['sort']['field'] = 'id';
 

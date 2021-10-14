@@ -8,6 +8,10 @@ switch($_SESSION['app']) {
         include 'pages/displayTrucks.php';
         break;
     }
+    case 'matches': {
+        include 'pages/displayMatches.php';
+        break;
+    }
     case 'newCargo': {
         include 'pages/newCargo.php';
         break;

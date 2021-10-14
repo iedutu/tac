@@ -105,6 +105,14 @@ class Truck extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>repeated .Rohel.TruckStop stop = 23;</code>
      */
     private $stop;
+    /**
+     * Generated from protobuf field <code>uint64 creation_date = 24;</code>
+     */
+    protected $creation_date = 0;
+    /**
+     * Generated from protobuf field <code>uint64 update_date = 25;</code>
+     */
+    protected $update_date = 0;
 
     /**
      * Constructor.
@@ -135,6 +143,8 @@ class Truck extends \Google\Protobuf\Internal\Message
      *     @type string $contract_type
      *     @type string $adr
      *     @type \Rohel\TruckStop[]|\Google\Protobuf\Internal\RepeatedField $stop
+     *     @type int|string $creation_date
+     *     @type int|string $update_date
      * }
      */
     public function __construct($data = NULL) {
@@ -644,6 +654,50 @@ class Truck extends \Google\Protobuf\Internal\Message
     {
         $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::MESSAGE, \Rohel\TruckStop::class);
         $this->stop = $arr;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>uint64 creation_date = 24;</code>
+     * @return int|string
+     */
+    public function getCreationDate()
+    {
+        return $this->creation_date;
+    }
+
+    /**
+     * Generated from protobuf field <code>uint64 creation_date = 24;</code>
+     * @param int|string $var
+     * @return $this
+     */
+    public function setCreationDate($var)
+    {
+        GPBUtil::checkUint64($var);
+        $this->creation_date = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>uint64 update_date = 25;</code>
+     * @return int|string
+     */
+    public function getUpdateDate()
+    {
+        return $this->update_date;
+    }
+
+    /**
+     * Generated from protobuf field <code>uint64 update_date = 25;</code>
+     * @param int|string $var
+     * @return $this
+     */
+    public function setUpdateDate($var)
+    {
+        GPBUtil::checkUint64($var);
+        $this->update_date = $var;
 
         return $this;
     }

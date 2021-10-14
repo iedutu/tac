@@ -93,7 +93,7 @@ else {
                                 echo '<span class="d-block text-muted pt-2 font-size-sm">If you need to change an item, simply click on its value and press ENTER after changing it.</span></h3>';
                             }
                             else {
-                                echo '<span class="d-block text-muted pt-2 font-size-sm">This entry can no longer be modified.</span></h3>';
+                                echo '<span class="d-block text-muted pt-2 font-size-sm">This entry can no longer be modified, as it is ACCEPTED by the recipient.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></h3>';
                             }
                             ?>
                     </div>
@@ -104,7 +104,7 @@ else {
                                 echo '<span class="d-block text-muted pt-2 font-size-sm">If you need to change a stop, please select it, delete, then add a new one. Note the stop ID from the form will determine the stop\'s position in the list.</span></h3>';
                             }
                             else {
-                                echo '<span class="d-block text-muted pt-2 font-size-sm">This entry can no longer be modified.</span></h3>';
+                                echo '<span class="d-block text-muted pt-2 font-size-sm">It is no longer possible to add/change the stops for this truck as the truck is already ACCEPTED by the recipient.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></h3>';
                             }
                             ?>
                     </div>
