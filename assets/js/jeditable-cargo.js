@@ -30,7 +30,7 @@ $(document).ready(function() {
         type           : 'select',
         indicator      : 'Saving ...',
         loadurl        : 'api/cargoDeliveryInstructions.php',
-        selectcssclass : 'form-control',
+        inputcssclass : 'form-control',
         cssclass       : 'form'
     });
 
@@ -38,7 +38,7 @@ $(document).ready(function() {
         type           : 'select',
         indicator      : 'Saving ...',
         loadurl        : 'api/cargoOrderType.php',
-        selectcssclass : 'form-control',
+        inputcssclass : 'form-control',
         cssclass       : 'form'
     });
 

@@ -21,7 +21,7 @@ $_SESSION['email-recipient'] = $cargo->getRecipient();
  * $editable['recipient]
  */
 $editable = DB_utils::isEditable($cargo->getOriginator(), $cargo->getRecipient());
-if($cargo->getStatus() > 0) {
+if($cargo->getStatus() > 1) {
     $editable['originator'] = false;
 }
 
