@@ -39,28 +39,12 @@ if (isset ( $_POST ['_submitted'] )) {
         $rec_id = DB::getMDB()->insertId();
 
         DB::getMDB()->query('UPDATE cargo_truck_stops SET stop_id=stop_id+1 WHERE ((truck_id=%d) AND (stop_id>=%d) AND (id<>%d))', $_SESSION['entry-id'], $stop_id-1, $rec_id);
+        DB_utils::writeValue('changes', '1');
+        $id = DB::getMDB()->insertId();
 
         DB::getMDB()->commit();
-    }
-    catch (MeekroDBException $mdbe) {
-        error_log("Database error: ".$mdbe->getMessage());
-        $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
-
-        return 0;
-    }
-    catch (Exception $e) {
-        error_log("Database error: ".$e->getMessage());
-        $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
-
-        return 0;
-    }
-
-	$id = DB::getMDB()->insertId();
 	$url = 'http://www.rohel.ro/new/tac/?page=details&type=truck&id='.$id;
 
-    try {
         // e-mail confirmation
         $mail = new PHPMailer ();
         include "../lib/mail-settings.php";
@@ -78,14 +62,24 @@ if (isset ( $_POST ['_submitted'] )) {
         if(!Utils::$DO_NOT_SEND_MAILS) {
             $mail->send ();
         }
-    } catch (\PHPMailer\PHPMailer\Exception $e) {
-        error_log("E-mail error: ".$e->errorMessage());
+    } catch (\PHPMailer\PHPMailer\Exception $me) {
+        Utils::handleMailException($me);
         $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'E-mail error ('.$e->getCode().':'.$e->errorMessage().'). Please contact your system administrator.';
+        $_SESSION['alert']['message'] = 'E-mail error ('.$me->getCode().':'.$me->getMessage().'). Please contact your system administrator.';
+
+        return 0;
+    } catch (MeekroDBException $mdbe) {
+        Utils::handleMySQLException($mdbe);
+        $_SESSION['alert']['type'] = 'error';
+        $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
+
+        return 0;
     } catch (Exception $e) {
-        error_log("E-mail error: ".$e->getMessage());
+        Utils::handleException($e);
         $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'E-mail error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+        $_SESSION['alert']['message'] = 'General error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+
+        return 0;
     }
 
     header ( 'Location: /?page=truckInfo&id='.$_SESSION['entry-id']);

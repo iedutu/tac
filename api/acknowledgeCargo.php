@@ -22,16 +22,18 @@ if(isset($_POST['id'])) {
         Utils::cargo_audit('cargo_request', 'accepted_by', $_SESSION['entry-id'], $_SESSION ['operator']);
         Utils::cargo_audit('cargo_request', 'status', $_SESSION['entry-id'], 1);
 
+        DB_utils::writeValue('changes', '1');
+
         // TODO: Send a proper acknowledgement e-mail.
         // Utils::email_notification($_POST['id'], $_POST['value'], $_SESSION['entry-id']);
         DB::getMDB()->commit();
     }
     catch (MeekroDBException $mdbe) {
-        error_log("Database error: ".$mdbe->getMessage());
+        Utils::handleMySQLException($mdbe);
         return null;
     }
     catch (Exception $e) {
-        error_log("Database error: ".$e->getMessage());
+        Utils::handleException($e);
         return null;
     }
 

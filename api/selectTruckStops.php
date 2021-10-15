@@ -14,14 +14,18 @@ try {
                                         cargo_truck_stops
                                      WHERE
                                         truck_id=%d
-                                     ORDER BY stop_id ASC", $_SESSION['entry-id']);
-}
-catch (MeekroDBException $mdbe) {
-    error_log("Database error: ".$mdbe->getMessage());
+                                     ORDER BY stop_id", $_SESSION['entry-id']);
+} catch (MeekroDBException $mdbe) {
+    Utils::handleMySQLException($mdbe);
+    $_SESSION['alert']['type'] = 'error';
+    $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
+
     return null;
-}
-catch (Exception $e) {
-    error_log("Database error: ".$e->getMessage());
+} catch (Exception $e) {
+    Utils::handleException($e);
+    $_SESSION['alert']['type'] = 'error';
+    $_SESSION['alert']['message'] = 'General error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+
     return null;
 }
 

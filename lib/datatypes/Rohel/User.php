@@ -38,10 +38,6 @@ class User extends \Google\Protobuf\Internal\Message
      */
     protected $reports = 0;
     /**
-     * Generated from protobuf field <code>int32 country_id = 7;</code>
-     */
-    protected $country_id = 0;
-    /**
      * Generated from protobuf field <code>string name = 8;</code>
      */
     protected $name = '';
@@ -62,7 +58,6 @@ class User extends \Google\Protobuf\Internal\Message
      *     @type int $class
      *     @type int $insert
      *     @type int $reports
-     *     @type int $country_id
      *     @type string $name
      *     @type string $office
      * }
@@ -200,28 +195,6 @@ class User extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkInt32($var);
         $this->reports = $var;
-
-        return $this;
-    }
-
-    /**
-     * Generated from protobuf field <code>int32 country_id = 7;</code>
-     * @return int
-     */
-    public function getCountryId()
-    {
-        return $this->country_id;
-    }
-
-    /**
-     * Generated from protobuf field <code>int32 country_id = 7;</code>
-     * @param int $var
-     * @return $this
-     */
-    public function setCountryId($var)
-    {
-        GPBUtil::checkInt32($var);
-        $this->country_id = $var;
 
         return $this;
     }

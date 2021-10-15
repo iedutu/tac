@@ -51,16 +51,21 @@ if(isset($_POST['id'])) {
         }
 
         Utils::cargo_audit($table, $_POST['id'], $_SESSION['entry-id'], $_POST['value']);
-        Utils::email_notification($_POST['id'], $_POST['value'], $_SESSION['entry-id']);
         Utils::audit_update($table, $_POST['id'], $_SESSION['entry-id']);
+        DB_utils::writeValue('changes', '1');
 
         DB::getMDB()->commit();
-    }
-    catch (MeekroDBException $mdbe) {
-        error_log("Database error: ".$mdbe->getMessage());
-    }
-    catch (Exception $e) {
-        error_log("Database error: ".$e->getMessage());
+
+        Utils::email_notification($_POST['id'], $_POST['value'], $_SESSION['entry-id']);
+    } catch (\PHPMailer\PHPMailer\Exception $me) {
+        Utils::handleMailException($me);
+        return null;
+    } catch (MeekroDBException $mdbe) {
+        Utils::handleMySQLException($mdbe);
+        return 0;
+    } catch (Exception $e) {
+        Utils::handleException($e);
+        return null;
     }
 
     echo $_POST['value'];

@@ -25,20 +25,18 @@ try {
 					   ORDER BY SYS_CREATION_DATE desc", Utils::$SQL_DATE_FORMAT, $_SESSION['entry-id']);
 
     // error_log(DB::getMDB()->lastQuery());
-}
-catch (MeekroDBException $mdbe) {
-    error_log("Database error: ".$mdbe->getMessage());
+} catch (MeekroDBException $mdbe) {
+    Utils::handleMySQLException($mdbe);
     $_SESSION['alert']['type'] = 'error';
     $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
 
-    return 0;
-}
-catch (Exception $e) {
-    error_log("Database error: ".$e->getMessage());
+    return null;
+} catch (Exception $e) {
+    Utils::handleException($e);
     $_SESSION['alert']['type'] = 'error';
-    $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+    $_SESSION['alert']['message'] = 'General error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
 
-    return 0;
+    return null;
 }
 
 $data = $alldata = $result;

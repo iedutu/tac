@@ -41,35 +41,21 @@ if (isset ( $_POST ['_submitted'] )) {
         ));
 
         Utils::cargo_audit('cargo_request', 'NEW-ENTRY', null, $_POST ['recipient']);
+        DB_utils::writeValue('changes', '1');
+
+        $id = DB::getMDB()->insertId();
 
         DB::getMDB()->commit();
-    }
-    catch (MeekroDBException $mdbe) {
-        error_log("Database error: ".$mdbe->getMessage());
-        $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
 
-        return 0;
-    }
-    catch (Exception $e) {
-        error_log("Database error: ".$e->getMessage());
-        $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+        $url = 'http://www.rohel.ro/new/tac/?page=details&type=cargo&id='.$id;
 
-        return 0;
-    }
-
-	$id = DB::getMDB()->insertId();
-	$url = 'http://www.rohel.ro/new/tac/?page=details&type=cargo&id='.$id;
-	
-	try {
-		// e-mail confirmation
-		$mail = new PHPMailer ();
+        // e-mail confirmation
+        $mail = new PHPMailer ();
         include $_SERVER["DOCUMENT_ROOT"]."/lib/mail-settings.php";
 
-		$mail->Subject = "New cargo from " . $_SESSION ['operator'];
-		
-		$cargo_details = '
+        $mail->Subject = "New cargo from " . $_SESSION ['operator'];
+
+        $cargo_details = '
 			<table border="0" cellpadding="2" cellspacing="0" class="message">
 				<tr>
 					<td>
@@ -194,22 +180,34 @@ if (isset ( $_POST ['_submitted'] )) {
 			</table>
 			';
 
-		$mail->addAddress ( $_POST['recipient'], $_POST['recipient'] );
-		
-		ob_start ();
-		include_once (dirname ( __FILE__ ) . "../../html/new_cargo.html");
-		$body = ob_get_clean ();
-		$mail->msgHTML ( $body, dirname ( __FILE__ ), true ); // Create message bodies and embed images
+        $mail->addAddress ( $_POST['recipient'], $_POST['recipient'] );
+
+        ob_start ();
+        include_once (dirname ( __FILE__ ) . "../../html/new_cargo.html");
+        $body = ob_get_clean ();
+        $mail->msgHTML ( $body, dirname ( __FILE__ ), true ); // Create message bodies and embed images
         if(!Utils::$DO_NOT_SEND_MAILS) {
             $mail->send ();
         }
-	} catch (\PHPMailer\PHPMailer\Exception $e) {
-		$_SESSION['email_error'] = $e->errorMessage(); //Pretty error messages from PHPMailer
-	} catch (Exception $e) {
-		$_SESSION['email_error'] = $e->getMessage(); //Boring error messages from anything else!
-	}
-	
-	$_SESSION ['message'] = '<p style="color: #00CC00">Confirmation e-mail sent to '.$_POST['recipient'].'</p>';
+    }
+    catch (MeekroDBException $me) {
+        Utils::handleMySQLException($me);
+        $_SESSION['alert']['type'] = 'error';
+        $_SESSION['alert']['message'] = 'Database error ('.$me->getCode().':'.$me->getMessage().'). Please contact your system administrator.';
+
+        return null;
+    } catch (\PHPMailer\PHPMailer\Exception $me) {
+        Utils::handleMailException($me);
+        $_SESSION['alert']['type'] = 'error';
+        $_SESSION['alert']['message'] = 'E-mail error ('.$me->getCode().':'.$me->getMessage().'). Please contact your system administrator.';
+    } catch (Exception $e) {
+        Utils::handleException($e);
+        $_SESSION['alert']['type'] = 'error';
+        $_SESSION['alert']['message'] = 'E-mail error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+    }
+
+    $_SESSION['alert']['type'] = 'success';
+    $_SESSION['alert']['message'] = 'A new notification was added into the system for the cargo request. '.$_POST['recipient'].' was notified by e-mail.';
 
 	header ( "Location: /?page=cargo" );
 	exit();

@@ -43,19 +43,19 @@ if (is_array($query)) {
 try {
     $result = DB::getMDB()->query ( "
                        SELECT
-                            a.id id,
-                            DATE_FORMAT(a.expiration, %s) expiration,
-                            a.client client,
-                            a.from_city from_city,
-                            a.to_city to_city,
-                            a.status status,
-                            a.ameta ameta,
-                            a.plate_number plate_number,
-                            a.order_type order_type,
-                            b.name originator_name,
-                            c.name recipient_name,
-                            d.name originator_office,
-                            e.name recipient_office 
+                            a.id as 'id',
+                            DATE_FORMAT(a.expiration, %s) as 'expiration',
+                            a.client as 'client',
+                            a.from_city as 'from_city',
+                            a.to_city as 'to_city',
+                            a.status as 'status',
+                            a.ameta as 'ameta',
+                            a.plate_number as 'plate_number',
+                            a.order_type as 'order_type',
+                            b.name as 'originator_name',
+                            c.name as 'recipient_name',
+                            d.name as 'originator_office',
+                            e.name as 'recipient_office' 
                        FROM 
                             cargo_request a,
                             cargo_users b, 
@@ -82,20 +82,18 @@ try {
 					    order by ".$field." ".$sort, Utils::$SQL_DATE_FORMAT, Utils::$CARGO_PERIOD, $_SESSION['operator']['country-id']);
 
     // error_log(DB::getMDB()->lastQuery());
-}
-catch (MeekroDBException $mdbe) {
-    error_log("Database error: ".$mdbe->getMessage());
+} catch (MeekroDBException $mdbe) {
+    Utils::handleMySQLException($mdbe);
     $_SESSION['alert']['type'] = 'error';
     $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
 
-    return 0;
-}
-catch (Exception $e) {
-    error_log("Database error: ".$e->getMessage());
+    return null;
+} catch (Exception $e) {
+    Utils::handleException($e);
     $_SESSION['alert']['type'] = 'error';
-    $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+    $_SESSION['alert']['message'] = 'General error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
 
-    return 0;
+    return null;
 }
 
 $data = $alldata = $result;

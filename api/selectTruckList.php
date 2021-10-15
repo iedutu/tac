@@ -31,24 +31,24 @@ $field = ! empty($_REQUEST['sort']['field']) ? $_REQUEST['sort']['field'] : 'id'
 // 25.01.2017. Removed the OR status=2 clause to clean-up the closed requests.
 try {
     $result = DB::getMDB()->query ( "SELECT
-                                        a.id id, 
-                                        DATE_FORMAT(a.expiration, %s) expiration, 
-                                        a.from_city from_city, 
-                                        f.city to_city, 
-                                        a.details details, 
-                                        a.status status, 
-                                        a.plate_number plate_number, 
-                                        a.cargo_type cargo_type, 
-                                        a.order_type order_type, 
-                                        a.truck_type truck_type, 
-                                        DATE_FORMAT(a.loading_date, %s) loading_date, 
-                                        DATE_FORMAT(a.unloading_date, %s) unloading_date, 
-                                        a.freight freight, 
-                                        a.ameta ameta,
-                                        b.name originator_name,
-                                        c.name recipient_name,
-                                        d.name originator_office,
-                                        e.name recipient_office 
+                                        a.id as 'id', 
+                                        DATE_FORMAT(a.expiration, %s) as 'expiration', 
+                                        a.from_city as 'from_city', 
+                                        f.city as 'to_city', 
+                                        a.details as 'details', 
+                                        a.status as 'status', 
+                                        a.plate_number as 'plate_number', 
+                                        a.cargo_type as 'cargo_type', 
+                                        a.order_type as 'order_type', 
+                                        a.truck_type as 'truck_type', 
+                                        DATE_FORMAT(a.loading_date, %s) as 'loading_date', 
+                                        DATE_FORMAT(a.unloading_date, %s) as 'unloading_date', 
+                                        a.freight as 'freight', 
+                                        a.ameta as 'ameta',
+                                        b.name as 'originator_name',
+                                        c.name as 'recipient_name',
+                                        d.name as 'originator_office',
+                                        e.name as 'recipient_office' 
                                      FROM 
                                         cargo_truck a,
                                         cargo_users b, 
@@ -85,14 +85,17 @@ try {
                                             Utils::$SQL_DATE_FORMAT,
                                             Utils::$CARGO_PERIOD);
 
-    // error_log(DB::getMDB()->lastQuery());
-}
-catch (MeekroDBException $mdbe) {
-    error_log("Database error: ".$mdbe->getMessage());
+} catch (MeekroDBException $mdbe) {
+    Utils::handleMySQLException($mdbe);
+    $_SESSION['alert']['type'] = 'error';
+    $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
+
     return null;
-}
-catch (Exception $e) {
-    error_log("Database error: ".$e->getMessage());
+} catch (Exception $e) {
+    Utils::handleException($e);
+    $_SESSION['alert']['type'] = 'error';
+    $_SESSION['alert']['message'] = 'General error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+
     return null;
 }
 

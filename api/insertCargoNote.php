@@ -7,8 +7,8 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 if (! Utils::authorized(Utils::$INSERT)) {
     error_log("User not authorized to insert data in the database.");
-	header ( 'Location: /' );
-	exit ();
+    header ( 'Location: /' );
+    exit ();
 }
 
 if (isset ( $_POST ['_submitted'] )) {
@@ -24,26 +24,10 @@ if (isset ( $_POST ['_submitted'] )) {
         Utils::cargo_audit('cargo_comments', 'NEW-ENTRY', null, $_POST ['id']);
 
         DB::getMDB()->commit();
-    }
-    catch (MeekroDBException $mdbe) {
-        error_log("Database error: ".$mdbe->getMessage());
-        $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
 
-        return 0;
-    }
-    catch (Exception $e) {
-        error_log("Database error: ".$e->getMessage());
-        $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+        $mail_recipient = '';
+        $cargo = DB_utils::selectRequest($_POST['id']);
 
-        return 0;
-    }
-
-    $mail_recipient = '';
-    $cargo = DB_utils::selectRequest($_POST['id']);
-
-    try {
         // Send any relevant e-mail
         $mail = new PHPMailer ();
         include "../lib/mail-settings.php";
@@ -70,14 +54,24 @@ if (isset ( $_POST ['_submitted'] )) {
         if(!Utils::$DO_NOT_SEND_MAILS) {
             $mail->send ();
         }
-    } catch (\PHPMailer\PHPMailer\Exception $e) {
-        error_log("E-mail error: ".$e->getMessage());
+    } catch (\PHPMailer\PHPMailer\Exception $me) {
+        Utils::handleMailException($me);
         $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'E-mail error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+        $_SESSION['alert']['message'] = 'E-mail error ('.$me->getCode().':'.$me->getMessage().'). Please contact your system administrator.';
+
+        return 0;
+    } catch (MeekroDBException $mdbe) {
+        Utils::handleMySQLException($mdbe);
+        $_SESSION['alert']['type'] = 'error';
+        $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
+
+        return 0;
     } catch (Exception $e) {
-        error_log("E-mail error: ".$e->getMessage());
+        Utils::handleException($e);
         $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'E-mail error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+        $_SESSION['alert']['message'] = 'General error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+
+        return 0;
     }
 
     $_SESSION['alert']['type'] = 'success';

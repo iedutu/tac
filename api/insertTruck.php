@@ -7,8 +7,8 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 if (! Utils::authorized(Utils::$INSERT)) {
     error_log("User not authorized to insert data in the database.");
-	header ( 'Location: /' );
-	exit ();
+    header ( 'Location: /' );
+    exit ();
 }
 
 if (isset ( $_POST ['_submitted'] )) {
@@ -53,28 +53,12 @@ if (isset ( $_POST ['_submitted'] )) {
         }
 
         Utils::cargo_audit('cargo_truck', 'NEW-ENTRY', null, $_POST ['recipient']);
+        DB_utils::writeValue('changes', '1');
+        $id = DB::getMDB()->insertId();
 
         DB::getMDB()->commit();
-    }
-    catch (MeekroDBException $mdbe) {
-        error_log("Database error: ".$mdbe->getMessage());
-        $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
 
-        return 0;
-    }
-    catch (Exception $e) {
-        error_log("Database error: ".$e->getMessage());
-        $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
-
-        return 0;
-    }
-
-	$id = DB::getMDB()->insertId();
-	$url = 'http://www.rohel.ro/new/tac/?page=details&type=cargo&id='.$id;
-
-    try {
+        $url = 'htts://www.rohel.ro/new/tac/?page=details&type=cargo&id='.$id;
         // e-mail confirmation
         $mail = new PHPMailer ();
         include "../lib/mail-settings.php";
@@ -199,10 +183,24 @@ if (isset ( $_POST ['_submitted'] )) {
         if(!Utils::$DO_NOT_SEND_MAILS) {
             $mail->send ();
         }
-    } catch (\PHPMailer\PHPMailer\Exception $e) {
-        $_SESSION['email_error'] = $e->errorMessage(); //Pretty error messages from PHPMailer
+    } catch (\PHPMailer\PHPMailer\Exception $me) {
+        Utils::handleMailException($me);
+        $_SESSION['alert']['type'] = 'error';
+        $_SESSION['alert']['message'] = 'E-mail error ('.$me->getCode().':'.$me->getMessage().'). Please contact your system administrator.';
+
+        return 0;
+    } catch (MeekroDBException $mdbe) {
+        Utils::handleMySQLException($mdbe);
+        $_SESSION['alert']['type'] = 'error';
+        $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
+
+        return 0;
     } catch (Exception $e) {
-        $_SESSION['email_error'] = $e->getMessage(); //Boring error messages from anything else!
+        Utils::handleException($e);
+        $_SESSION['alert']['type'] = 'error';
+        $_SESSION['alert']['message'] = 'General error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+
+        return 0;
     }
 
     $_SESSION ['message'] = '<p style="color: #00CC00">Confirmation e-mail sent to '.$_POST['recipient'].'</p>';

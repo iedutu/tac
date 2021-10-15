@@ -10,21 +10,19 @@ $username = $_POST ['username'];
 $password = hash("sha256", $_POST ['password']);
 
 try {
-    $row = DB::getMDB()->queryFirstRow("SELECT * FROM cargo_users WHERE username=%s and password=%s", $username, $password);
-}
-catch (MeekroDBException $mdbe) {
-    error_log("Database error: ".$mdbe->getMessage());
+    $row = DB::getMDB()->queryFirstRow("SELECT a.*, b.country FROM cargo_users a, cargo_offices b WHERE (a.office_id=b.id) and (a.username=%s) and (a.password=%s)", $username, $password);
+} catch (MeekroDBException $mdbe) {
+    Utils::handleMySQLException($mdbe);
     $_SESSION['alert']['type'] = 'error';
     $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
 
-    return 0;
-}
-catch (Exception $e) {
-    error_log("Database error: ".$e->getMessage());
+    return null;
+} catch (Exception $e) {
+    Utils::handleException($e);
     $_SESSION['alert']['type'] = 'error';
-    $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+    $_SESSION['alert']['message'] = 'General error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
 
-    return 0;
+    return null;
 }
 
 if ($row == null) {
@@ -36,7 +34,7 @@ if ($row == null) {
     $_SESSION['operator']['username]'] = $row['username'];
     $_SESSION['operator']['insert'] = $row['insert'] == 1;
     $_SESSION['operator']['reports'] = $row['reports'] == 1;
-    $_SESSION['operator']['country-id'] = $row['country_id'];
+    $_SESSION['operator']['country-id'] = $row['country'];
 
     $params = '';
     if (isset($_POST['page'])) {

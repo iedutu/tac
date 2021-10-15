@@ -157,7 +157,6 @@ message User {
   int32 class = 4;
   int32 insert = 5;
   int32 reports = 6;
-  int32 country_id = 7;
   string name = 8;
   string office = 9;
 }

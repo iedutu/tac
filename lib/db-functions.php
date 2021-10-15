@@ -113,7 +113,6 @@ class DB_utils
     {
         try {
             $offices = DB::getMDB()->query('select * from cargo_offices order by importance');
-            echo '<option value="">All</option>';
             foreach ($offices as $office) {
                 echo '<option value="'.$office['name'].'">'.$office['name'].'</option>';
             }
@@ -502,7 +501,46 @@ class DB_utils
         }
     }
 
+    public static function readValue(string $key): ?string
+    {
+        try {
+            return DB::getMDB()->queryFirstField("select value from cargo_settings where `key`=%s", $key);
+        }
+        catch (MeekroDBException $mdbe) {
+            error_log("Database error: ".$mdbe->getMessage());
+            return null;
+        }
+        catch (Exception $e) {
+            error_log("Database error: ".$e->getMessage());
+            return null;
+        }
+    }
+
+    public static function writeValue(string $key, string $value): ?bool
+    {
+        try {
+            DB::getMDB()->replace('cargo_settings', [
+                'key' => $key,
+                'value' => $value
+            ]);
+        }
+        catch (MeekroDBException $mdbe) {
+            error_log("Database error: ".$mdbe->getMessage());
+            return false;
+        }
+        catch (Exception $e) {
+            error_log("Database error: ".$e->getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
     public static function generateMatches() {
+        if(self::readValue('changes') == '0') {
+            return;
+        }
+
         try {
             // Select all NEW and ACCEPTED trucks
 
@@ -513,7 +551,6 @@ class DB_utils
             $i = 0;
             foreach($t_rows as $t_row) {
                 $truck = self::row2truck($t_row);
-                error_log('Truck created: '.$truck->getFromCity());
 
                 $s_rows = DB::getMDB()->query ('SELECT * FROM cargo_truck_stops WHERE truck_id=%d ORDER BY stop_id', $truck->getId());
                 $j = 0;
@@ -553,7 +590,6 @@ class DB_utils
                         }
                     }
 
-                    error_log('Going to insert: '.$match->getToCity());
                     DB_utils::insertMatch($match);
                     unset($match);
                 }
@@ -602,5 +638,7 @@ class DB_utils
             error_log("Database error: ".$e->getMessage());
             return null;
         }
+
+        self::writeValue('changes', '0');
     }
 }
