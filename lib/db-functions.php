@@ -503,8 +503,9 @@ class DB_utils
     }
 
     public static function generateMatches() {
-        // Select all NEW and ACCEPTED trucks
         try {
+            // Select all NEW and ACCEPTED trucks
+
             // Clean-up the table
             DB::getMDB()->query('TRUNCATE cargo_match');
 
@@ -529,10 +530,10 @@ class DB_utils
                     $match->setOrderType($truck->getOrderType());
                     $match->setPlateNumber($truck->getPlateNumber());
                     $match->setAmeta($truck->getAmeta());
-                    $match->setAvailability($truck->getAvailability());
+                    $match->setAvailability($truck->getUnloadingDate());
                     $match->setFromCity($truck->getFromCity());
                     $match->setToCity($stop->getCity());
-                    $match->setItemDate($truck->getUnloadingDate());
+                    $match->setItemDate($truck->getCreationDate());
                     $match->setItemId($truck->getId());
                     $match->setOrderType($truck->getOrderType());
                     $match->setItemKind('truck');
@@ -554,8 +555,43 @@ class DB_utils
 
                     error_log('Going to insert: '.$match->getToCity());
                     DB_utils::insertMatch($match);
-                    // unset($match);
+                    unset($match);
                 }
+
+                unset($truck);
+            }
+
+            // Select all NEW and ACCEPTED cargo
+            $c_rows = DB::getMDB()->query ('SELECT * FROM cargo_request WHERE (status = 1) OR (status = 2) ORDER BY SYS_CREATION_DATE DESC');
+            $i = 0;
+            foreach($c_rows as $c_row) {
+                $cargo = self::row2request($c_row);
+
+                // Create the match
+                $match = new TruckMatch();
+
+                $match->setWeight($cargo->getWeight());
+                $match->setVolume($cargo->getVolume());
+                $match->setLoadingMeters($cargo->getLoadingMeters());
+                $match->setAdr($cargo->getAdr());
+                $match->setOrderType($cargo->getOrderType());
+                $match->setPlateNumber($cargo->getPlateNumber());
+                $match->setAmeta($cargo->getAmeta());
+                $match->setAvailability($cargo->getLoadingDate());
+                $match->setFromCity($cargo->getFromCity());
+                $match->setToCity($cargo->getToCity());
+                $match->setItemDate($cargo->getCreationDate());
+                $match->setItemId($cargo->getId());
+                $match->setOrderType($cargo->getOrderType());
+                $match->setItemKind('cargo');
+                $match->setOperator($_SESSION['operator']['username']);
+                $match->setOriginatorId($cargo->getOriginator());
+                $match->setRecipientId($cargo->getRecipient());
+                $match->setStatus(3);
+
+                DB_utils::insertMatch($match);
+                unset($match);
+                unset($cargo);
             }
         }
         catch (MeekroDBException $mdbe) {

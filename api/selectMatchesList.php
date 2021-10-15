@@ -10,24 +10,31 @@ if(!isset($_SESSION['operator']['id'])) {
 
 // Sorting
 // Cleaning up the request from the other pages.
+// Setting up the sorting
+$sort  = 'desc';
+$field = 'item_date';
+
 if(empty($_SESSION['previous_area'])) {
     $_REQUEST['sort']['sort'] = 'desc';
-    $_REQUEST['sort']['field'] = 'id';
+    $_REQUEST['sort']['field'] = 'item_date';
 
     $_SESSION['previous_area'] = 'matches';
+
+    $sort  = ! empty($_REQUEST['sort']['sort']) ? $_REQUEST['sort']['sort'] : 'desc';
+    $field = ! empty($_REQUEST['sort']['field']) ? $_REQUEST['sort']['field'] : 'item_date';
 }
 else {
     if(($_SESSION['previous_area'] == 'cargo') || ($_SESSION['previous_area'] == 'truck')){
         $_REQUEST['sort']['sort'] = 'desc';
-        $_REQUEST['sort']['field'] = 'id';
+        $_REQUEST['sort']['field'] = 'item_date';
 
         $_SESSION['previous_area'] = 'matches';
     }
+    else {
+        $sort  = ! empty($_REQUEST['sort']['sort']) ? $_REQUEST['sort']['sort'] : 'desc';
+        $field = ! empty($_REQUEST['sort']['field']) ? $_REQUEST['sort']['field'] : 'item_date';
+    }
 }
-
-// Settings
-$sort  = ! empty($_REQUEST['sort']['sort']) ? $_REQUEST['sort']['sort'] : 'desc';
-$field = ! empty($_REQUEST['sort']['field']) ? $_REQUEST['sort']['field'] : 'availability';
 
 // Filters
 $filter = '';
@@ -102,6 +109,7 @@ catch (Exception $e) {
 $data = $alldata = $result;
 
 $datatable = array_merge(['pagination' => [], 'sort' => [], 'query' => []], $_REQUEST);
+if(isset($_REQUEST['sort'])) $_SESSION['sorting'] = $_REQUEST['sort'];
 
 // search filter by keywords
 $filter = isset($datatable['query']['generalSearch']) && is_string($datatable['query']['generalSearch'])

@@ -29,6 +29,7 @@ let KTDatatableMatchesList = function() {
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true,
+                saveState: false
             },
 
             // layout definition
@@ -96,15 +97,15 @@ let KTDatatableMatchesList = function() {
                         let status = {
                             1: {
                                 'title': 'Available',
-                                'class': ' label-light-info'
+                                'class': ' label-primary'
                             },
                             2: {
-                                'title': 'Needed',
-                                'class': ' label-light-danger'
+                                'title': 'Free',
+                                'class': ' label-warning'
                             },
                             3: {
-                                'title': 'Free',
-                                'class': ' label-light-warning'
+                                'title': 'Needed',
+                                'class': ' label-danger'
                             },
                         };
                         return '<a href="/?page='+row.item_kind+'&id='+row.item_id+'" class="label font-weight-bold label-lg ' + status[row.status].class + ' label-inline">' + status[row.status].title + '</a>';
