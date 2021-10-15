@@ -69,17 +69,16 @@
             <div class="row align-items-center">
                 <div class="col-md-12">
                     <div class="row align-items-center">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="input-icon">
                                 <input type="text" class="form-control" placeholder="Search..." id="kt_datatable_search_query" />
                                 <span><i class="flaticon2-search-1 text-muted"></i></span>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="d-flex align-items-center">
-                                <label class="mr-3 mb-0 d-none d-md-block">Status:</label>
                                 <select class="form-control" id="kt_datatable_search_status">
-                                    <option value="">All</option>
+                                    <option value="">Status</option>
                                     <option value="1">New</option>
                                     <option value="2">Accepted</option>
                                     <option value="3">Closed</option>
@@ -88,19 +87,43 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="d-flex align-items-center">
-                                <label class="mr-3 mb-0 d-none d-md-block">From:</label>
                                 <select class="form-control" id="kt_datatable_search_from">
+                                    <option value="">Origin office</option>
                                     <?php DB_utils::selectOffices(); ?>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="d-flex align-items-center">
-                                <label class="mr-3 mb-0 d-none d-md-block">To:</label>
                                 <select class="form-control" id="kt_datatable_search_to">
+                                    <option value="">Destination office</option>
                                     <?php DB_utils::selectOffices(); ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="d-flex align-items-center">
+                                <!-- <label class="mr-3 mb-0 d-none d-md-block">From:</label> -->
+                                <select class="form-control" id="kt_datatable_search_country_from">
+                                    <option value="">Origin country</option>
+                                    <option value="1">Romania</option>
+                                    <option value="2">Greece</option>
+                                    <option value="3">Serbia</option>
+                                    <option value="4">Moldova</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="d-flex align-items-center">
+                                <!-- <label class="mr-3 mb-0 d-none d-md-block">To:</label> -->
+                                <select class="form-control" id="kt_datatable_search_country_to">
+                                    <option value="">Destination country</option>
+                                    <option value="1">Romania</option>
+                                    <option value="2">Greece</option>
+                                    <option value="3">Serbia</option>
+                                    <option value="4">Moldova</option>
                                 </select>
                             </div>
                         </div>

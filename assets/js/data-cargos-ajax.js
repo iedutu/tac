@@ -166,7 +166,15 @@ var KTDatatableCargoList = function() {
             datatable.search($(this).val(), 'originator_office');
         });
 
-        $('#kt_datatable_search_status, #kt_datatable_search_to, #kt_datatable_search_from').selectpicker();
+        $('#kt_datatable_search_country_to').on('change', function() {
+            datatable.search($(this).val(), 'recipient_country');
+        });
+
+        $('#kt_datatable_search_country_from').on('change', function() {
+            datatable.search($(this).val(), 'originator_country');
+        });
+
+        $('#kt_datatable_search_status, #kt_datatable_search_to, #kt_datatable_search_from, #kt_datatable_search_country_to, #kt_datatable_search_country_from').selectpicker();
     };
 
     return {

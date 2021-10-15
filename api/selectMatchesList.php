@@ -68,8 +68,8 @@ try {
                             b.name as 'originator_name',
                             c.name as 'recipient_name',
                             d.name as 'originator_office',
-                            d.country as 'originator_country',
                             e.name as 'recipient_office',
+                            d.country as 'originator_country',
                             e.country as 'recipient_country'
                        FROM 
                             cargo_match a,

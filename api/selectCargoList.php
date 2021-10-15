@@ -55,7 +55,9 @@ try {
                             b.name as 'originator_name',
                             c.name as 'recipient_name',
                             d.name as 'originator_office',
-                            e.name as 'recipient_office' 
+                            e.name as 'recipient_office',
+                            d.country as 'originator_country',
+                            e.country as 'recipient_country'
                        FROM 
                             cargo_request a,
                             cargo_users b, 
