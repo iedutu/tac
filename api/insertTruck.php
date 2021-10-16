@@ -42,8 +42,8 @@ if (isset ( $_POST ['_submitted'] )) {
                 'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
                 'truck_id' => $truck_id,
                 'stop_id' => $i,
-                'city' => $_POST['stops'][$i]['city'],
-                'address' => $_POST['stops'][$i]['address'],
+                'city' => $_POST['stops'][$i]['to_city'],
+                'address' => $_POST['stops'][$i]['to_address'],
                 'loading_meters' => $_POST['stops'][$i]['loading_meters'],
                 'weight' => $_POST['stops'][$i]['weight'],
                 'volume' => $_POST['stops'][$i]['volume']

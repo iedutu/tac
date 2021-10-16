@@ -11,7 +11,7 @@
 								<!--begin::Logo-->
 								<div class="header-logo mr-10 d-none d-lg-flex">
 									<a href="index.php">
-										<img alt="Logo" src="assets/media/logos/logo-5.svg" class="h-40px" />
+										<img alt="Logo" src="assets/media/logos/package.svg" class="h-40px" />
 									</a>
 								</div>
 

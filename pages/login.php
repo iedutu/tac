@@ -87,18 +87,18 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
             <div class="d-flex flex-column-auto flex-column pt-lg-40 pt-15">
                 <!--begin::Aside header-->
                 <a href="#" class="text-center mb-15">
-                    <img src="/assets/media/logos/logo-5.svg" alt="logo" class="h-70px" />
+                    <img src="/assets/media/logos/package.svg" alt="logo" class="h-200px" />
                 </a>
                 <!--end::Aside header-->
                 <!--begin::Aside title-->
-                <h3 class="font-weight-bolder text-center font-size-h4 font-size-h1-lg text-white">Discover Keen's Amazing
-                    <br />Features &amp; Possibilites</h3>
+                <h3 class="font-weight-bolder text-center font-size-h2 font-size-h1-lg text-white">ROHEL
+                    <br />TRANS</h3>
                 <!--end::Aside title-->
             </div>
             <!--end::Aside Top-->
-            <!--begin::Aside Bottom-->
-            <div class="aside-img d-flex flex-row-fluid bgi-no-repeat bgi-position-y-bottom bgi-position-x-center" style="background-image: url('/assets/media/svg/illustrations/payment.svg')"></div>
-            <!--end::Aside Bottom-->
+            <!--begin::Aside Bottom
+            <div class="aside-img d-flex flex-row-fluid bgi-no-repeat bgi-position-y-bottom bgi-position-x-center" style="background-image: url('/assets/media/svg/illustrations/data-points.svg')"></div>
+                end::Aside Bottom-->
         </div>
         <!--begin::Aside-->
         <!--begin::Content-->
@@ -112,7 +112,7 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
                         <input type="hidden" name="_submitted" value="true">
                         <!--begin::Title-->
                         <div class="pb-13 pt-lg-0 pt-5">
-                            <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">ROHEL TRANS Cargo app</h3>
+                            <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">Welcome</h3>
                             <span class="text-muted font-weight-bold font-size-h4">New Here?
 									<a href="javascript:;" id="kt_login_signup" class="text-primary font-weight-bolder">Create an Account</a></span>
                         </div>

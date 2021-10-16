@@ -355,7 +355,7 @@ $class_text_default = '';
                                 <tr>
                                     <td class="text-right">Freight</td>
                                     <td>
-                                        <p style="display: inline" id="freight" class="<?=$audit->getFreight()?$class_text_new:$class_text_default?>"><?=$cargo->getFreight()?></p>
+                                        <p style="display: inline" id="freight" class="<?=$audit->getFreight()?$class_text_new:$class_text_default?>">&euro; <?=$cargo->getFreight()?></p>
                                     </td>
                                 </tr>
                                 <tr>
