@@ -46,7 +46,12 @@ try {
     // Redo the stop_id numbers on the remaining records
     // TODO: This might be MySQL specific!!!
     DB::getMDB()->get()->multi_query('SET @num := -1; UPDATE cargo_truck_stops SET stop_id = @num := (@num+1) WHERE truck_id='.$_SESSION['entry-id'].' ORDER BY stop_id;');
+
+    // Set the trigger for the generation of the Match page
     DB_utils::writeValue('changes', '1');
+
+    // Add a notification to the receiver of the cargo request
+    DB_utils::addNotification($_SESSION['recipient-id'], 4, 3, $_SESSION['entry-id']);
 
     DB::getMDB()->commit();
 }

@@ -52,9 +52,15 @@ if (isset ( $_POST ['_submitted'] )) {
             $truck_final_destination = $_POST['stops'][$i]['city'];
         }
 
-        Utils::cargo_audit('cargo_truck', 'NEW-ENTRY', null, $_POST ['recipient']);
-        DB_utils::writeValue('changes', '1');
         $id = DB::getMDB()->insertId();
+
+        Utils::cargo_audit('cargo_truck', 'NEW-ENTRY', null, $_POST ['recipient']);
+
+        // Set the trigger for the generation of the Match page
+        DB_utils::writeValue('changes', '1');
+
+        // Add a notification to the receiver of the cargo request
+        DB_utils::addNotification($_POST ['recipient'], 1, 2, $id);
 
         DB::getMDB()->commit();
 

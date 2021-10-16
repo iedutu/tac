@@ -86,6 +86,25 @@ class Audit {
         return $a;
     }
 
+    public static function clearCargo(int $id, string $for_whom): bool
+    {
+        $filename = $_SERVER["DOCUMENT_ROOT"] . '/notifications/cargo_request_' . $for_whom.'_'.$id . '.bin';
+
+        try {
+            if (!is_file($filename)) {
+                error_log("File not found: " . $filename . ". Ignoring the call.");
+            }
+            else {
+                unlink($filename);
+            }
+        } catch (Exception $e) {
+            Utils::handleException($e);
+            return false;
+        }
+
+        return true;
+    }
+
     public static function writeTruck(TruckUpdates $a): bool
     {
         if(isset($_SESSION['role'])) {
@@ -155,5 +174,25 @@ class Audit {
         $a->setId($id);
 
         return $a;
+    }
+
+    public static function clearTruck(int $id): bool
+    {
+        $for_whom = $_SESSION['role'] ?? 'unknown';
+        $filename = $_SERVER["DOCUMENT_ROOT"] . '/notifications/cargo_truck_' . $for_whom.'_'.$id . '.bin';
+
+        try {
+            if (!is_file($filename)) {
+                error_log("File not found: " . $filename . ". Ignoring the call.");
+            }
+            else {
+                unlink($filename);
+            }
+        } catch (Exception $e) {
+            Utils::handleException($e);
+            return false;
+        }
+
+        return true;
     }
 }

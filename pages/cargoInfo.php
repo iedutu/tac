@@ -14,7 +14,9 @@ if(is_null($cargo)) {
 
 // Required for the fetching of notifications, dynamic updates
 $_SESSION['entry-id'] = $_GET['id'];
-$_SESSION['email-recipient'] = $cargo->getRecipient();
+$_SESSION['entry-kind'] = 1;
+$_SESSION['originator-id'] = $cargo->getOriginator();
+$_SESSION['recipient-id'] = $cargo->getRecipient();
 
 /*
  * $editable['originator']
@@ -68,8 +70,13 @@ else {
 
 $originator = DB_utils::selectUserById($cargo->getOriginator());
 $recipient = DB_utils::selectUserById($cargo->getRecipient());
+$_SESSION['email-recipient'] = $recipient->getUsername();
 
+// Read the changes which happened so far
 $audit = Audit::readCargo($cargo->getId(), $_SESSION['role']);
+// Clean-up the changes
+Audit::clearCargo($cargo->getId(), $_SESSION['role']);
+
 $class_text_new = 'text-primary';
 $class_text_default = '';
 
@@ -470,6 +477,7 @@ $class_text_default = '';
                     <input type="hidden" name="_submitted" id="_submitted" value="yes"/>
                     <input type="hidden" name="page" id="page" value="<?=$_GET['page']?>"/>
                     <input type="hidden" name="id" id="id" value="<?=$_GET['id']?>"/>
+                    <input type="hidden" name="recipient" id="recipient" value="<?=$cargo->getRecipient()?>"/>
                     <div class="card-body">
                         <div class="form-group row">
                             <div class="col-lg-12">

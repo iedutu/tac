@@ -49,6 +49,10 @@ else {
     }
 }
 
+if(isset($_GET['viewedItem'])) {
+    DB_utils::clearNotification($_GET['viewedItem']);
+}
+
 $_REQUEST['sort']['field'] = null;
 $_REQUEST['sort']['sort'] = null;
 ?>

@@ -45,6 +45,14 @@ class User extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>string office = 9;</code>
      */
     protected $office = '';
+    /**
+     * Generated from protobuf field <code>int32 country_id = 10;</code>
+     */
+    protected $country_id = 0;
+    /**
+     * Generated from protobuf field <code>string country_name = 11;</code>
+     */
+    protected $country_name = '';
 
     /**
      * Constructor.
@@ -60,6 +68,8 @@ class User extends \Google\Protobuf\Internal\Message
      *     @type int $reports
      *     @type string $name
      *     @type string $office
+     *     @type int $country_id
+     *     @type string $country_name
      * }
      */
     public function __construct($data = NULL) {
@@ -239,6 +249,50 @@ class User extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkString($var, True);
         $this->office = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>int32 country_id = 10;</code>
+     * @return int
+     */
+    public function getCountryId()
+    {
+        return $this->country_id;
+    }
+
+    /**
+     * Generated from protobuf field <code>int32 country_id = 10;</code>
+     * @param int $var
+     * @return $this
+     */
+    public function setCountryId($var)
+    {
+        GPBUtil::checkInt32($var);
+        $this->country_id = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>string country_name = 11;</code>
+     * @return string
+     */
+    public function getCountryName()
+    {
+        return $this->country_name;
+    }
+
+    /**
+     * Generated from protobuf field <code>string country_name = 11;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setCountryName($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->country_name = $var;
 
         return $this;
     }

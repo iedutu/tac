@@ -8,7 +8,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/lib/datatypes/Rohel/Truck.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/lib/datatypes/Rohel/TruckStop.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/lib/datatypes/Rohel/User.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/lib/datatypes/Rohel/TruckMatch.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/lib/datatypes/Rohel/Notification.php";
 
+use Rohel\Notification;
 use Rohel\TruckMatch;
 use Rohel\Request;
 use Rohel\Truck;
@@ -21,6 +23,22 @@ include $_SERVER['DOCUMENT_ROOT'] . "/lib/db-settings.php";
 class DB_utils
 {
     // Private functions
+    static function row2user($row): User
+    {
+        $user = new User();
+        $user->setId($row['id']);
+        $user->setUsername($row['username']);
+        $user->setPassword($row['password']);
+        $user->setName($row['name']);
+        $user->setClass($row['class']);
+        $user->setCountryName($row['country_name']);
+        $user->setCountryId($row['country_id']);
+        $user->setInsert($row['insert']);
+        $user->setReports($row['reports']);
+        $user->setOffice($row['office_name']);
+
+        return $user;
+    }
     static function row2request($row): Request
     {
         $request = new Request();
@@ -118,12 +136,11 @@ class DB_utils
             }
         }
         catch (MeekroDBException $mdbe) {
-            error_log("Database error: ".$mdbe->getMessage());
+            Utils::handleMySQLException($mdbe);
             return false;
         }
         catch (Exception $e) {
-            error_log("Database error: ".$e->getMessage());
-
+            Utils::handleException($e);
             return false;
         }
 
@@ -139,12 +156,11 @@ class DB_utils
             }
         }
         catch (MeekroDBException $mdbe) {
-            error_log("Database error: ".$mdbe->getMessage());
+            Utils::handleMySQLException($mdbe);
             return false;
         }
         catch (Exception $e) {
-            error_log("Database error: ".$e->getMessage());
-
+            Utils::handleException($e);
             return false;
         }
 
@@ -155,15 +171,13 @@ class DB_utils
     {
         try {
             $country = DB::getMDB()->queryOneField('country_id', 'SELECT country_id FROM cargo_users WHERE id = %d', $other);
-            error_log('Country selected: '. $country);
         }
         catch (MeekroDBException $mdbe) {
-            error_log("Database error: ".$mdbe->getMessage());
+            Utils::handleMySQLException($mdbe);
             return false;
         }
         catch (Exception $e) {
-            error_log("Database error: ".$e->getMessage());
-
+            Utils::handleException($e);
             return false;
         }
 
@@ -174,7 +188,6 @@ class DB_utils
     {
         // Who can edit the cargo
         // 1. The one who created it
-        error_log('isEditable request: ['.$originator.']['.$recipient.']');
         if (($_SESSION['operator']['id'] == $originator) || self::countryMatch($originator)){
             $result['originator'] = true;
         }
@@ -183,8 +196,6 @@ class DB_utils
         }
 
         $result['recipient'] = self::countryMatch($recipient);
-
-        error_log('isEditable response: ['.$result['originator'].']['.$result['recipient'].']');
         return $result;
     }
 
@@ -203,14 +214,14 @@ class DB_utils
 
         }
         catch (MeekroDBException $mdbe) {
-            error_log("Database error: ".$mdbe->getMessage());
+            Utils::handleMySQLException($mdbe);
             $_SESSION['alert']['type'] = 'error';
             $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
 
             return null;
         }
         catch (Exception $e) {
-            error_log("Database error: ".$e->getMessage());
+            Utils::handleException($e);
             $_SESSION['alert']['type'] = 'error';
             $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
 
@@ -254,14 +265,14 @@ class DB_utils
             return $result;
         }
         catch (MeekroDBException $mdbe) {
-            error_log("Database error: ".$mdbe->getMessage());
+            Utils::handleMySQLException($mdbe);
             $_SESSION['alert']['type'] = 'error';
             $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
 
             return false;
         }
         catch (Exception $e) {
-            error_log("Database error: ".$e->getMessage());
+            Utils::handleException($e);
             $_SESSION['alert']['type'] = 'error';
             $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
 
@@ -320,11 +331,11 @@ class DB_utils
             return $truck;
         }
         catch (MeekroDBException $mdbe) {
-            error_log("Database error: ".$mdbe->getMessage());
+            Utils::handleMySQLException($mdbe);
             return null;
         }
         catch (Exception $e) {
-            error_log("Database error: ".$e->getMessage());
+            Utils::handleException($e);
             return null;
         }
     }
@@ -356,11 +367,11 @@ class DB_utils
             DB::getMDB()->commit();
         }
         catch (MeekroDBException $mdbe) {
-            error_log("Database error: ".$mdbe->getMessage());
+            Utils::handleMySQLException($mdbe);
             return false;
         }
         catch (Exception $e) {
-            error_log("Database error: ".$e->getMessage());
+            Utils::handleException($e);
             return false;
         }
 
@@ -398,14 +409,14 @@ class DB_utils
             return $result;
         }
         catch (MeekroDBException $mdbe) {
-            error_log("Database error: ".$mdbe->getMessage());
+            Utils::handleMySQLException($mdbe);
             $_SESSION['alert']['type'] = 'error';
             $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
 
             return false;
         }
         catch (Exception $e) {
-            error_log("Database error: ".$e->getMessage());
+            Utils::handleException($e);
             $_SESSION['alert']['type'] = 'error';
             $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
 
@@ -416,12 +427,15 @@ class DB_utils
     public static function selectUser(string $username): ?User
     {
         try {
-            $row = DB::getMDB()->queryoneRow("select a.*, b.name office
+            $row = DB::getMDB()->queryoneRow("select a.*, b.name as 'office_name', c.name as 'country_name', c.id as 'country_id' 
                                                   from 
                                                      cargo_users a,
-                                                     cargo_offices b
+                                                     cargo_offices b,
+                                                     cargo_countries c  
                                                   where
                                                      (a.office_id = b.id)
+                                                     and
+                                                     (b.country = c.id)
                                                      and
                                                      (a.username=%s)", $username);
             if (is_null($row)) {
@@ -430,28 +444,17 @@ class DB_utils
                 return null;
             }
 
-            $user = new User();
-            $user->setId($row['id']);
-            $user->setUsername($username);
-            $user->setPassword($row['password']);
-            $user->setName($row['name']);
-            $user->setClass($row['class']);
-            $user->setCountryId($row['country_id']);
-            $user->setInsert($row['insert']);
-            $user->setReports($row['reports']);
-            $user->setOffice($row['office']);
-
-            return $user;
+            return self::row2user($row);
         }
         catch (MeekroDBException $mdbe) {
-            error_log("Database error: ".$mdbe->getMessage());
+            Utils::handleMySQLException($mdbe);
             $_SESSION['alert']['type'] = 'error';
             $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
 
             return null;
         }
         catch (Exception $e) {
-            error_log("Database error: ".$e->getMessage());
+            Utils::handleException($e);
             $_SESSION['alert']['type'] = 'error';
             $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
 
@@ -462,38 +465,34 @@ class DB_utils
     public static function selectUserById(int $id): ?User
     {
         try {
-            $row = DB::getMDB()->queryOneRow("select * 
+            $row = DB::getMDB()->queryOneRow("select a.*, b.name as 'office_name', c.name as 'country_name', c.id as 'country_id' 
                                                   from 
-                                                     cargo_users 
-                                                  where 
-                                                     id=%s", $id);
+                                                     cargo_users a,
+                                                     cargo_offices b,
+                                                     cargo_countries c  
+                                                  where
+                                                     (a.office_id = b.id)
+                                                     and
+                                                     (b.country = c.id)
+                                                     and
+                                                     (a.id=%d)", $id);
             if (is_null($row)) {
                 error_log("No cargo_users was found for id=".$id);
 
                 return null;
             }
 
-            $user = new User();
-            $user->setId($row['id']);
-            $user->setUsername($row['username']);
-            $user->setPassword($row['password']);
-            $user->setName($row['name']);
-            $user->setClass($row['class']);
-            $user->setCountryId($row['country_id']);
-            $user->setInsert($row['insert']);
-            $user->setReports($row['reports']);
-
-            return $user;
+            return self::row2user($row);
         }
         catch (MeekroDBException $mdbe) {
-            error_log("Database error: ".$mdbe->getMessage());
+            Utils::handleMySQLException($mdbe);
             $_SESSION['alert']['type'] = 'error';
             $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
 
             return null;
         }
         catch (Exception $e) {
-            error_log("Database error: ".$e->getMessage());
+            Utils::handleException($e);
             $_SESSION['alert']['type'] = 'error';
             $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
 
@@ -507,11 +506,11 @@ class DB_utils
             return DB::getMDB()->queryFirstField("select value from cargo_settings where `key`=%s", $key);
         }
         catch (MeekroDBException $mdbe) {
-            error_log("Database error: ".$mdbe->getMessage());
+            Utils::handleMySQLException($mdbe);
             return null;
         }
         catch (Exception $e) {
-            error_log("Database error: ".$e->getMessage());
+            Utils::handleException($e);
             return null;
         }
     }
@@ -525,15 +524,44 @@ class DB_utils
             ]);
         }
         catch (MeekroDBException $mdbe) {
-            error_log("Database error: ".$mdbe->getMessage());
+            Utils::handleMySQLException($mdbe);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
+
             return false;
         }
         catch (Exception $e) {
-            error_log("Database error: ".$e->getMessage());
+            Utils::handleException($e);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+
             return false;
         }
 
         return true;
+    }
+
+    public static function clearNotification(int $id): ?bool
+    {
+        try {
+            return DB::getMDB()->update ( 'cargo_notifications', array (
+                'viewed' => 1
+            ), "id=%d", $id );
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
+
+            return false;
+        }
+        catch (Exception $e) {
+            Utils::handleException($e);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+
+            return false;
+        }
     }
 
     public static function generateMatches() {
@@ -631,14 +659,315 @@ class DB_utils
             }
         }
         catch (MeekroDBException $mdbe) {
-            error_log("Database error: ".$mdbe->getMessage());
+            Utils::handleMySQLException($mdbe);
             return null;
         }
         catch (Exception $e) {
-            error_log("Database error: ".$e->getMessage());
+            Utils::handleException($e);
             return null;
         }
 
         self::writeValue('changes', '0');
+    }
+
+    public static function handleNotifications(): bool
+    {
+        try {
+            $rows = DB::getMDB()->query('SELECT 
+                                            a.*, b.name 
+                                         FROM 
+                                            cargo_notifications a, cargo_users b 
+                                         WHERE
+                                            (a.originator_id = b.id)
+                                            and
+                                            (a.user_id=%d) 
+                                            and
+                                            (a.viewed=0)
+                                         ORDER BY SYS_CREATION_DATE', $_SESSION['operator']['id']);
+            if(!empty($rows)) {
+                echo '
+        <!--begin::Separator-->
+        <div class="separator separator-dashed my-7"></div>
+        <!--end::Separator-->
+
+        <!--begin::Notifications-->
+        <div class="pt-5">
+            <!--begin:Heading-->
+            <h5 class="mb-7">Recent Notifications</h5>
+            <!--end:Heading-->
+                ';
+
+                foreach ($rows as $row) {
+                    $notification = new Notification();
+
+                    $notification->setId($row['id']);
+                    $notification->setFrom($row['name']);
+                    $notification->setEntityId($row['entity_id']);
+                    $notification->setEntityKind($row['entity_kind']);
+                    $notification->setKind($row['notification_kind']);
+
+                    $title = '';
+                    $label = '';
+                    $text = '';
+                    $url = '';
+                    $empty = false;
+
+                    switch ($notification->getKind()) {
+                        case 1:
+                        { // New item
+                            $label = 'btn-light-primary';
+                            switch ($notification->getEntityKind()) {
+                                case 1:
+                                { // Cargo
+                                    $title = 'New cargo request';
+                                    $text = 'A new cargo request was added by ' . $notification->getFrom();
+                                    $url = '/?viewedItem=' . $notification->getId() . '&page=cargoInfo&id=' . $notification->getEntityId();
+
+                                    break;
+                                }
+                                case 2:
+                                { // Truck
+                                    $title = 'New available truck';
+                                    $text = 'A new available truck was added by ' . $notification->getFrom();
+                                    $url = '/?viewedItem=' . $notification->getId() . '&page=truckInfo&id=' . $notification->getEntityId();
+
+                                    break;
+                                }
+                                case 3:
+                                { // Truck stop
+                                    $title = 'New truck stop added';
+                                    $text = 'A new truck stop was added for an existing truck by ' . $notification->getFrom();
+                                    $url = '/?viewedItem=' . $notification->getId() . '&page=truckInfo&id=' . $notification->getEntityId();
+
+                                    break;
+                                }
+                                default:
+                                { // Cargo notification
+                                    return false;
+                                }
+                            }
+
+                            break;
+                        }
+                        case 2:
+                        { // Changed item
+                            $label = 'btn-light-warning';
+                            switch ($notification->getEntityKind()) {
+                                case 1:
+                                { // Cargo
+                                    $title = 'Changed cargo';
+                                    $text = 'An existing cargo request was modified by  ' . $notification->getFrom();
+                                    $url = '/?viewedItem=' . $notification->getId() . '&page=cargoInfo&id=' . $notification->getEntityId();
+
+                                    break;
+                                }
+                                case 2:
+                                { // Truck
+                                    $title = 'Changed available truck';
+                                    $text = 'An existing available truck was modified by  ' . $notification->getFrom();
+                                    $url = '/?viewedItem=' . $notification->getId() . '&page=cargoInfo&id=' . $notification->getEntityId();
+
+                                    break;
+                                }
+                                default:
+                                { // Truck stop
+                                    $empty = true;
+                                }
+                            }
+
+                            break;
+                        }
+                        case 3:
+                        { // Approved item
+                            $label = 'btn-light-success';
+                            switch ($notification->getEntityKind()) {
+                                case 1:
+                                { // Cargo
+                                    $title = 'Approved cargo';
+                                    $text = 'Your cargo request was approved by  ' . $notification->getFrom();
+                                    $url = '/?viewedItem=' . $notification->getId() . '&page=cargoInfo&id=' . $notification->getEntityId();
+
+                                    break;
+                                }
+                                default:
+                                { // Cargo notification
+                                    $empty = true;
+                                }
+                            }
+
+                            break;
+                        }
+                        case 4:
+                        { // Removed item
+                            $label = 'btn-light-danger';
+                            switch ($notification->getEntityKind()) {
+                                case 1:
+                                { // Cargo
+                                    $title = 'Cancelled cargo request';
+                                    $text = 'A cargo request was removed by ' . $notification->getFrom();
+                                    $url = '/?viewedItem=' . $notification->getId() . '&page=cargo';
+
+                                    break;
+                                }
+                                case 2:
+                                { // Truck
+                                    $title = 'Cancelled truck';
+                                    $text = 'A truck entry was removed by ' . $notification->getFrom();
+                                    $url = '/?viewedItem=' . $notification->getId() . '&page=trucks';
+
+                                    break;
+                                }
+                                case 3:
+                                { // Truck stop
+                                    $title = 'Removed truck stop';
+                                    $text = 'A scheduled stop for an existing truck was removed by ' . $notification->getFrom();
+                                    $url = '/?viewedItem=' . $notification->getId() . '&page=truckInfo&id=' . $notification->getEntityId();
+
+                                    break;
+                                }
+                                default:
+                                { // Cargo notification
+                                    $empty = true;
+                                }
+                            }
+
+                            break;
+                        }
+                        default:
+                        {
+                            return false;
+                        }
+                    }
+
+                    if (!$empty) echo '
+            <!--begin::Item-->
+            <div class="bg-gray-100 d-flex align-items-center p-5 rounded gutter-b">
+                <!--begin::Icon-->
+                <div class="d-flex flex-center position-relative ml-4 mr-6 ml-lg-6 mr-lg-10">
+					<span class="svg-icon svg-icon-4x svg-icon-primary position-absolute opacity-15">
+						<!--begin::Svg Icon | path:assets/media/svg/icons/Layout/Layout-polygon.svg-->
+						<svg xmlns="http://www.w3.org/2000/svg" width="70px" height="70px" viewBox="0 0 70 70" fill="none">
+							<g stroke="none" stroke-width="1" fill-rule="evenodd">
+							<path d="M28 4.04145C32.3316 1.54059 37.6684 1.54059 42 4.04145L58.3109 13.4585C62.6425 15.9594 65.3109 20.5812 65.3109 25.5829V44.4171C65.3109 49.4188 62.6425 54.0406 58.3109 56.5415L42 65.9585C37.6684 68.4594 32.3316 68.4594 28 65.9585L11.6891 56.5415C7.3575 54.0406 4.68911 49.4188 4.68911 44.4171V25.5829C4.68911 20.5812 7.3575 15.9594 11.6891 13.4585L28 4.04145Z" fill="#000000" />									</g>
+						</svg>
+                        <!--end::Svg Icon-->
+					</span>
+                    <span class="svg-icon svg-icon-lg svg-icon-primary position-absolute">
+						<!--begin::Svg Icon | path:assets/media/svg/icons/Files/File-done.svg-->
+						<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+							<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+								<polygon points="0 0 24 0 24 24 0 24" />
+    								<path d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z M10.875,15.75 C11.1145833,15.75 11.3541667,15.6541667 11.5458333,15.4625 L15.3791667,11.6291667 C15.7625,11.2458333 15.7625,10.6708333 15.3791667,10.2875 C14.9958333,9.90416667 14.4208333,9.90416667 14.0375,10.2875 L10.875,13.45 L9.62916667,12.2041667 C9.29375,11.8208333 8.67083333,11.8208333 8.2875,12.2041667 C7.90416667,12.5875 7.90416667,13.1625 8.2875,13.5458333 L10.2041667,15.4625 C10.3958333,15.6541667 10.6354167,15.75 10.875,15.75 Z" fill="#000000" fill-rule="nonzero" opacity="0.3" />
+									<path d="M10.875,15.75 C10.6354167,15.75 10.3958333,15.6541667 10.2041667,15.4625 L8.2875,13.5458333 C7.90416667,13.1625 7.90416667,12.5875 8.2875,12.2041667 C8.67083333,11.8208333 9.29375,11.8208333 9.62916667,12.2041667 L10.875,13.45 L14.0375,10.2875 C14.4208333,9.90416667 14.9958333,9.90416667 15.3791667,10.2875 C15.7625,10.6708333 15.7625,11.2458333 15.3791667,11.6291667 L11.5458333,15.4625 C11.3541667,15.6541667 11.1145833,15.75 10.875,15.75 Z" fill="#000000" />
+							</g>
+						</svg>
+                        <!--end::Svg Icon-->
+					</span>
+                </div>
+                <!--end::Icon-->
+
+                <!--begin::Description-->
+                <div class="ml-1">
+           			<a href="' . $url . '" class="btn btn-sm ' . $label . ' font-weight-bolder py-1 px-3">' . $title . '</a>
+                    <p class="m-0 text-dark-50 font-weight-bold">' . $text . '</p>
+                </div>
+                <!--end::Description-->
+            </div>
+            <!--end::Item-->
+				';
+                }
+
+                echo '
+        </div>
+        <!--end::Notifications-->
+                ';
+            }
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
+
+            return false;
+        }
+        catch (Exception $e) {
+            Utils::handleException($e);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function notificationMessage(): ?string
+    {
+        try {
+            $row = DB::getMDB()->queryFirstField('SELECT 
+                                            count(1) 
+                                         FROM 
+                                            cargo_notifications 
+                                         WHERE
+                                            (user_id=%d) 
+                                            and
+                                            (viewed=0)
+                                         ORDER BY SYS_CREATION_DATE', $_SESSION['operator']['id']);
+
+            if(empty($row)) {
+                return '<small class="d-block pt-2 font-size-sm" style="color: darkgreen">No new notifications!</small>';
+            }
+            else {
+                return '<small class="d-block pt-2 font-size-sm" style="color: red">'.$row.' messages</small>';
+            }
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
+
+            return null;
+        }
+        catch (Exception $e) {
+            Utils::handleException($e);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+
+            return null;
+        }
+    }
+
+    public static function addNotification(int $originator_id, int $notification_kind, int $entity_kind, int $entity_id): bool
+    {
+        try {
+            DB::getMDB()->insert('cargo_notifications', array(
+                'operator' => $_SESSION['operator']['username'],
+                'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
+                'viewed' => 0,
+                'user_id' => $originator_id,
+                'originator_id' => $_SESSION['operator']['id'],
+                'notification_kind' => $notification_kind,
+                'entity_kind' => $entity_kind,
+                'entity_id' => $entity_id
+            ));
+
+            DB::getMDB()->commit();
+
+            return true;
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
+
+            return false;
+        }
+        catch (Exception $e) {
+            Utils::handleException($e);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+
+            return false;
+        }
     }
 }

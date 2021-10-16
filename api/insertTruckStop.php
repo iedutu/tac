@@ -36,14 +36,18 @@ if (isset ( $_POST ['_submitted'] )) {
             'cmr' => $_POST ['cmr']
         ));
 
-        $rec_id = DB::getMDB()->insertId();
-
-        DB::getMDB()->query('UPDATE cargo_truck_stops SET stop_id=stop_id+1 WHERE ((truck_id=%d) AND (stop_id>=%d) AND (id<>%d))', $_SESSION['entry-id'], $stop_id-1, $rec_id);
-        DB_utils::writeValue('changes', '1');
         $id = DB::getMDB()->insertId();
 
+        DB::getMDB()->query('UPDATE cargo_truck_stops SET stop_id=stop_id+1 WHERE ((truck_id=%d) AND (stop_id>=%d) AND (id<>%d))', $_SESSION['entry-id'], $stop_id-1, $id);
+
+        // Set the trigger for the generation of the Match page
+        DB_utils::writeValue('changes', '1');
+
+        // Add a notification to the receiver of the cargo request
+        DB_utils::addNotification($_POST ['recipient'], 1, 3, $id);
+
         DB::getMDB()->commit();
-	$url = 'http://www.rohel.ro/new/tac/?page=details&type=truck&id='.$id;
+	    $url = 'http://www.rohel.ro/new/tac/?page=details&type=truck&id='.$id;
 
         // e-mail confirmation
         $mail = new PHPMailer ();

@@ -40,10 +40,16 @@ if (isset ( $_POST ['_submitted'] )) {
             'adr' => $_POST ['adr']
         ));
 
+        $id = DB::getMDB()->insertId();
+
+        // Keep a record of what happened
         Utils::cargo_audit('cargo_request', 'NEW-ENTRY', null, $_POST ['recipient']);
+
+        // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');
 
-        $id = DB::getMDB()->insertId();
+        // Add a notification to the receiver of the cargo request
+        DB_utils::addNotification($_POST ['recipient'], 1, 1, $id);
 
         DB::getMDB()->commit();
 

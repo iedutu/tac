@@ -47,7 +47,12 @@ try {
         ), "id=%d", $_POST ['id']);
 
         Utils::cargo_audit('cargo_request', 'status', $_POST['id'], 4);
+
+        // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');
+
+        // Add a notification to the receiver of the cargo request
+        DB_utils::addNotification($_SESSION['recipient-id'], 4, 1, $_POST['id']);
 
         DB::getMDB()->commit();
 

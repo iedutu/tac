@@ -39,6 +39,12 @@ if (isset ( $_POST ['id'] )) {
 
         Utils::cargo_audit('cargo_truck', 'status', $_POST['id'], 3);
 
+        // Set the trigger for the generation of the Match page
+        DB_utils::writeValue('changes', '1');
+
+        // Add a notification to the receiver of the cargo request
+        DB_utils::addNotification($_SESSION['recipient-id'], 4, 2, $_POST['id']);
+
         DB::getMDB()->commit ();
 
         $_SESSION['alert']['type'] = 'success';

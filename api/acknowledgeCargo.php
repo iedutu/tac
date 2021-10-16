@@ -13,16 +13,20 @@ if(isset($_POST['id'])) {
     try {
         DB::getMDB()->update('cargo_request', array(
             'acceptance' => date("Y-m-d H:i:s"),
-            'accepted_by' => $_SESSION ['operator'],
+            'accepted_by' => $_SESSION ['operator']['id'],
             $_POST ['id'] => $_POST ['value'],
-            'status' => 1
+            'status' => 2
         ), "id=%d", $_SESSION['entry-id']);
 
         Utils::cargo_audit('cargo_request', 'acceptance', $_SESSION['entry-id'], date("Y-m-d H:i:s"));
-        Utils::cargo_audit('cargo_request', 'accepted_by', $_SESSION['entry-id'], $_SESSION ['operator']);
+        Utils::cargo_audit('cargo_request', 'accepted_by', $_SESSION['entry-id'], $_SESSION ['operator']['username']);
         Utils::cargo_audit('cargo_request', 'status', $_SESSION['entry-id'], 1);
 
+        // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');
+
+        // Add a notification to the receiver of the cargo request
+        DB_utils::addNotification($_SESSION['originator-id'], 3, 1, $_SESSION['entry-id']);
 
         // TODO: Send a proper acknowledgement e-mail.
         // Utils::email_notification($_POST['id'], $_POST['value'], $_SESSION['entry-id']);

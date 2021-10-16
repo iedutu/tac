@@ -52,7 +52,12 @@ if(isset($_POST['id'])) {
 
         Utils::cargo_audit($table, $_POST['id'], $_SESSION['entry-id'], $_POST['value']);
         Utils::audit_update($table, $_POST['id'], $_SESSION['entry-id']);
+
+        // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');
+
+        // Add a notification to the receiver of the cargo request
+        DB_utils::addNotification($_SESSION['recipient-id'], 2, $_SESSION['entry-kind'], $_SESSION['entry-id']);
 
         DB::getMDB()->commit();
 

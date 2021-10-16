@@ -54,7 +54,7 @@
 									<div class="btn btn-icon btn-hover-transparent-white w-auto d-flex align-items-center btn-lg px-2" id="kt_quick_user_toggle">
 										<div class="symbol symbol-circle symbol-30 bg-white overflow-hidden">
 											<div class="symbol-label">
-												<img alt="Userland" src="assets/media/svg/avatars/018-girl-9.svg" class="h-75 align-self-end" />
+												<img alt="Userland" src="assets/media/svg/avatars/<?=$_SESSION['operator']['avatar']?>.svg" class="h-75 align-self-end" />
 											</div>
 										</div>
 									</div>

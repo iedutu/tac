@@ -16,7 +16,7 @@ class Types
         }
         $pool->internalAddGeneratedFile(
             '
-š
+±
 types.protoRohel"ž
 Request
 
@@ -189,7 +189,7 @@ truck_type (
 creation_date	 (
 update_date
  (
-operator (	"„
+operator (	"®
 User
 
 id (
@@ -199,7 +199,19 @@ truck_type (
 insert (
 reports (
 name (	
-office	 (	bproto3'
+office	 (	
+
+country_id
+ (
+country_name (	"k
+Notification
+
+id (
+from (	
+kind (	
+entity_kind (	
+	entity_id (
+url (	bproto3'
         , true);
 
         static::$is_initialized = true;

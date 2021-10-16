@@ -500,8 +500,6 @@ class Utils
     }
 
     public static function audit_update(string $table, string $row, int $id) {
-        error_log('audit_update with ['.$table.'], ['.$row.'], ['.$id.']');
-
         switch($table) {
             case 'cargo_request': {
                 if($_SESSION['role'] == 'originator') {
@@ -516,8 +514,6 @@ class Utils
                         return;
                     }
                 }
-
-                error_log('Audit file read');
 
                 switch($row) {
                     case 'id':              { $a->setId(true); break;}

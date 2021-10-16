@@ -10,7 +10,9 @@ unset($_SESSION['current_truck']);
 
 // Required for the fetching of notifications, dynamic updates
 $_SESSION['entry-id'] = $_GET['id'];
-$_SESSION['email-recipient'] = $truck->getRecipient();
+$_SESSION['entry-kind'] = 2;
+$_SESSION['originator-id'] = $truck->getOriginator();
+$_SESSION['recipient-id'] = $truck->getRecipient();
 
 if(is_null($truck)) {
     error_log('No cargo_truck found for id='.$_GET['id']);
@@ -67,8 +69,13 @@ else {
 
 $originator = DB_utils::selectUserById($truck->getOriginator());
 $recipient = DB_utils::selectUserById($truck->getRecipient());
+$_SESSION['email-recipient'] = $recipient->getUsername();
 
+// Read the changes which happened so far
 $audit = Audit::readTruck($truck->getId());
+// Clean-up the changes
+Audit::clearTruck($truck->getId());
+
 $class_text_new = 'text-primary';
 $class_text_default = '';
 
