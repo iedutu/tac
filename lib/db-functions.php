@@ -17,8 +17,9 @@ use Rohel\Truck;
 use Rohel\TruckStop;
 use Rohel\User;
 
-
 include $_SERVER['DOCUMENT_ROOT'] . "/lib/db-settings.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/lib/site-settings.php";
+
 
 class DB_utils
 {
@@ -39,6 +40,7 @@ class DB_utils
 
         return $user;
     }
+
     static function row2request($row): Request
     {
         $request = new Request();
@@ -46,7 +48,7 @@ class DB_utils
         if(!empty($row['SYS_CREATION_DATE'])) $request->setCreationDate(strtotime($row['SYS_CREATION_DATE']));
         if(!empty($row['SYS_UPDATE_DATE'])) $request->setUpdateDate(strtotime($row['SYS_UPDATE_DATE']));
         if(!empty($row['acceptance'])) $request->setAcceptance(strtotime($row['acceptance']));
-        $request->setAcceptedBy($row['accepted_by']);
+        if(!empty($row['accepted_by'])) $request->setAcceptedBy($row['accepted_by']);
         $request->setAdr($row['adr']);
         $request->setAmeta($row['ameta']);
         $request->setClient($row['client']);
@@ -82,7 +84,7 @@ class DB_utils
         if(!empty($row['SYS_CREATION_DATE'])) $truck->setCreationDate(strtotime($row['SYS_CREATION_DATE']));
         if(!empty($row['SYS_UPDATE_DATE'])) $truck->setUpdateDate(strtotime($row['SYS_UPDATE_DATE']));
         if(!empty($row['acceptance'])) $truck->setAcceptance(strtotime($row['acceptance']));
-        $truck->setAcceptedBy($row['accepted_by']);
+        if(!empty($row['accepted_by'])) $truck->setAcceptedBy($row['accepted_by']);
         $truck->setAdr($row['adr']);
         $truck->setAmeta($row['ameta']);
         if(!empty($row['availability'])) $truck->setAvailability(strtotime($row['availability']));
@@ -96,7 +98,6 @@ class DB_utils
         $truck->setId($row['id']);
         if(!empty($row['loading_date'])) $truck->setLoadingDate(strtotime($row['loading_date']));
         $truck->setOperator($row['operator']);
-        $truck->setOrderType($row['order_type']);
         $truck->setOriginator($row['originator_id']);
         $truck->setPlateNumber($row['plate_number']);
         $truck->setStatus($row['status']);
@@ -120,6 +121,7 @@ class DB_utils
         $stop->setWeight($row['weight']);
         $stop->setTruckId($row['truck_id']);
         $stop->setStopId($row['stop_id']);
+        $stop->setAddress($row['address']);
         if(!empty($row['cmr'])) $stop->setCmr($row['cmr']);
         $stop->setCity($row['city']);
 
@@ -226,6 +228,45 @@ class DB_utils
             $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
 
             return null;
+        }
+    }
+
+    /**
+     * @throws ApplicationException
+     */
+    public static function insertRequest(Request $entry): int
+    {
+        try {
+            DB::getMDB()->insert('cargo_request', array(
+                'originator_id' => $_SESSION['operator']['id'],
+                'operator' => $_SESSION['operator']['username'],
+                'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
+                'status' => $entry->getStatus(),
+                'client' => $entry->getClient(),
+                'recipient_id' => $entry->getRecipient(),
+                'from_city' => $entry->getFromCity(),
+                'to_city' => $entry->getToCity(),
+                'from_address' => $entry->getFromAddress(),
+                'to_address' => $entry->getToAddress(),
+                'expiration' => DB::getMDB()->sqleval("from_unixtime(%d)",$entry->getExpiration()),
+                'loading_date' => DB::getMDB()->sqleval("from_unixtime(%d)",$entry->getLoadingDate()),
+                'unloading_date' => DB::getMDB()->sqleval("from_unixtime(%d)",$entry->getUnloadingDate()),
+                'description' => $entry->getDescription(),
+                'collies' => $entry->getCollies(),
+                'weight' => $entry->getWeight(),
+                'volume' => $entry->getVolume(),
+                'loading_meters' => $entry->getLoadingMeters(),
+                'instructions' => $entry->getInstructions(),
+                'freight' => $entry->getFreight(),
+                'order_type' => $entry->getOrderType(),
+                'adr' => (empty($entry->getAdr())?null:$entry->getAdr())
+            ));
+
+            return DB::getMDB()->insertId();
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe->getMessage());
         }
     }
 
@@ -340,6 +381,65 @@ class DB_utils
         }
     }
 
+    /**
+     * @throws ApplicationException
+     */
+    public static function insertTruck(Truck $entry): int
+    {
+        try {
+            DB::getMDB()->insert('cargo_truck', array(
+                'originator_id' => $_SESSION['operator']['id'],
+                'operator' => $_SESSION['operator']['username'],
+                'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
+                'status' => $entry->getStatus(),
+                'recipient_id' => $entry->getRecipient(),
+                'from_city' => $entry->getFromCity(),
+                'from_address' => $entry->getFromAddress(),
+                'expiration' => DB::getMDB()->sqleval("from_unixtime(%d)",$entry->getExpiration()),
+                'loading_date' => DB::getMDB()->sqleval("from_unixtime(%d)",$entry->getLoadingDate()),
+                'unloading_date' => DB::getMDB()->sqleval("from_unixtime(%d)",$entry->getUnloadingDate()),
+                'freight' => $entry->getFreight(),
+                'contract_type' => $entry->getContractType(),
+                'details' => $entry->getDetails(),
+                'plate_number' => $entry->getPlateNumber(),
+                'ameta' => $entry->getAmeta(),
+                'adr' => (empty($entry->getAdr())?null:$entry->getAdr())
+            ));
+
+            return DB::getMDB()->insertId();
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe->getMessage());
+        }
+    }
+
+    /**
+     * @throws ApplicationException
+     */
+    public static function insertTruckStop(TruckStop $entry): int
+    {
+        try {
+            DB::getMDB()->insert('cargo_truck_stops', array(
+                'operator' => $_SESSION['operator']['username'],
+                'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
+                'truck_id' => $entry->getTruckId(),
+                'stop_id' => $entry->getStopId(),
+                'city' => $entry->getCity(),
+                'address' => $entry->getAddress(),
+                'loading_meters' => $entry->getLoadingMeters(),
+                'weight' => $entry->getWeight(),
+                'volume' => $entry->getVolume()
+            ));
+
+            return DB::getMDB()->insertId();
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe->getMessage());
+        }
+    }
+
     public static function insertMatch(TruckMatch $match): bool
     {
         try {
@@ -391,8 +491,7 @@ class DB_utils
                 'from_address' => $truck->getFromAddress(),
                 'from_city' => $truck->getFromCity(),
                 'loading_date' => $truck->getLoadingDate(),
-                'operator' => $_SESSION['operator'],
-                'order_type' => $truck->getOrderType(),
+                'operator' => $_SESSION['operator']['username'],
                 'originator' => $truck->getOriginator(),
                 'plate_number' => $truck->getPlateNumber(),
                 'recipient' => $truck->getRecipient(),
@@ -515,30 +614,20 @@ class DB_utils
         }
     }
 
+    /**
+     * @throws ApplicationException
+     */
     public static function writeValue(string $key, string $value): ?bool
     {
         try {
-            DB::getMDB()->replace('cargo_settings', [
-                'key' => $key,
+            return DB::getMDB()->update ( 'cargo_settings', array (
                 'value' => $value
-            ]);
+            ), "`key`=%s", $key );
         }
         catch (MeekroDBException $mdbe) {
             Utils::handleMySQLException($mdbe);
-            $_SESSION['alert']['type'] = 'error';
-            $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
-
-            return false;
+            throw new ApplicationException($mdbe->getMessage());
         }
-        catch (Exception $e) {
-            Utils::handleException($e);
-            $_SESSION['alert']['type'] = 'error';
-            $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
-
-            return false;
-        }
-
-        return true;
     }
 
     public static function clearNotification(int $id): ?bool
@@ -592,7 +681,6 @@ class DB_utils
                     $match->setVolume($stop->getVolume());
                     $match->setLoadingMeters($stop->getLoadingMeters());
                     $match->setAdr($truck->getAdr());
-                    $match->setOrderType($truck->getOrderType());
                     $match->setPlateNumber($truck->getPlateNumber());
                     $match->setAmeta($truck->getAmeta());
                     $match->setAvailability($truck->getUnloadingDate());
@@ -600,8 +688,7 @@ class DB_utils
                     $match->setToCity($stop->getCity());
                     $match->setItemDate($truck->getCreationDate());
                     $match->setItemId($truck->getId());
-                    $match->setOrderType($truck->getOrderType());
-                    $match->setItemKind('truck');
+                    $match->setItemKind('truckInfo');
                     $match->setOperator($_SESSION['operator']['username']);
                     $match->setOriginatorId($truck->getOriginator());
                     $match->setRecipientId($truck->getRecipient());
@@ -647,7 +734,7 @@ class DB_utils
                 $match->setItemDate($cargo->getCreationDate());
                 $match->setItemId($cargo->getId());
                 $match->setOrderType($cargo->getOrderType());
-                $match->setItemKind('cargo');
+                $match->setItemKind('cargoInfo');
                 $match->setOperator($_SESSION['operator']['username']);
                 $match->setOriginatorId($cargo->getOriginator());
                 $match->setRecipientId($cargo->getRecipient());
@@ -937,6 +1024,9 @@ class DB_utils
         }
     }
 
+    /**
+     * @throws ApplicationException
+     */
     public static function addNotification(int $originator_id, int $notification_kind, int $entity_kind, int $entity_id): bool
     {
         try {
@@ -957,17 +1047,7 @@ class DB_utils
         }
         catch (MeekroDBException $mdbe) {
             Utils::handleMySQLException($mdbe);
-            $_SESSION['alert']['type'] = 'error';
-            $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
-
-            return false;
-        }
-        catch (Exception $e) {
-            Utils::handleException($e);
-            $_SESSION['alert']['type'] = 'error';
-            $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
-
-            return false;
+            throw new ApplicationException($mdbe->getMessage());
         }
     }
 }

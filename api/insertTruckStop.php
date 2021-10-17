@@ -44,7 +44,7 @@ if (isset ( $_POST ['_submitted'] )) {
         DB_utils::writeValue('changes', '1');
 
         // Add a notification to the receiver of the cargo request
-        DB_utils::addNotification($_POST ['recipient'], 1, 3, $id);
+        DB_utils::addNotification($_SESSION['recipient-id'], 1, 3, $id);
 
         DB::getMDB()->commit();
 	    $url = 'http://www.rohel.ro/new/tac/?page=details&type=truck&id='.$id;

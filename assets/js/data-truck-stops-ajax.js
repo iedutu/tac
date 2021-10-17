@@ -71,14 +71,23 @@ let KTDatatableTruckStops = function() {
             field: 'loading_meters',
             title: 'LDM',
             type: 'number',
+            template: function (row) {
+                return row.volume + ' m';
+            },
         }, {
             field: 'weight',
             title: 'Weight',
             type: 'number',
+            template: function (row) {
+                return row.volume + ' kg';
+            },
         }, {
             field: 'volume',
             title: 'Volume',
             type: 'number',
+            template: function (row) {
+                return row.volume + ' m&sup3';
+            },
         }],
     };
 

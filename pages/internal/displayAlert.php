@@ -3,13 +3,10 @@ $width = 12;
 if(isset($_SESSION['alert']['width'])) {
     $width = $_SESSION['alert']['width'];
 }
-?>
-
-<div class="col-lg-<?=$width?>">
-    <?php
-    if(isset($_SESSION['alert'])) {
-        if($_SESSION['alert']['type'] == 'success') {
-            echo '
+if(isset($_SESSION['alert'])) {
+    if($_SESSION['alert']['type'] == 'success') {
+        echo '
+<div class="col-lg-'.$width.'">
     <div class="alert alert-custom alert-success" role="alert">
         <div class="alert-icon">
             <i class="flaticon-warning"></i>
@@ -21,10 +18,12 @@ if(isset($_SESSION['alert']['width'])) {
             </button>
         </div>
     </div>
+</div>
                 ';
-        }
-        else {
-            echo '
+    }
+    else {
+        echo '
+<div class="col-lg-'.$width.'">
     <div class="alert alert-custom alert-danger" role="alert">
         <div class="alert-icon">
             <i class="flaticon-questions-circular-button"></i>
@@ -36,10 +35,10 @@ if(isset($_SESSION['alert']['width'])) {
             </button>
         </div>
     </div>
-                ';
-        }
-
-        unset($_SESSION['alert']);
-    }
-    ?>
 </div>
+                ';
+    }
+
+    unset($_SESSION['alert']);
+}
+?>

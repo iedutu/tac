@@ -90,13 +90,13 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
             <div class="d-flex flex-column-auto flex-column pt-lg-40 pt-15">
                 <!--begin::Aside header-->
                 <a href="#" class="text-center mb-15">
-                    <img src="/assets/media/logos/package.svg" alt="logo" class="h-200px" />
+                    <img src="/assets/media/logos/package.svg" alt="logo" class="h-300px" />
                 </a>
                 <!--end::Aside header-->
-                <!--begin::Aside title-->
+                <!--begin::Aside title
                 <h3 class="font-weight-bolder text-center font-size-h2 font-size-h1-lg text-white">ROHEL
                     <br />TRANS</h3>
-                <!--end::Aside title-->
+                end::Aside title-->
             </div>
             <!--end::Aside Top-->
             <!--begin::Aside Bottom

@@ -23,7 +23,6 @@ try {
                                         cargo_truck_stops
                                      WHERE
                                         truck_id=%d", $_SESSION['entry-id']);
-
     error_log('I have ['.$stops_count.'] elements in my DB.');
 
     // Remove the stops from the database
@@ -44,8 +43,8 @@ try {
     }
 
     // Redo the stop_id numbers on the remaining records
-    // TODO: This might be MySQL specific!!!
-    DB::getMDB()->get()->multi_query('SET @num := -1; UPDATE cargo_truck_stops SET stop_id = @num := (@num+1) WHERE truck_id='.$_SESSION['entry-id'].' ORDER BY stop_id;');
+    DB::getMDB()->get()->multi_query('SET @num := -1; UPDATE cargo_truck_stops SET stop_id = @num := (@num+1) WHERE truck_id='.$_SESSION['entry-id'].' ORDER BY stop_id');
+    while (DB::getMDB()->get()->next_result()) {;}  // Required to fix the sync error: https://stackoverflow.com/questions/27899598/mysqli-multi-query-commands-out-of-sync-you-cant-run-this-command-now
 
     // Set the trigger for the generation of the Match page
     DB_utils::writeValue('changes', '1');

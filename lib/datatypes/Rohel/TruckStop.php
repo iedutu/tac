@@ -22,6 +22,10 @@ class TruckStop extends \Google\Protobuf\Internal\Message
      */
     protected $city = '';
     /**
+     * Generated from protobuf field <code>string address = 12;</code>
+     */
+    protected $address = '';
+    /**
      * Generated from protobuf field <code>int32 cmr = 3;</code>
      */
     protected $cmr = 0;
@@ -66,6 +70,7 @@ class TruckStop extends \Google\Protobuf\Internal\Message
      *
      *     @type int $id
      *     @type string $city
+     *     @type string $address
      *     @type int $cmr
      *     @type float $loading_meters
      *     @type float $weight
@@ -122,6 +127,28 @@ class TruckStop extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkString($var, True);
         $this->city = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>string address = 12;</code>
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * Generated from protobuf field <code>string address = 12;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setAddress($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->address = $var;
 
         return $this;
     }

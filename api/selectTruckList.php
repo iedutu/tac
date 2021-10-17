@@ -39,7 +39,6 @@ try {
                                         a.status as 'status', 
                                         a.plate_number as 'plate_number', 
                                         a.cargo_type as 'cargo_type', 
-                                        a.order_type as 'order_type', 
                                         a.truck_type as 'truck_type', 
                                         DATE_FORMAT(a.loading_date, %s) as 'loading_date', 
                                         DATE_FORMAT(a.unloading_date, %s) as 'unloading_date', 

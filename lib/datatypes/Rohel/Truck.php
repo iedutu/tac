@@ -30,9 +30,9 @@ class Truck extends \Google\Protobuf\Internal\Message
      */
     protected $recipient = 0;
     /**
-     * Generated from protobuf field <code>string accepted_by = 5;</code>
+     * Generated from protobuf field <code>int32 accepted_by = 5;</code>
      */
-    protected $accepted_by = '';
+    protected $accepted_by = 0;
     /**
      * Generated from protobuf field <code>int32 status = 6;</code>
      */
@@ -82,10 +82,6 @@ class Truck extends \Google\Protobuf\Internal\Message
      */
     protected $ameta = '';
     /**
-     * Generated from protobuf field <code>string order_type = 18;</code>
-     */
-    protected $order_type = '';
-    /**
      * Generated from protobuf field <code>string cargo_type = 19;</code>
      */
     protected $cargo_type = '';
@@ -110,7 +106,7 @@ class Truck extends \Google\Protobuf\Internal\Message
      */
     protected $creation_date = 0;
     /**
-     * Generated from protobuf field <code>uint64 update_date = 25;</code>
+     * Generated from protobuf field <code>uint64 update_date = 18;</code>
      */
     protected $update_date = 0;
 
@@ -124,7 +120,7 @@ class Truck extends \Google\Protobuf\Internal\Message
      *     @type string $operator
      *     @type int $originator
      *     @type int $recipient
-     *     @type string $accepted_by
+     *     @type int $accepted_by
      *     @type int $status
      *     @type string $from_city
      *     @type string $from_address
@@ -137,7 +133,6 @@ class Truck extends \Google\Protobuf\Internal\Message
      *     @type float $freight
      *     @type string $plate_number
      *     @type string $ameta
-     *     @type string $order_type
      *     @type string $cargo_type
      *     @type string $truck_type
      *     @type string $contract_type
@@ -241,8 +236,8 @@ class Truck extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string accepted_by = 5;</code>
-     * @return string
+     * Generated from protobuf field <code>int32 accepted_by = 5;</code>
+     * @return int
      */
     public function getAcceptedBy()
     {
@@ -250,13 +245,13 @@ class Truck extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string accepted_by = 5;</code>
-     * @param string $var
+     * Generated from protobuf field <code>int32 accepted_by = 5;</code>
+     * @param int $var
      * @return $this
      */
     public function setAcceptedBy($var)
     {
-        GPBUtil::checkString($var, True);
+        GPBUtil::checkInt32($var);
         $this->accepted_by = $var;
 
         return $this;
@@ -527,28 +522,6 @@ class Truck extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string order_type = 18;</code>
-     * @return string
-     */
-    public function getOrderType()
-    {
-        return $this->order_type;
-    }
-
-    /**
-     * Generated from protobuf field <code>string order_type = 18;</code>
-     * @param string $var
-     * @return $this
-     */
-    public function setOrderType($var)
-    {
-        GPBUtil::checkString($var, True);
-        $this->order_type = $var;
-
-        return $this;
-    }
-
-    /**
      * Generated from protobuf field <code>string cargo_type = 19;</code>
      * @return string
      */
@@ -681,7 +654,7 @@ class Truck extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>uint64 update_date = 25;</code>
+     * Generated from protobuf field <code>uint64 update_date = 18;</code>
      * @return int|string
      */
     public function getUpdateDate()
@@ -690,7 +663,7 @@ class Truck extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>uint64 update_date = 25;</code>
+     * Generated from protobuf field <code>uint64 update_date = 18;</code>
      * @param int|string $var
      * @return $this
      */

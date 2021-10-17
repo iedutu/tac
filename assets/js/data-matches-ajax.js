@@ -132,7 +132,7 @@ let KTDatatableMatchesList = function() {
                     type: 'number',
                     width: 50,
                     template: function (row) {
-                        return row.weight + ' m';
+                        return row.loading_meters + ' m';
                     },
                 }, {
                     field: 'weight',
@@ -148,7 +148,7 @@ let KTDatatableMatchesList = function() {
                     type: 'number',
                     width: 60,
                     template: function (row) {
-                        return row.weight + ' m&sup3';
+                        return row.volume + ' m&sup3';
                     },
                 }, {
                     field: 'plate_number',

@@ -56,7 +56,7 @@ $(document).ready(function() {
         datepicker: {
             orientation: "top right",
             todayHighlight: true,
-            format: "d/m/yyyy"
+            format: "d-m-yyyy"
         }
     });
 });

@@ -3,7 +3,8 @@ session_start ();
 
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
-use PHPMailer\PHPMailer\PHPMailer;
+use Rohel\Truck;
+use Rohel\TruckStop;
 
 if (! Utils::authorized(Utils::$INSERT)) {
     error_log("User not authorized to insert data in the database.");
@@ -12,193 +13,71 @@ if (! Utils::authorized(Utils::$INSERT)) {
 }
 
 if (isset ( $_POST ['_submitted'] )) {
-    error_log("Trying to insert.");
-
+    $truck = new Truck();
+    
     try {
-        DB::getMDB()->insert('cargo_truck', array(
-            'originator_id' => $_SESSION['operator']['id'],
-            'operator' => $_SESSION['operator']['username'],
-            'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
-            'status' => 1,
-            'recipient_id' => $_POST ['recipient'],
-            'from_city' => $_POST ['from_city'],
-            'loading_date' => (($_POST ['rohel_truck_loading'] == '') ? null : DB::getMDB()->sqleval("str_to_date(%s, %s)",$_POST ['rohel_truck_loading'], Utils::$SQL_DATE_FORMAT)),
-            'unloading_date' => (($_POST ['rohel_truck_unloading'] == '') ? null : DB::getMDB()->sqleval("str_to_date(%s, %s)",$_POST ['rohel_truck_unloading'], Utils::$SQL_DATE_FORMAT)),
-            'details' => $_POST ['details'],
-            'freight' => $_POST ['freight'],
-            'cargo_type' => $_POST ['cargo_type'],
-            'contract_type' => $_POST ['contract_type'],
-            'adr' => $_POST ['adr'],
-            'ameta' => $_POST ['ameta'],
-            'plate_number' => $_POST['plate_number']
-        ));
+        $truck->setStatus(1);
+        $truck->setOriginator($_SESSION['operator']['id']);
+        $truck->setRecipient($_POST ['recipient']);
+        $truck->setFromCity($_POST ['from_city']);
+        $truck->setFromAddress($_POST ['from_address']);
+        if(!empty($_POST ['rohel_truck_loading'])) $truck->setLoadingDate(strtotime($_POST ['rohel_truck_loading']));
+        if(!empty($_POST ['rohel_truck_unloading'])) $truck->setUnloadingDate(strtotime($_POST ['rohel_truck_unloading']));
+        $truck->setFreight($_POST ['freight']);
+        if(!empty($_POST['adr'])) $truck->setAdr($_POST ['adr']);
+        $truck->setContractType($_POST ['contract_type']);
+        $truck->setAmeta($_POST ['ameta']);
+        $truck->setPlateNumber($_POST ['plate_number']);
+        $truck->setDetails($_POST ['details']);
 
-        $truck_id = DB::getMDB()->insertId();
+        $id = DB_utils::insertTruck($truck);
         $truck_final_destination = '';
 
+        $stops = [];
         for($i=0;$i<sizeof($_POST['stops']);$i++) {
-            DB::getMDB()->insert('cargo_truck_stops', array(
-                'operator' => $_SESSION['operator'],
-                'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
-                'truck_id' => $truck_id,
-                'stop_id' => $i,
-                'city' => $_POST['stops'][$i]['to_city'],
-                'address' => $_POST['stops'][$i]['to_address'],
-                'loading_meters' => $_POST['stops'][$i]['loading_meters'],
-                'weight' => $_POST['stops'][$i]['weight'],
-                'volume' => $_POST['stops'][$i]['volume']
-            ));
+            $stop = new TruckStop();
 
-            $truck_final_destination = $_POST['stops'][$i]['city'];
+            $stop->setVolume($_POST['stops'][$i]['volume']);
+            $stop->setWeight($_POST['stops'][$i]['weight']);
+            $stop->setLoadingMeters($_POST['stops'][$i]['loading_meters']);
+            $stop->setCity($_POST['stops'][$i]['to_city']);
+            $stop->setAddress($_POST['stops'][$i]['to_address']);
+            $stop->setStopId($i);
+            $stop->setTruckId($id);
+
+            $truck_final_destination = $stop->getCity();
+
+            DB_utils::insertTruckStop($stop);
+            $stops[$i] = $stop;
         }
 
-        $id = DB::getMDB()->insertId();
+        $truck->setStop($stops);
 
-        Utils::cargo_audit('cargo_truck', 'NEW-ENTRY', null, $_POST ['recipient']);
+        Utils::insertCargoAuditEntry('cargo_truck', 'NEW-ENTRY', null, $truck->getRecipient());
 
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');
 
         // Add a notification to the receiver of the cargo request
-        DB_utils::addNotification($_POST ['recipient'], 1, 2, $id);
+        DB_utils::addNotification($truck->getRecipient(), 1, 2, $truck->getId());
 
-        DB::getMDB()->commit();
+        // Send an e-mail notification
+        $originator = DB_utils::selectUserById($truck->getOriginator());
+        $recipient = DB_utils::selectUserById($truck->getRecipient());
 
-        $url = 'htts://www.rohel.ro/new/tac/?page=details&type=cargo&id='.$id;
-        // e-mail confirmation
-        $mail = new PHPMailer ();
-        include "../lib/mail-settings.php";
+        $email['subject'] = 'New cargo request received from '.$originator->getName();
+        $email['title'] = 'ROHEL | E-mail';
+        $email['header'] = ' You have a new cargo request from '.$originator->getName();
+        $email['template'] = $_SERVER["DOCUMENT_ROOT"].'/html/newTruck.html';
+        $email['originator'] = $originator->getUsername();
+        $email['recipient'] = $recipient->getUsername();
+        $email['status-label'] = 'label-info';
+        $email['status-name'] = 'NEW';
 
-        $mail->Subject = "New truck from " . $_SESSION ['operator'];
-
-        $cargo_details = '
-			<table border="0" cellpadding="2" cellspacing="0" class="message">
-				<tr>
-					<td>
-						Originator:
-					</td>
-					<td>
-						'.$_SESSION['operator'].'
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Recipient:
-					</td>
-					<td>
-						'.$_POST['recipient'].'
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Available in:
-					</td>
-					<td>
-						'.$_POST['from_city'].'
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Available for (final destination):
-					</td>
-					<td>
-						'.$truck_final_destination.'
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Cargo type:
-					</td>
-					<td>
-						'.$_POST['order_type'].'
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Contract type:
-					</td>
-					<td>
-						'.$_POST['contract_type'].'
-					</td>
-				</tr>
-				<tr>
-					<td>
-						License plate:
-					</td>
-					<td>
-						'.$_POST['plate_number'].'
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Loading on:
-					</td>
-					<td>
-						'.(($_POST ['rohel_truck_loading']=='')?null:($_POST ['rohel_truck_loading'])).'
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Unloading on:
-					</td>
-					<td>
-						'.(($_POST ['rohel_truck_unloading']=='')?null:($_POST ['rohel_truck_unloading'])).'
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Details
-					</td>
-					<td>
-						'.(($_POST['details'] == NULL)?'N/A':($_POST['details'])).'
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Freight
-					</td>
-					<td>
-						'.(($_POST['freight'] == NULL)?'N/A':($_POST['freight'])).'
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Ameta
-					</td>
-					<td>
-						'.(($_POST['ameta'] == NULL)?'N/A':($_POST['ameta'])).'
-					</td>
-				</tr>
-				<tr>
-					<td>
-						ADR
-					</td>
-					<td>
-						'.(($_POST['adr'] == NULL)?'N/A':($_POST['adr'])).'
-					</td>
-				</tr>
-			</table>
-			';
-
-        $mail->addAddress ( $_POST['recipient'], $_POST['recipient'] );
-
-        ob_start ();
-        include_once (dirname ( __FILE__ ) . "../../html/new_truck.html");
-        $body = ob_get_clean ();
-        $mail->msgHTML ( $body, dirname ( __FILE__ ), true ); // Create message bodies and embed images
-        if(!Utils::$DO_NOT_SEND_MAILS) {
-            $mail->send ();
-        }
-    } catch (\PHPMailer\PHPMailer\Exception $me) {
-        Utils::handleMailException($me);
+        Mails::emailNewTruckEntryNotification($truck, $email);
+    } catch (ApplicationException $ae) {
         $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'E-mail error ('.$me->getCode().':'.$me->getMessage().'). Please contact your system administrator.';
-
-        return 0;
-    } catch (MeekroDBException $mdbe) {
-        Utils::handleMySQLException($mdbe);
-        $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
+        $_SESSION['alert']['message'] = 'Application error ('.$ae->getCode().':'.$ae->getMessage().'). Please contact your system administrator.';
 
         return 0;
     } catch (Exception $e) {
@@ -209,7 +88,8 @@ if (isset ( $_POST ['_submitted'] )) {
         return 0;
     }
 
-    $_SESSION ['message'] = '<p style="color: #00CC00">Confirmation e-mail sent to '.$_POST['recipient'].'</p>';
+    $_SESSION['alert']['type'] = 'success';
+    $_SESSION['alert']['message'] = 'A new notification was added into the system for the truck order. '.$truck->getRecipient().' was notified by e-mail.';
 
     header ( "Location: /?page=trucks" );
     exit();

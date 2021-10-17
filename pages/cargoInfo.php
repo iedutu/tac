@@ -70,6 +70,8 @@ else {
 
 $originator = DB_utils::selectUserById($cargo->getOriginator());
 $recipient = DB_utils::selectUserById($cargo->getRecipient());
+$acceptor = DB_utils::selectUserById($cargo->getAcceptedBy());
+
 $_SESSION['email-recipient'] = $recipient->getUsername();
 
 // Read the changes which happened so far
@@ -153,7 +155,7 @@ $class_text_default = '';
                                 <tr>
                                     <td class="text-right">Accepted by</td>
                                     <td id="kt_cargo_accepted_by">
-                                        <p style="display: inline" id="recipient" class="<?=($audit->getAcceptedBy()?$class_text_new:$class_text_default)?>"><?=empty($cargo->getAcceptedBy())?'N/A':$cargo->getAcceptedBy()?></p>
+                                        <p style="display: inline" id="recipient" class="<?=($audit->getAcceptedBy()?$class_text_new:$class_text_default)?>"><?=empty($cargo->getAcceptedBy())?'N/A':$acceptor->getName()?></p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -226,11 +228,11 @@ $class_text_default = '';
                                     <td>
                                         <?php
                                         if($editable['recipient']) {
-                                            if($cargo->getStatus() == 0) {
-                                                echo '<b style="display: inline" id="plate_number" class="editable-acknowledge-text text-danger" /b>';
+                                            if($cargo->getStatus() == 1) {
+                                                echo '<b style="display: inline" id="plate_number" class="editable-acknowledge-text text-danger"></b>';
                                             }
                                             else {
-                                                if($cargo->getStatus() == 1) {
+                                                if($cargo->getStatus() == 2) {
                                                     echo '<b style="display: inline" id="plate_number" class="editable-text '.($audit->getPlateNumber()?$class_text_new:$class_text_default).'">' . $cargo->getPlateNumber() . '</b>';
                                                 }
                                                 else {
@@ -351,10 +353,10 @@ $class_text_default = '';
                                     <td>
                                         <?php
                                         if($editable['originator']) {
-                                            echo '<b style="display: inline" id="volume" class="editable-text '.($audit->getVolume()?$class_text_new:$class_text_default).'">'.$cargo->getVolume().'</b> mc';
+                                            echo '<b style="display: inline" id="volume" class="editable-text '.($audit->getVolume()?$class_text_new:$class_text_default).'">'.$cargo->getVolume().'</b> m&sup3';
                                         }
                                         else {
-                                            echo '<p style="display: inline" id="volume" class="'.($audit->getVolume()?$class_text_new:$class_text_default).'">'.$cargo->getVolume().' mc</p>';
+                                            echo '<p style="display: inline" id="volume" class="'.($audit->getVolume()?$class_text_new:$class_text_default).'">'.$cargo->getVolume().' m&sup3</p>';
                                         }
                                         ?>
                                     </td>
@@ -370,7 +372,7 @@ $class_text_default = '';
                                     <td>
                                         <?php
                                         if($editable['recipient']) {
-                                            if($cargo->getStatus() == 0) {
+                                            if($cargo->getStatus() == 1) {
                                                 if(empty($cargo->getAmeta())) {
                                                     echo '<b style="display: inline" id="ameta" class="editable-text text-danger"/>';
                                                 }
@@ -379,7 +381,7 @@ $class_text_default = '';
                                                 }
                                             }
                                             else {
-                                                if($cargo->getStatus() == 1) {
+                                                if($cargo->getStatus() == 2) {
                                                     if(empty($cargo->getAmeta())) {
                                                         echo '<b style="display: inline" id="ameta" class="editable-text" /b>';
                                                     }

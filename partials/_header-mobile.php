@@ -4,7 +4,7 @@
 
 			<!--begin::Logo-->
 			<a href="index.html">
-				<img alt="Logo" src="assets/media/logos/logo-5.svg" class="max-h-30px" />
+				<img alt="Logo" src="/assets/media/logos/package.svg" class="max-h-30px" />
 			</a>
 
 			<!--end::Logo-->

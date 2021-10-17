@@ -114,9 +114,9 @@ class Request extends \Google\Protobuf\Internal\Message
      */
     protected $status = 0;
     /**
-     * Generated from protobuf field <code>string accepted_by = 26;</code>
+     * Generated from protobuf field <code>int32 accepted_by = 26;</code>
      */
-    protected $accepted_by = '';
+    protected $accepted_by = 0;
     /**
      * Generated from protobuf field <code>uint64 creation_date = 27;</code>
      */
@@ -157,7 +157,7 @@ class Request extends \Google\Protobuf\Internal\Message
      *     @type string $adr
      *     @type int $recipient
      *     @type int $status
-     *     @type string $accepted_by
+     *     @type int $accepted_by
      *     @type int|string $creation_date
      *     @type int|string $update_date
      * }
@@ -718,8 +718,8 @@ class Request extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string accepted_by = 26;</code>
-     * @return string
+     * Generated from protobuf field <code>int32 accepted_by = 26;</code>
+     * @return int
      */
     public function getAcceptedBy()
     {
@@ -727,13 +727,13 @@ class Request extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string accepted_by = 26;</code>
-     * @param string $var
+     * Generated from protobuf field <code>int32 accepted_by = 26;</code>
+     * @param int $var
      * @return $this
      */
     public function setAcceptedBy($var)
     {
-        GPBUtil::checkString($var, True);
+        GPBUtil::checkInt32($var);
         $this->accepted_by = $var;
 
         return $this;

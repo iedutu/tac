@@ -52,7 +52,7 @@
 
                 // Lazy hack to get my date format.
                 let _date = new Date(dateRaw);
-                dateFormatted =  _date.getDate() + '/' + (_date.getMonth() + 1) + '/' + _date.getFullYear();
+                dateFormatted =  _date.getDate() + '-' + (_date.getMonth() + 1) + '-' + _date.getFullYear();
             }
 
             $('input', this).val(dateFormatted);

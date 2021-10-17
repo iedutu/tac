@@ -43,7 +43,7 @@
                                 <option value="Round-trip">Round-trip</option>
                                 <option value="One-way">One-way</option>
                             </select>
-                            <span class="form-text text-muted">Please select the type of the order</span>
+                            <span class="form-text text-muted">Please select the type of the contract</span>
                         </div>
                         <div class="col-lg-4">
                             <label>ADR:</label>

@@ -15,8 +15,8 @@ class Utils
     public static int $QUERY = 1;
     public static int $INSERT = 5;
     public static int $ADMIN = 6;
-    public static string $PHP_DATE_FORMAT = 'd/m/Y';
-    public static string $SQL_DATE_FORMAT = '%d/%m/%Y';
+    public static string $PHP_DATE_FORMAT = 'd-m-Y';
+    public static string $SQL_DATE_FORMAT = '%d-%m-%Y';
 
     public static int $REPORTS = 11;
     public static int $OPERATIONAL = 12;
@@ -86,7 +86,7 @@ class Utils
 
     public static function isMatch(): bool
     {
-        if ($_SESSION['app'] == 'match') {
+        if ($_SESSION['app'] == 'matches') {
             return true;
         }
 
@@ -429,16 +429,25 @@ class Utils
         ) );
     }
 
-    public static function cargo_audit($table, $field, $key, $new) {
-        DB::getMDB()->insert ( 'cargo_audit', array (
-            'operator_id' => $_SESSION ['operator']['id'],
-            'operator' => $_SESSION ['operator']['username'],
-            'IP' => $_SERVER['REMOTE_ADDR'],
-            'table' => $table,
-            'field' => $field,
-            'key' => $key,
-            'new' => $new
-        ) );
+    /**
+     * @throws ApplicationException
+     */
+    public static function insertCargoAuditEntry($table, $field, $key, $new) {
+        try {
+            DB::getMDB()->insert('cargo_audit', array(
+                'operator_id' => $_SESSION ['operator']['id'],
+                'operator' => $_SESSION ['operator']['username'],
+                'IP' => $_SERVER['REMOTE_ADDR'],
+                'table' => $table,
+                'field' => $field,
+                'key' => $key,
+                'new' => $new
+            ));
+        }
+        catch(MeekroDBException $mdbe) {
+            self::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe->getMessage());
+        }
     }
 
     public static function docs_audit($table, $field, $key, $new) {
@@ -587,5 +596,25 @@ class Utils
                 break;
             }
         }
+    }
+}
+
+class ApplicationException extends Exception
+{
+    // Redefine the exception so message isn't optional
+    public function __construct($message, $code = 0, Throwable $previous = null) {
+        // some code
+
+        // make sure everything is assigned properly
+        parent::__construct($message, $code, $previous);
+    }
+
+    // custom string representation of object
+    public function __toString() {
+        return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
+    }
+
+    public function customFunction() {
+        echo "A custom function for this type of exception\n";
     }
 }

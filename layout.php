@@ -2,7 +2,7 @@
 <!--begin::Main-->
 
 <?php include 'partials/_header-mobile.php'; ?>
-<?php include 'partials/_aside.php'; ?>
+<?php // include 'partials/_aside.php'; ?>
 
 <div class="d-flex flex-column flex-root">
 
@@ -35,7 +35,7 @@
                 if($_SESSION['debug']) {
                     echo '<!--begin::Debug-->';
                     include "pages/internal/displayDebug.php";
-                    echo '<!--begin::Debug-->';
+                    echo '<!--end::Debug-->';
                 }
             ?>
 

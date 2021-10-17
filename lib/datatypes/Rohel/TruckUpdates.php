@@ -82,10 +82,6 @@ class TruckUpdates extends \Google\Protobuf\Internal\Message
      */
     protected $ameta = false;
     /**
-     * Generated from protobuf field <code>bool order_type = 18;</code>
-     */
-    protected $order_type = false;
-    /**
      * Generated from protobuf field <code>bool cargo_type = 19;</code>
      */
     protected $cargo_type = false;
@@ -98,7 +94,7 @@ class TruckUpdates extends \Google\Protobuf\Internal\Message
      */
     protected $contract_type = false;
     /**
-     * Generated from protobuf field <code>bool adr = 22;</code>
+     * Generated from protobuf field <code>bool adr = 18;</code>
      */
     protected $adr = false;
 
@@ -125,7 +121,6 @@ class TruckUpdates extends \Google\Protobuf\Internal\Message
      *     @type bool $freight
      *     @type bool $plate_number
      *     @type bool $ameta
-     *     @type bool $order_type
      *     @type bool $cargo_type
      *     @type bool $truck_type
      *     @type bool $contract_type
@@ -512,28 +507,6 @@ class TruckUpdates extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>bool order_type = 18;</code>
-     * @return bool
-     */
-    public function getOrderType()
-    {
-        return $this->order_type;
-    }
-
-    /**
-     * Generated from protobuf field <code>bool order_type = 18;</code>
-     * @param bool $var
-     * @return $this
-     */
-    public function setOrderType($var)
-    {
-        GPBUtil::checkBool($var);
-        $this->order_type = $var;
-
-        return $this;
-    }
-
-    /**
      * Generated from protobuf field <code>bool cargo_type = 19;</code>
      * @return bool
      */
@@ -600,7 +573,7 @@ class TruckUpdates extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>bool adr = 22;</code>
+     * Generated from protobuf field <code>bool adr = 18;</code>
      * @return bool
      */
     public function getAdr()
@@ -609,7 +582,7 @@ class TruckUpdates extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>bool adr = 22;</code>
+     * Generated from protobuf field <code>bool adr = 18;</code>
      * @param bool $var
      * @return $this
      */
