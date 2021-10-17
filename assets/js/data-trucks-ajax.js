@@ -131,11 +131,15 @@ var KTDatatableTruckList = function() {
                             'class': ' label-light-info'
                         },
                         2: {
-                            'title': 'Accepted',
+                            'title': 'Partial',
                             'class': ' label-light-success'
                         },
                         3: {
-                            'title': 'Expired',
+                            'title': 'Solved',
+                            'class': ' label-light-primary'
+                        },
+                        4: {
+                            'title': 'Cancelled',
                             'class': ' label-light-danger'
                         },
                     };

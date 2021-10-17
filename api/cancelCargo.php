@@ -46,7 +46,7 @@ try {
             'status' => 4
         ), "id=%d", $_POST ['id']);
 
-        Utils::cargo_audit('cargo_request', 'status', $_POST['id'], 4);
+        Utils::insertCargoAuditEntry('cargo_request', 'status', $_POST['id'], 4);
 
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');

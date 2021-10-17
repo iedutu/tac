@@ -35,9 +35,9 @@ if (isset ( $_GET ['id'] )) {
 			'status' => 1
 	), "id=%d", $_GET ['id']);
 
-	Utils::cargo_audit('cargo_request', 'acceptance', $_GET['id'], date ( "Y-m-d H:i:s" ));
-	Utils::cargo_audit('cargo_request', 'accepted_by', $_GET['id'], $_SESSION ['operator']);
-	Utils::cargo_audit('cargo_request', 'status', $_GET['id'], 1);
+	Utils::insertCargoAuditEntry('cargo_request', 'acceptance', $_GET['id'], date ( "Y-m-d H:i:s" ));
+	Utils::insertCargoAuditEntry('cargo_request', 'accepted_by', $_GET['id'], $_SESSION ['operator']);
+	Utils::insertCargoAuditEntry('cargo_request', 'status', $_GET['id'], 1);
 
 	DB::commit ();
 

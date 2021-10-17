@@ -33,4 +33,12 @@ $(document).ready(function() {
             format: "d-m-yyyy"
         }
     });
+
+    $('.editable-select').editable('api/updateField.php', {
+        type           : 'select',
+        indicator      : 'Saving ...',
+        loadurl        : 'api/truckContractType.php',
+        inputcssclass : 'form-control',
+        cssclass       : 'form'
+    });
 });

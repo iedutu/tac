@@ -664,7 +664,7 @@ class DB_utils
             // Clean-up the table
             DB::getMDB()->query('TRUNCATE cargo_match');
 
-            $t_rows = DB::getMDB()->query ('SELECT * FROM cargo_truck WHERE (status = 1) OR (status = 2) ORDER BY SYS_CREATION_DATE DESC');
+            $t_rows = DB::getMDB()->query ('SELECT * FROM cargo_truck WHERE (status < 4) ORDER BY SYS_CREATION_DATE DESC');
             $i = 0;
             foreach($t_rows as $t_row) {
                 $truck = self::row2truck($t_row);
@@ -676,6 +676,7 @@ class DB_utils
 
                     // Create the match
                     $match = new TruckMatch();
+                    $originator = DB_utils::selectUserById($truck->getOriginator());
 
                     $match->setWeight($stop->getWeight());
                     $match->setVolume($stop->getVolume());
@@ -684,24 +685,39 @@ class DB_utils
                     $match->setPlateNumber($truck->getPlateNumber());
                     $match->setAmeta($truck->getAmeta());
                     $match->setAvailability($truck->getUnloadingDate());
-                    $match->setFromCity($truck->getFromCity());
-                    $match->setToCity($stop->getCity());
+                    $match->setFromCity($stop->getCity());
+                    $match->setToCity($originator->getCountryName());
                     $match->setItemDate($truck->getCreationDate());
                     $match->setItemId($truck->getId());
+                    $match->setOrderType('N/A');
                     $match->setItemKind('truckInfo');
                     $match->setOperator($_SESSION['operator']['username']);
                     $match->setOriginatorId($truck->getOriginator());
                     $match->setRecipientId($truck->getRecipient());
 
-                    if($truck->getContractType() == 'Round-trip') {
-                        $match->setStatus(1);
-                    }
-                    else {
-                        if($truck->getContractType() == 'One-way') {
-                            $match->setStatus(2);
+                    switch($truck->getStatus()) {
+                        case 1:
+                        case 2: {
+                            if ($truck->getContractType() == 'Round-trip') {
+                                $match->setStatus(1);
+                            } else {
+                                if ($truck->getContractType() == 'One-way') {
+                                    $match->setStatus(2);
+                                } else {
+                                    $match->setStatus(3);
+                                }
+                            }
+
+                            break;
                         }
-                        else {
-                            $match->setStatus(3);
+                        case 3: {
+                            $match->setStatus(4);
+
+                            break;
+                        }
+                        case 4: {
+
+                            break;
                         }
                     }
 
@@ -738,7 +754,13 @@ class DB_utils
                 $match->setOperator($_SESSION['operator']['username']);
                 $match->setOriginatorId($cargo->getOriginator());
                 $match->setRecipientId($cargo->getRecipient());
-                $match->setStatus(3);
+
+                if(empty($cargo->getPlateNumber())) {
+                    $match->setStatus(3);
+                }
+                else {
+                    $match->setStatus(4);
+                }
 
                 DB_utils::insertMatch($match);
                 unset($match);

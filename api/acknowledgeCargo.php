@@ -18,9 +18,9 @@ if(isset($_POST['id'])) {
             'status' => 2
         ), "id=%d", $_SESSION['entry-id']);
 
-        Utils::cargo_audit('cargo_request', 'acceptance', $_SESSION['entry-id'], date("Y-m-d H:i:s"));
-        Utils::cargo_audit('cargo_request', 'accepted_by', $_SESSION['entry-id'], $_SESSION ['operator']['username']);
-        Utils::cargo_audit('cargo_request', 'status', $_SESSION['entry-id'], 1);
+        Utils::insertCargoAuditEntry('cargo_request', 'acceptance', $_SESSION['entry-id'], date("Y-m-d H:i:s"));
+        Utils::insertCargoAuditEntry('cargo_request', 'accepted_by', $_SESSION['entry-id'], $_SESSION ['operator']['username']);
+        Utils::insertCargoAuditEntry('cargo_request', 'status', $_SESSION['entry-id'], 1);
 
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');

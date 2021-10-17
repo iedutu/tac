@@ -21,7 +21,7 @@ if (isset ( $_POST ['_submitted'] )) {
         ));
 
         // TODO: Overhaul the audit system.
-        Utils::cargo_audit('cargo_comments', 'NEW-ENTRY', null, $_POST ['id']);
+        Utils::insertCargoAuditEntry('cargo_comments', 'NEW-ENTRY', null, $_POST ['id']);
 
         // Add a notification to the receiver of the cargo request
         DB_utils::addNotification($_POST ['recipient'], 1, 4, $_POST ['id']);

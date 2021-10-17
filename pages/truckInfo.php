@@ -26,23 +26,24 @@ if(is_null($truck)) {
  */
 $editable = DB_utils::isEditable($truck->getOriginator(), $truck->getRecipient());
 
-if($truck->getStatus() > 1) {
+if($truck->getStatus() > 2) {
     $editable['originator'] = false;
+    $editable['recipient'] = false;
 }
 
 $status_code = '';
 
 switch($truck->getStatus()) {
     case 1: {
-        $status_code = '<span class="label label-lg label-info label-inline mr-2 font-weight-bolder">NEW</span>';
+        $status_code = '<span class="label label-lg label-info label-inline mr-2 font-weight-bolder">New</span>';
         break;
     }
     case 2: {
-        $status_code = '<span class="label label-lg label-success label-inline mr-2 font-weight-bolder">ACCEPTED</span>';
+        $status_code = '<span class="label label-lg label-success label-inline mr-2 font-weight-bolder">Partial</span>';
         break;
     }
     case 3: {
-        $status_code = '<span class="label label-lg label-warning label-inline mr-2">CLOSED</span>';
+        $status_code = '<span class="label label-lg label-primary label-inline mr-2">Solved</span>';
         break;
     }
     case 4: {
@@ -182,6 +183,19 @@ else {
                                     }
                                     else {
                                         echo '<p style="display: inline" id="ameta" class="'.($audit->getAmeta()?$class_text_new:$class_text_default).'">'.$truck->getAmeta().'</p>';
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Contract type</td>
+                                <td>
+                                    <?php
+                                    if($editable['originator']) {
+                                        echo '<b style="display: inline" id="contract_type" class="editable-select '.($audit->getContractType()?$class_text_new:$class_text_default).'">'.$truck->getContractType().'</b>';
+                                    }
+                                    else {
+                                        echo '<p style="display: inline" id="contract_type" class="'.($audit->getContractType()?$class_text_new:$class_text_default).'">'.$truck->getContractType().'</p>';
                                     }
                                     ?>
                                 </td>
@@ -328,29 +342,47 @@ else {
             <div class="card-footer">
                 <div class="row">
                     <div class="col-lg-8">
-                        <form class="form" <?=$editable['originator']?'':'hidden'?> id="kt_rohel_cancel_form" action="/api/cancelTruck.php" method="post">
-                            <input type="hidden" name="_submitted" value="true">
-                            <input type="hidden" name="id" value="<?=$truck->getId()?>">
-                            <div>
-                                <div class="row">
-                                    <div class="col-lg-8">
-                                        <?php
-                                        // NEW truck - can be cancelled
-                                        if($truck->getStatus() == 1) {
-                                            echo '<button type="submit" class="btn btn-primary btn-danger btn-lg" data-toggle="tooltip" title="Click to cancel!">Remove/Cancel truck</button>';
-                                        }
-                                        else {
-                                            echo '
-                                            <span class="d-inline-block" data-toggle="tooltip" title="Only status NEW trucks can be cancelled.">
-                                                <button type="submit" class="btn btn-primary btn-danger btn-lg" style="pointer-events: none;" disabled>Remove/Cancel truck</button>
-                                            </span>
-                                                    ';
-                                        }
-                                        ?>
+                        <?php
+                        if($editable['originator']) {
+                            ?>
+                            <form class="form" id="kt_rohel_cancel_form" action="/api/cancelTruck.php" method="post">
+                                <input type="hidden" name="_submitted" value="true">
+                                <input type="hidden" name="id" value="<?=$truck->getId()?>">
+                                <div>
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            <button type="submit" class="btn btn-primary btn-danger btn-lg" data-toggle="tooltip" title="Click to cancel!">Remove/Cancel truck</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                            <?php
+                        }
+                        else {
+                            if($editable['recipient']) {
+                                echo '
+                                        <div class="row">
+                                            ';
+                                if($truck->getStatus() == 1) {
+                                    echo '
+                                                <form class="form" id="kt_rohel_solved_form" action="/api/partiallySolveTruck.php" method="post">
+                                                    <input type="hidden" name="_submitted" value="true">
+                                                    <input type="hidden" name="id" value="'.$truck->getId().'">
+                                                    <button type="submit" class="btn btn-success btn-lg" data-toggle="tooltip" title="Click to confirm the truck was partially loaded">Partial load</button>
+                                                </form>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    ';
+                                }
+                                echo '
+                                                <form class="form" id="kt_rohel_solved_form" action="/api/solveTruck.php" method="post">
+                                                    <input type="hidden" name="_submitted" value="true">
+                                                    <input type="hidden" name="id" value="'.$truck->getId().'">
+                                                    <button type="submit" class="btn btn-primary btn-lg" data-toggle="tooltip" title="Click to confirm the truck was fully loaded">Full load</button>
+                                                </form>
+                                ';
+                            }
+                        }
+                        ?>
                     </div>
                 </div>
             </div>

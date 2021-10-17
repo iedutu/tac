@@ -95,9 +95,13 @@ let KTDatatableMatchesList = function() {
                     // callback function support for column rendering
                     template: function (row) {
                         let status = {
+                            0: {
+                                'title': 'Error!',
+                                'class': ' label-danger'
+                            },
                             1: {
                                 'title': 'Available',
-                                'class': ' label-primary'
+                                'class': ' label-success'
                             },
                             2: {
                                 'title': 'Free',
@@ -106,6 +110,10 @@ let KTDatatableMatchesList = function() {
                             3: {
                                 'title': 'Needed',
                                 'class': ' label-danger'
+                            },
+                            4: {
+                                'title': 'Solved',
+                                'class': ' label-primary'
                             },
                         };
                         return '<a href="/?page='+row.item_kind+'&id='+row.item_id+'" class="label font-weight-bold label-lg ' + status[row.status].class + ' label-inline">' + status[row.status].title + '</a>';

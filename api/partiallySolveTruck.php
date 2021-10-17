@@ -15,18 +15,17 @@ if (isset ( $_POST ['id'] )) {
     }
 
     if($truck->getStatus() == 2) {
-        error_log('Truck already solved/loaded and cannot be cancelled. Please contact the recipient directly.');
+        error_log('Truck already solved/loaded. Please contact the recipient directly.');
         $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'Truck already solved/loaded and cannot be cancelled. Please contact the recipient directly.';
+        $_SESSION['alert']['message'] = 'Truck already solved/closed. Please contact the recipient directly.';
 
         header ( 'Location: /index.php?page=truckInfo&id='.$_POST['id'] );
         exit();
     }
 
-    if($truck->getOriginator() != $_SESSION['operator']) {
-        error_log('You cannot cancel orders created by others.');
+    if($truck->getRecipient() != $_SESSION['operator']['id']) {
         $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'You cannot cancel trucks added by others.';
+        $_SESSION['alert']['message'] = 'Only the recipient can solve/close a truck.';
 
         header ( 'Location: /index.php?page=truckInfo&id='.$_POST['id'] );
         exit();
@@ -34,7 +33,7 @@ if (isset ( $_POST ['id'] )) {
 
     try {
         DB::getMDB()->update ( 'cargo_truck', array (
-            'status' => 3
+            'status' => 2
         ), "id=%d", $_POST ['id']);
 
         Utils::insertCargoAuditEntry('cargo_truck', 'status', $_POST['id'], 3);
@@ -48,29 +47,10 @@ if (isset ( $_POST ['id'] )) {
         DB::getMDB()->commit ();
 
         $_SESSION['alert']['type'] = 'success';
-        $_SESSION['alert']['message'] = 'Truck '.$truck->getPlateNumber().' with ameta '.$truck->getAmeta().' was successfully cancelled.';
+        $_SESSION['alert']['message'] = 'Truck '.$truck->getPlateNumber().' with ameta '.$truck->getAmeta().' was marked as solved/closed.';
 
         // Send any relevant e-mail
-        $mail = new PHPMailer ();
-        include $_SERVER["DOCUMENT_ROOT"] . "/lib/mail-settings.php";
-
-        $mail->Subject = "Truck canceled by " . $_SESSION ['operator'];
-
-        $url='http://rohel.iedutu.com/?page=trucks';
-
-        $cargo_details = Utils::mailingTruckDetails($truck);
-
-        $mail->addAddress ( $truck->getRecipient(), $truck->getRecipient() );
-        $mail->addAddress ( $_SESSION['operator'], $_SESSION['operator'] );
-
-        ob_start ();
-        include_once(dirname(__FILE__) . "/../html/cancelled_truck.html");
-        $body = ob_get_clean ();
-        $mail->msgHTML ( $body, dirname ( __FILE__ ), true ); // Create message bodies and embed images
-
-        if(!Utils::$DO_NOT_SEND_MAILS) {
-            $mail->send ();
-        }
+        // TODO: Add the code to send e-mails for when a truck is solved/closed.
     } catch (\PHPMailer\PHPMailer\Exception $me) {
         Utils::handleMailException($me);
         $_SESSION['alert']['type'] = 'error';
@@ -85,7 +65,10 @@ if (isset ( $_POST ['id'] )) {
         $_SESSION['alert']['message'] .= 'There was an error while sending the notification e-mails: '.$e->getMessage(); //Pretty error messages from PHPMailer
     }
 
-    $_SESSION['alert']['message'] .= 'Cancellation e-mail sent to '.$truck->getRecipient().' and '.$_SESSION['operator'];
+    $_SESSION['alert']['message'] .= ' Notification e-mail sent to '.$truck->getRecipient().' and '.$_SESSION['operator'];
+
+    header ( 'Location: /index.php?page=truckInfo&id='.$truck->getId() );
+    exit();
 }
 
 header ( 'Location: /index.php?page=trucks' );

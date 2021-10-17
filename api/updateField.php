@@ -50,7 +50,7 @@ if(isset($_POST['id'])) {
             }
         }
 
-        Utils::cargo_audit($table, $_POST['id'], $_SESSION['entry-id'], $_POST['value']);
+        Utils::insertCargoAuditEntry($table, $_POST['id'], $_SESSION['entry-id'], $_POST['value']);
         Utils::audit_update($table, $_POST['id'], $_SESSION['entry-id']);
 
         // Set the trigger for the generation of the Match page
