@@ -94,7 +94,7 @@ $_REQUEST['sort']['sort'] = null;
 <!--end::Head-->
 
 <!--begin::Body-->
-<body id="kt_body" class="header-fixed header-mobile-fixed subheader-enabled aside-enabled aside-static page-loading">
+<body id="kt_body" class="print-content-only header-fixed header-mobile-fixed subheader-enabled aside-enabled aside-static page-loading">
 
 <?php include 'layout.php'; ?>
 

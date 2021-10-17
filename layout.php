@@ -32,7 +32,7 @@
             <!--end::Content-->
 
             <?php
-                if($_SESSION['debug']) {
+                if(Utils::$DEBUG) {
                     echo '<!--begin::Debug-->';
                     include "pages/internal/displayDebug.php";
                     echo '<!--end::Debug-->';

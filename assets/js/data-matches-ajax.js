@@ -90,7 +90,7 @@ let KTDatatableMatchesList = function() {
                     },
                 }, {
                     field: 'status',
-                    title: 'Type',
+                    title: 'Status',
                     width: 90,
                     // callback function support for column rendering
                     template: function (row) {
@@ -132,7 +132,7 @@ let KTDatatableMatchesList = function() {
                     width: 75,
                 }, {
                     field: 'order_type',
-                    title: 'Order type',
+                    title: 'Type',
                     width: 60,
                 }, {
                     field: 'loading_meters',

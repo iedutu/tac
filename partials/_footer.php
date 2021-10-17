@@ -12,7 +12,7 @@
 
         <!--begin::Nav-->
         <div class="nav nav-dark order-1 order-md-2">
-            <a href="http://www.rohel.ro/" target="_blank" class="nav-link pl-3 pr-0">Contact</a>
+            <a href="http://www.rohel.ro/contact" target="_blank" class="nav-link pl-3 pr-0">Contact</a>
         </div>
         <!--end::Nav-->
     </div>

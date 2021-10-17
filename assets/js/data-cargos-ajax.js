@@ -118,9 +118,21 @@ var KTDatatableCargoList = function() {
                 }, {
                     field: 'plate_number',
                     title: 'License plate',
+                    template: function(row) {
+                        if(row.plate_number === null) {
+                            return 'N/A';
+                        }
+                        return row.plate_number;
+                    },
                 }, {
                     field: 'ameta',
                     title: 'Ameta',
+                    template: function(row) {
+                        if(row.ameta === null) {
+                            return 'N/A';
+                        }
+                        return row.ameta;
+                    },
                 }, {
                     field: 'status',
                     title: 'Status',
