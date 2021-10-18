@@ -43,7 +43,7 @@ class Mails
     /**
      * @throws ApplicationException
      */
-    public static function emailNotification($email) {
+    public static function emailNotification($email, string $template = 'template.php') {
         try {
             $mail = new PHPMailer ();
             include $_SERVER["DOCUMENT_ROOT"] . "/lib/mail-settings.php";
@@ -54,7 +54,7 @@ class Mails
             $mail->addReplyTo($email['originator']['e-mail'], $email['originator']['name']);
 
             ob_start();
-            include_once($_SERVER["DOCUMENT_ROOT"].'/assets/html/template.php');
+            include_once($_SERVER["DOCUMENT_ROOT"].'/assets/html/'.$template);
             $body = ob_get_clean();
             $mail->msgHTML($body, dirname(__FILE__), true); // Create message bodies and embed images
             if (!self::$DO_NOT_SEND_MAILS) {

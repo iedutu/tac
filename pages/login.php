@@ -6,7 +6,7 @@ include $_SERVER["DOCUMENT_ROOT"]."/lib/db-settings.php";
 require_once $_SERVER["DOCUMENT_ROOT"]."/lib/site-functions.php";
 require_once $_SERVER["DOCUMENT_ROOT"]."/lib/db-functions.php";
 
-if (isset ( $_POST ['_submitted'] )) {
+if (!empty( $_POST ['_signin'] )) { // Regular sign-in
     $username = $_POST ['username'];
     $password = hash("sha256", $_POST ['password']);
 
@@ -40,21 +40,24 @@ if (isset ( $_POST ['_submitted'] )) {
         $_SESSION['alert']['message']='No such user found in the system.';
     }
 }
+else {
+    if (!empty( $_POST ['_forgot_password'] )) { // Regular sign-in
+        if(Utils::resetPassword($_POST ['email'])) {
+            $_SESSION['alert']['type']='success';
+            $_SESSION['alert']['width']=12;
+            $_SESSION['alert']['message']='Your password was reset. Please check your inbox for details.';
+        }
+        else {
+            $_SESSION['alert']['type']='error';
+            $_SESSION['alert']['width']=12;
+            $_SESSION['alert']['message']='Unable to reset your password.';
+        }
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
-<!--
-Template Name: Keen - The Ultimate Bootstrap 4 HTML Admin Dashboard Theme
-Author: KeenThemes
-Website: http://www.keenthemes.com/
-Contact: support@keenthemes.com
-Follow: www.twitter.com/keenthemes
-Dribbble: www.dribbble.com/keenthemes
-Like: www.facebook.com/keenthemes
-Purchase: https://themes.getbootstrap.com/product/keen-the-ultimate-bootstrap-admin-theme/
-Support: https://keenthemes.com/theme-support
-License: You must have a valid license purchased only from themes.getbootstrap.com(the above link) in order to legally use the theme for your project.
--->
 <html lang="en">
 <!--begin::Head-->
 <head><base href="../../../">
@@ -112,12 +115,11 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
                 <div class="login-form login-signin">
                     <!--begin::Form-->
                     <form class="form" novalidate="novalidate" id="kt_login_signin_form" action="" method="post">
-                        <input type="hidden" name="_submitted" value="true">
+                        <input type="hidden" name="_signin" value="true">
                         <!--begin::Title-->
                         <div class="pb-13 pt-lg-0 pt-5">
                             <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">Welcome</h3>
-                            <span class="text-muted font-weight-bold font-size-h4">New Here?
-									<a href="javascript:;" id="kt_login_signup" class="text-primary font-weight-bolder">Create an Account</a></span>
+                            <span class="text-muted font-weight-bold font-size-h4">Please enter your e-mail aadress and application password below</span>
                         </div>
                         <!--end::Title-->
 
@@ -203,7 +205,8 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
                 <!--begin::Forgot-->
                 <div class="login-form login-forgot">
                     <!--begin::Form-->
-                    <form class="form" novalidate="novalidate" id="kt_login_forgot_form">
+                    <form class="form" novalidate="novalidate" id="kt_login_forgot_form" action="" method="post">
+                        <input type="hidden" name="_forgot_password" id="_forgot_password" value="true" />
                         <!--begin::Title-->
                         <div class="pb-13 pt-lg-0 pt-5">
                             <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">Forgotten Password ?</h3>
@@ -212,7 +215,7 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
                         <!--end::Title-->
                         <!--begin::Form group-->
                         <div class="form-group">
-                            <input class="form-control form-control-solid h-auto p-6 rounded-lg font-size-h6" type="email" placeholder="Email" name="email" autocomplete="off" />
+                            <input class="form-control form-control-solid h-auto p-6 rounded-lg font-size-h6" type="email" placeholder="Email" name="email" id="email" autocomplete="off" />
                         </div>
                         <!--end::Form group-->
                         <!--begin::Form group-->
@@ -229,9 +232,8 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
             <!--end::Content body-->
             <!--begin::Content footer-->
             <div class="d-flex justify-content-lg-start justify-content-center align-items-end py-7 py-lg-0">
-                <a href="#" class="text-primary font-weight-bolder font-size-h5">Terms</a>
-                <a href="#" class="text-primary ml-10 font-weight-bolder font-size-h5">Plans</a>
-                <a href="#" class="text-primary ml-10 font-weight-bolder font-size-h5">Contact Us</a>
+                <a href="/?page=help" class="text-primary font-weight-bolder font-size-h5">Help</a>
+                <a href="http://www.rohel.ro/contact/" class="text-primary ml-10 font-weight-bolder font-size-h5">Contact Us</a>
             </div>
             <!--end::Content footer-->
         </div>

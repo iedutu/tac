@@ -130,6 +130,25 @@ class DB_utils
     }
 
     // Public functions
+    /**
+     * @throws ApplicationException
+     */
+    public static function changeUserPassword(string $username, string $password): bool
+    {
+        try {
+            DB::getMDB()->update('cargo_users', array(
+                'password' => $password
+            ), "username=%s", $username);
+            DB::getMDB()->commit();
+
+            return true;
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe->getMessage());
+        }
+    }
+
     public static function selectOffices(): bool
     {
         try {
@@ -743,6 +762,9 @@ class DB_utils
         }
     }
 
+    /**
+     * @throws ApplicationException
+     */
     public static function selectUser(string $username): ?User
     {
         try {
@@ -769,15 +791,7 @@ class DB_utils
             Utils::handleMySQLException($mdbe);
             $_SESSION['alert']['type'] = 'error';
             $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
-
-            return null;
-        }
-        catch (Exception $e) {
-            Utils::handleException($e);
-            $_SESSION['alert']['type'] = 'error';
-            $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
-
-            return null;
+            throw new ApplicationException($mdbe);
         }
     }
 

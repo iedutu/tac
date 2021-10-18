@@ -17,6 +17,8 @@ class Utils
     public static int $ADMIN = 6;
     public static string $PHP_DATE_FORMAT = 'd-m-Y';
     public static string $SQL_DATE_FORMAT = '%d-%m-%Y';
+    public static int $PASSWORD_LENGTH = 6;
+    public static string $BASE_URL = 'https://rohel.iedutu.com/';
 
     public static int $REPORTS = 11;
     public static int $OPERATIONAL = 12;
@@ -27,6 +29,20 @@ class Utils
         unset($_SESSION['entry-id']);
 //      unset($_SESSION['update_done']);
         unset($_SESSION['email-recipient']);
+    }
+
+    private static function randomString(int $length, string $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'): ?string
+    {
+        $str = '';
+        $max = mb_strlen($keyspace, '8bit') - 1;
+        if ($max < 1) {
+            return null;
+        }
+        for ($i = 0; $i < $length; ++$i) {
+            $str .= $keyspace[random_int(0, $max)];
+        }
+
+        return $str;
     }
 
     public static function handleMySQLException(MeekroDBException $mdbe)
@@ -48,6 +64,43 @@ class Utils
         error_log("Mailing error: " . $e->errorMessage());
         error_log("Error code: " . $e->getCode());
         error_log("Error trace: " . $e->getTraceAsString());
+    }
+
+    public static function resetPassword(string $username): bool
+    {
+        try {
+            $recipient = DB_utils::selectUser($username);
+            if(empty($recipient)) return false;
+            $password = self::randomString(self::$PASSWORD_LENGTH);
+            error_log('New password: '.$password);
+            error_log('Old password: '.hash('sha256', 'pavel'));
+
+            if (DB_utils::changeUserPassword($username, hash('sha256', $password))) {
+                $email['subject'] = 'ROHEL | New application password ';
+                $email['title'] = 'ROHEL | E-mail';
+                $email['header'] = 'New application password generated';
+                $email['body-1'] = 'Hi ' . $recipient->getName() . '!';
+                $email['body-2'] = 'Please use the following password for your next visit to our application: <strong>' . $password . '</strong>';
+                $email['recipient']['e-mail'] = $recipient->getUsername();
+                $email['recipient']['name'] = $recipient->getName();
+                $email['link']['url'] = self::$BASE_URL;
+                $email['link']['text'] = 'Application link';
+                $email['bg-color'] = Mails::$BG_ACKNOWLEDGED_COLOR;
+                $email['tx-color'] = Mails::$TX_CANCELLED_COLOR;
+
+                Mails::emailNotification($email, 'template-2.php');
+                return true;
+            }
+        }
+        catch(ApplicationException $ae) {
+            return false;
+        }
+        catch(Exception $e) {
+            self::handleException($e);
+            return false;
+        }
+
+        return false;
     }
 
     public static function isCargo(): bool

@@ -192,32 +192,19 @@ let KTLogin = function () {
 				},
 				plugins: {
 					trigger: new FormValidation.plugins.Trigger(),
+					submitButton: new FormValidation.plugins.SubmitButton(),
+					defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
 					bootstrap: new FormValidation.plugins.Bootstrap()
 				}
 			}
 		);
 
-		// Handle submit button
 		$('#kt_login_forgot_submit').on('click', function (e) {
 			e.preventDefault();
 
 			validation.validate().then(function (status) {
-				if (status === 'Valid') {
-					// Submit form
-					KTUtil.scrollTop();
-				} else {
-					swal.fire({
-						text: "Sorry, looks like there are some errors detected, please try again.",
-						icon: "error",
-						buttonsStyling: false,
-						confirmButtonText: "Ok, got it!",
-						customClass: {
-							confirmButton: "btn font-weight-bold btn-light-primary"
-						}
-					}).then(function () {
-						KTUtil.scrollTop();
-					});
-				}
+				console.debug('In validate - succes??');
+				KTUtil.scrollTop();
 			});
 		});
 
