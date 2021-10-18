@@ -37,7 +37,7 @@ switch($_SESSION['app']) {
         echo '<script src="/assets/js/src/jquery.jeditable.js"></script>';
         echo '<script src="/assets/js/src/jquery.jeditable.datepicker.js"></script>';
         echo '<script src="/assets/js/jeditable-cargo.js"></script>';
-        echo '<script src="/assets/js/data-cargo-notifications.js"></script>';
+        echo '<script src="/assets/js/data-cargo-comments.js"></script>';
         echo '<script src="/assets/js/form-validation-cargo-note.js"></script>';
 
         break;

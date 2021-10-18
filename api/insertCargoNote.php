@@ -2,8 +2,8 @@
 session_start ();
 
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
+require_once $_SERVER["DOCUMENT_ROOT"]."/lib/datatypes/Rohel/CargoNote.php";
 
-use PHPMailer\PHPMailer\PHPMailer;
 use Rohel\CargoNote;
 
 if (! Utils::authorized(Utils::$INSERT)) {
@@ -59,7 +59,12 @@ if (isset ( $_POST ['_submitted'] )) {
     }
 
     $_SESSION['alert']['type'] = 'success';
-    $_SESSION['alert']['message'] = 'A new notification was added into the system for the cargo request. '.$recipient->getName().' ('.$recipient->getUsername().') was notified by e-mail.';
+    if($_SESSION['role'] == 'recipient') {
+        $_SESSION['alert']['message'] = 'A new notification was added into the system for the cargo request. ' . $originator->getName() . ' (' . $originator->getUsername() . ') was notified by e-mail.';
+    }
+    else {
+        $_SESSION['alert']['message'] = 'A new notification was added into the system for the cargo request. ' . $recipient->getName() . ' (' . $recipient->getUsername() . ') was notified by e-mail.';
+    }
 }
 
 

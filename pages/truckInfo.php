@@ -39,15 +39,15 @@ switch($truck->getStatus()) {
         break;
     }
     case 2: {
-        $status_code = '<span class="label label-lg label-success label-inline mr-2 font-weight-bolder">Partial</span>';
+        $status_code = '<span class="label label-lg label-success label-inline mr-2 font-weight-bolder">Partially loaded</span>';
         break;
     }
     case 3: {
-        $status_code = '<span class="label label-lg label-primary label-inline mr-2">Solved</span>';
+        $status_code = '<span class="label label-lg label-primary label-inline mr-2">Fully loaded</span>';
         break;
     }
     case 4: {
-        $status_code = '<span class="label label-lg label-danger label-inline mr-2">CANCELLED</span>';
+        $status_code = '<span class="label label-lg label-danger label-inline mr-2">Cancelled</span>';
         break;
     }
     default: {
@@ -103,7 +103,7 @@ else {
                         }
                         ?>
                 </div>
-                <div class="card-toolbar">
+                <div class="card-toolbar d-print-none">
                     <!--begin::Button-->
                     <button type="button" class="btn btn-light-primary font-weight-bolder" aria-expanded="false" onclick="javascript:window.print()">
 												<span class="svg-icon svg-icon-md">
@@ -254,7 +254,7 @@ else {
                                 </td>
                             </tr>
                             <tr>
-                                <td class="text-right">Truck details</td>
+                                <td class="text-right">Driver details</td>
                                 <td>
                                     <?php
                                     if($editable['originator']) {
@@ -341,12 +341,12 @@ else {
                     </div>
                 </div>
             </div>
-            <div class="card-footer">
-                <div class="row">
-                    <div class="col-lg-8">
-                        <?php
-                        if($editable['originator']) {
-                            ?>
+            <?php
+            if($editable['originator']) {
+                ?>
+                <div class="card-footer d-print-none">
+                    <div class="row">
+                        <div class="col-lg-8">
                             <form class="form" id="kt_rohel_cancel_form" action="/api/cancelTruck.php" method="post">
                                 <input type="hidden" name="_submitted" value="true">
                                 <input type="hidden" name="id" value="<?=$truck->getId()?>">
@@ -358,36 +358,43 @@ else {
                                     </div>
                                 </div>
                             </form>
-                            <?php
-                        }
-                        else {
-                            if($editable['recipient']) {
-                                echo '
-                                        <div class="row">
+                        </div>
+                    </div>
+                </div>
+                <?php
+            }
+            else {
+                if($editable['recipient']) {
+                    echo '
+            <div class="card-footer d-print-none">
+                <div class="col-lg-8">
+                    <div class="row">
                                             ';
-                                if($truck->getStatus() == 1) {
-                                    echo '
-                                                <form class="form" id="kt_rohel_solved_form" action="/api/partiallySolveTruck.php" method="post">
+                    if($truck->getStatus() == 1) {
+                        echo '
+                            <form class="form" id="kt_rohel_solved_form" action="/api/partiallySolveTruck.php" method="post">
                                                     <input type="hidden" name="_submitted" value="true">
                                                     <input type="hidden" name="id" value="'.$truck->getId().'">
                                                     <button type="submit" class="btn btn-success btn-lg" data-toggle="tooltip" title="Click to confirm the truck was partially loaded">Partial load</button>
                                                 </form>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     ';
-                                }
-                                echo '
-                                                <form class="form" id="kt_rohel_solved_form" action="/api/solveTruck.php" method="post">
+                    }
+                    echo '
+                            <form class="form" id="kt_rohel_solved_form" action="/api/solveTruck.php" method="post">
                                                     <input type="hidden" name="_submitted" value="true">
                                                     <input type="hidden" name="id" value="'.$truck->getId().'">
                                                     <button type="submit" class="btn btn-primary btn-lg" data-toggle="tooltip" title="Click to confirm the truck was fully loaded">Full load</button>
                                                 </form>
                                 ';
-                            }
-                        }
-                        ?>
+                    echo '
                     </div>
                 </div>
             </div>
+                                ';
+                }
+            }
+            ?>
             <!--end::Card-->
         </div>
     </div>

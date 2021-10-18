@@ -3,7 +3,7 @@ session_start();
 
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
-if(!isset($_SESSION['operatorid']['id'])) {
+if(empty($_SESSION['operator']['id'])) {
     exit ();
 }
 

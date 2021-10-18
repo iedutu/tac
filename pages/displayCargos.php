@@ -2,7 +2,7 @@
 <div class="card card-custom">
     <div class="card-header flex-wrap border-0 pt-6 pb-0 d-print-none">
         <div class="card-title">
-            <h3 class="card-label">Cargo requests
+            <h3 class="card-label">Cargo
                 <span class="d-block text-muted pt-2 font-size-sm">Please note all records will be kept for up to 5 calendar days from acceptance.</span></h3>
         </div>
         <div class="card-toolbar">

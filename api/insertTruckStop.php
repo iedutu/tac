@@ -66,7 +66,7 @@ if (isset ( $_POST ['_submitted'] )) {
     }
 
     $_SESSION['alert']['type'] = 'success';
-    $_SESSION['alert']['message'] = 'A new notification was added into the system for the truck order. '.$truck->getRecipient().' was notified by e-mail.';
+    $_SESSION['alert']['message'] = 'A new notification was added into the system for the truck order. '.$recipient->getName().' was notified by e-mail.';
 
     header ( 'Location: /?page=truckInfo&id='.$_SESSION['entry-id']);
     exit();

@@ -92,9 +92,9 @@
                             <span class="form-text text-muted">Please enter the cost of the transport</span>
                         </div>
                         <div class="col-lg-4">
-                            <label>Details:</label>
-                            <input type="text" id="details" name="details" class="form-control" placeholder="Truck details"/>
-                            <span class="form-text text-muted">Please enter any relevant details about the truck</span>
+                            <label>Driver details:</label>
+                            <input type="text" id="details" name="details" class="form-control" placeholder="<Name>, <Mobile number>"/>
+                            <span class="form-text text-muted">Please enter the driver details.</span>
                         </div>
                     </div>
                     <div class="h5">

@@ -5,7 +5,7 @@
             <h3 class="card-label">Avalailable trucks
                 <span class="d-block text-muted pt-2 font-size-sm">Please note all records will be kept for up to 5 calendar days from acceptance.</span></h3>
         </div>
-        <div class="card-toolbar">
+        <div class="card-toolbar d-print-none">
             <!--begin::Dropdown-->
             <div class="dropdown dropdown-inline mr-2">
                 <button type="button" class="btn btn-light-primary font-weight-bolder dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

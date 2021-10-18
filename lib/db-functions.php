@@ -427,16 +427,17 @@ class DB_utils
                                         cargo_truck_stops
                                      WHERE
                                         truck_id=%d", $entry->getTruckId());
-            if($entry->getStopId() > $stops_count + 1) {
-                $entry->setStopId($stops_count + 1);
+            if($entry->getStopId() > $stops_count) {
+                $entry->setStopId($stops_count);
             }
 
             DB::getMDB()->insert('cargo_truck_stops', array(
                 'operator' => $_SESSION['operator']['username'],
                 'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
                 'truck_id' => $entry->getTruckId(),
-                'stop_id' => $entry->getStopId() - 1, // Counting starts from 0
+                'stop_id' => $entry->getStopId(),
                 'city' => $entry->getCity(),
+                'cmr' => $entry->getCmr(),
                 'address' => $entry->getAddress(),
                 'loading_meters' => $entry->getLoadingMeters(),
                 'weight' => $entry->getWeight(),
@@ -444,7 +445,7 @@ class DB_utils
             ));
 
             $id = DB::getMDB()->insertId();
-            DB::getMDB()->query('UPDATE cargo_truck_stops SET stop_id=stop_id+1 WHERE ((truck_id=%d) AND (stop_id>=%d) AND (id<>%d))', $entry->getTruckId(), $entry->getStopId()-1, $id);
+            DB::getMDB()->query('UPDATE cargo_truck_stops SET stop_id=stop_id+1 WHERE ((truck_id=%d) AND (stop_id>=%d) AND (id<>%d))', $entry->getTruckId(), $entry->getStopId(), $id);
             DB::getMDB()->commit();
 
             return $id;
@@ -915,26 +916,31 @@ class DB_utils
                     $match->setRecipientId($truck->getRecipient());
 
                     switch($truck->getStatus()) {
-                        case 1:
-                        case 2: {
+                        case 1: {
                             if ($truck->getContractType() == 'Round-trip') {
                                 $match->setStatus(1);
                             } else {
                                 if ($truck->getContractType() == 'One-way') {
-                                    $match->setStatus(2);
-                                } else {
                                     $match->setStatus(3);
+                                } else {
+                                    $match->setStatus(0);
                                 }
                             }
 
                             break;
                         }
-                        case 3: {
+                        case 2: {
                             $match->setStatus(4);
 
                             break;
                         }
+                        case 3: {
+                            $match->setStatus(6);
+
+                            break;
+                        }
                         case 4: {
+                            $match->setStatus(0);
 
                             break;
                         }
@@ -975,10 +981,10 @@ class DB_utils
                 $match->setRecipientId($cargo->getRecipient());
 
                 if(empty($cargo->getPlateNumber())) {
-                    $match->setStatus(3);
+                    $match->setStatus(5);
                 }
                 else {
-                    $match->setStatus(4);
+                    $match->setStatus(2);
                 }
 
                 DB_utils::insertMatch($match);
@@ -1066,6 +1072,14 @@ class DB_utils
                                     $title = 'New truck stop added';
                                     $text = 'A new truck stop was added for an existing truck by ' . $notification->getFrom();
                                     $url = '/?viewedItem=' . $notification->getId() . '&page=truckInfo&id=' . $notification->getEntityId();
+
+                                    break;
+                                }
+                                case 4:
+                                { // Cargo comment
+                                    $title = 'New cargo comment added';
+                                    $text = 'A new comment was added for an existing cargo by ' . $notification->getFrom();
+                                    $url = '/?viewedItem=' . $notification->getId() . '&page=cargoInfo&id=' . $notification->getEntityId();
 
                                     break;
                                 }

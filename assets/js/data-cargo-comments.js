@@ -7,7 +7,7 @@ var KTDatatableRemoteAjaxDemo = function() {
     // basic demo
     var demo = function() {
 
-        var datatable = $('#kt_datatable').KTDatatable({
+        var datatable = $('#kt_datatable_notes').KTDatatable({
             // datasource definition
             data: {
                 type: 'remote',
@@ -68,7 +68,7 @@ var KTDatatableRemoteAjaxDemo = function() {
             datatable.search($(this).val().toLowerCase(), 'Status');
         });
 
-        $('#kt_datatable_search_status, #kt_datatable_search_type').selectpicker();
+        $('#kt_datatable_search_status').selectpicker();
     };
 
     return {

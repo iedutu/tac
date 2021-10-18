@@ -59,7 +59,7 @@ License: You must have a valid license purchased only from themes.getbootstrap.c
 <!--begin::Head-->
 <head><base href="../../../">
     <meta charset="utf-8" />
-    <title>ROHRL | Login Page</title>
+    <title>ROHEL | Login Page</title>
     <meta name="description" content="Login page" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <!--begin::Fonts-->

@@ -49,9 +49,9 @@ class Mails
             include $_SERVER["DOCUMENT_ROOT"] . "/lib/mail-settings.php";
 
             $mail->Subject = $email['subject'];
-            $mail->addAddress($email['recipient']['address'], $email['recipient']['name']);
+            $mail->addAddress($email['recipient']['e-mail'], $email['recipient']['name']);
             $mail->setFrom('webapp@rohel.ro', 'Team Rohel');
-            $mail->addReplyTo($email['originator']['address'], $email['originator']['name']);
+            $mail->addReplyTo($email['originator']['e-mail'], $email['originator']['name']);
 
             ob_start();
             include_once($_SERVER["DOCUMENT_ROOT"].'/assets/html/template.php');

@@ -80,7 +80,7 @@ if (isset ( $_POST ['_submitted'] )) {
     }
 
     $_SESSION['alert']['type'] = 'success';
-    $_SESSION['alert']['message'] = 'A new notification was added into the system for the cargo request. '.$_POST['recipient'].' was notified by e-mail.';
+    $_SESSION['alert']['message'] = 'A new notification was added into the system for the cargo request. '.$recipient->getName().' was notified by e-mail.';
 
     header ( "Location: /?page=cargo" );
     exit();

@@ -20,27 +20,39 @@ if(!empty($_POST['id'])) {
         $recipient = DB_utils::selectUserById($_SESSION['recipient-id']);
         $originator = DB_utils::selectUserById($_SESSION['originator-id']);
 
-        if($_SESSION['app'] = 'cargo') {
-            $cargo = DB_utils::selectRequest($_SESSION['entry-id']);
+        switch($_SESSION['app']) {
+            case 'cargo':
+            case 'cargoInfo': {
+                $cargo = DB_utils::selectRequest($_SESSION['entry-id']);
 
-            $email['subject'] = 'Cargo request modified by ' . $originator->getName();
-            $email['title'] = 'ROHEL | E-mail';
-            $email['header'] = 'A cargo request was modified by ' . $originator->getName();
-            $email['body-1'] = 'has modified a field ('.$_POST['id'].' => '.$_POST['value'].') on cargo request bound to <strong>' . $cargo->getToCity() . '</strong>' . '.';
-            $email['body-2'] = 'The loading date is <strong>' . date(Utils::$PHP_DATE_FORMAT, $cargo->getLoadingDate()) . '</strong>';
-            $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargoInfo&id='.$cargo->getId();
-            $email['link']['text'] = 'View the cargo request details';
-        }
-        else {
-            $truck = DB_utils::selectTruck($_SESSION['entry-id']);
+                $email['subject'] = 'Cargo request modified by ' . $originator->getName();
+                $email['title'] = 'ROHEL | E-mail';
+                $email['header'] = 'A cargo request was modified by ' . $originator->getName();
+                $email['body-1'] = 'has modified a field ('.$_POST['id'].' => '.$_POST['value'].') on cargo request bound to <strong>' . $cargo->getToCity() . '</strong>' . '.';
+                $email['body-2'] = 'The loading date is <strong>' . date(Utils::$PHP_DATE_FORMAT, $cargo->getLoadingDate()) . '</strong>';
+                $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargoInfo&id='.$cargo->getId();
+                $email['link']['text'] = 'View the cargo request details';
 
-            $email['subject'] = 'Truck order modified by ' . $originator->getName();
-            $email['title'] = 'ROHEL | E-mail';
-            $email['header'] = 'A truck order was modified by ' . $originator->getName();
-            $email['body-1'] = 'has modified a field ('.$_POST['id'].' => '.$_POST['value'].') on truck order from <strong>' . $truck->getFromCity() . '</strong>' . '.';
-            $email['body-2'] = 'The loading date is <strong>' . date(Utils::$PHP_DATE_FORMAT, $truck->getLoadingDate()) . '</strong>';
-            $email['link']['url'] = 'https://rohel.iedutu.com/?page=truckInfo&id='.$truck->getId();
-            $email['link']['text'] = 'View the truck order details';
+                break;
+            }
+            case 'trucks':
+            case 'truckInfo':  {
+                $truck = DB_utils::selectTruck($_SESSION['entry-id']);
+
+                $email['subject'] = 'Truck order modified by ' . $originator->getName();
+                $email['title'] = 'ROHEL | E-mail';
+                $email['header'] = 'A truck order was modified by ' . $originator->getName();
+                $email['body-1'] = 'has modified a field ('.$_POST['id'].' => '.$_POST['value'].') on truck order from <strong>' . $truck->getFromCity() . '</strong>' . '.';
+                $email['body-2'] = 'The loading date is <strong>' . date(Utils::$PHP_DATE_FORMAT, $truck->getLoadingDate()) . '</strong>';
+                $email['link']['url'] = 'https://rohel.iedutu.com/?page=truckInfo&id='.$truck->getId();
+                $email['link']['text'] = 'View the truck order details';
+
+                break;
+            }
+            default: {
+                error_log('Unknown page set-up when trying for a generic update.');
+                return false;
+            }
         }
 
         $email['originator']['e-mail'] = $originator->getUsername();
@@ -52,13 +64,13 @@ if(!empty($_POST['id'])) {
 
         Mails::emailNotification($email);
     }
-    catch (ApplicationException $ae) {
-        return null;
-    }
+catch (ApplicationException $ae) {
+    return null;
+}
     catch (Exception $e) {
-        Utils::handleException($e);
-        return null;
-    }
+    Utils::handleException($e);
+    return null;
+}
 
     echo $_POST['value'];
 }

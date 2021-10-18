@@ -104,16 +104,24 @@ let KTDatatableMatchesList = function() {
                                 'class': ' label-success'
                             },
                             2: {
-                                'title': 'Free',
+                                'title': 'Needed',
                                 'class': ' label-warning'
                             },
                             3: {
-                                'title': 'Needed',
+                                'title': 'Free',
                                 'class': ' label-danger'
                             },
                             4: {
-                                'title': 'Solved',
+                                'title': 'Partial',
                                 'class': ' label-primary'
+                            },
+                            5: {
+                                'title': 'Solved',
+                                'class': ' label-success'
+                            },
+                            6: {
+                                'title': 'Full',
+                                'class': ' label-success'
                             },
                         };
                         return '<a href="/?page='+row.item_kind+'&id='+row.item_id+'" class="label font-weight-bold label-lg ' + status[row.status].class + ' label-inline">' + status[row.status].title + '</a>';
@@ -162,10 +170,16 @@ let KTDatatableMatchesList = function() {
                     field: 'plate_number',
                     title: 'Truck no',
                     width: 85,
+                    template: function (row) {
+                        return '<b>' + row.plate_number + '</b>';
+                    },
                 }, {
                     field: 'ameta',
                     title: 'Ameta',
                     width: 95,
+                    template: function (row) {
+                        return '<b>' + row.ameta + '</b>';
+                    },
                 }],
         });
 

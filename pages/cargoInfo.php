@@ -70,7 +70,12 @@ else {
 
 $originator = DB_utils::selectUserById($cargo->getOriginator());
 $recipient = DB_utils::selectUserById($cargo->getRecipient());
-$acceptor = DB_utils::selectUserById($cargo->getAcceptedBy());
+if(empty($cargo->getAcceptedBy())) {
+    $acceptor = null;
+}
+else {
+    $acceptor = DB_utils::selectUserById($cargo->getAcceptedBy());
+}
 
 // Read the changes which happened so far
 $audit = Audit::readCargo($cargo->getId(), $_SESSION['role']);
@@ -90,7 +95,7 @@ $class_text_default = '';
         <div class="card card-custom gutter-b">
             <div class="card-header flex-wrap border-0 pt-6 pb-0">
                 <div class="card-title">
-                    <h3 class="card-label">Cargo request details
+                    <h3 class="card-label">Cargo details
                         <?php
                         if($editable['originator']) {
                             echo '<span class="d-block text-muted pt-2 font-size-sm">If you need to change an item, simply click on its value and press ENTER after changing it.</span></h3>';
@@ -105,7 +110,7 @@ $class_text_default = '';
                         }
                         ?>
                 </div>
-                <div class="card-toolbar">
+                <div class="card-toolbar d-print-none">
                     <!--begin::Button-->
                     <button type="button" class="btn btn-light-primary font-weight-bolder" aria-expanded="false" onclick="javascript:window.print()">
 												<span class="svg-icon svg-icon-md">
@@ -420,37 +425,36 @@ $class_text_default = '';
                     </tr>
                 </table>
             </div>
-            <!--
-            <div class="card-footer">
+            <div class="card-footer d-print-none">
                 <?php
-                    if($editable['originator']) {
-                ?>
-                        <form class="form" id="kt_rohel_cancel_form" action="/api/cancelCargo.php" method="post">
-                    <input type="hidden" name="_submitted" value="true">
-                    <input type="hidden" name="id" value="<?=$cargo->getId()?>">
-                    <div class="row">
-                        <div class="col-lg-8">
-                            <?php
-                            // NEW cargo only can be cancelled
-                            if($cargo->getStatus() == 0) {
-                                echo '<button type="submit" class="btn btn-primary btn-danger btn-lg" data-toggle="tooltip" title="Click to cancel!">Remove/Cancel cargo</button>';
-                            }
-                            else {
-                                echo '
+                if($editable['originator']) {
+                    ?>
+                    <form class="form" id="kt_rohel_cancel_form" action="/api/cancelCargo.php" method="post">
+                        <input type="hidden" name="_submitted" value="true">
+                        <input type="hidden" name="id" value="<?=$cargo->getId()?>">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <?php
+                                // NEW cargo only can be cancelled
+                                if($cargo->getStatus() == 1) {
+                                    echo '<button type="submit" class="btn btn-primary btn-danger btn-lg" data-toggle="tooltip" title="Click to cancel!">Remove/Cancel cargo</button>';
+                                }
+                                else {
+                                    echo '
                                             <span class="d-inline-block" data-toggle="tooltip" title="Only status NEW cargo can be cancelled.">
                                                 <button type="submit" class="btn btn-primary btn-danger btn-lg" style="pointer-events: none;" disabled>Remove/Cancel cargo</button>
                                             </span>
                                                     ';
-                            }
-                            ?>
+                                }
+                                ?>
+                            </div>
                         </div>
-                    </div>
-                </form>
-                <?php
-                    }
-                    else {
-                        if($editable['recipient']) {
-                ?>
+                    </form>
+                    <?php
+                }
+                else {
+                    if($editable['recipient']) {
+                        ?>
                         <form class="form" id="kt_rohel_accept_form" action="/api/acceptCargo.php" method="post">
                             <input type="hidden" name="_submitted" value="true">
                             <input type="hidden" name="id" value="<?=$cargo->getId()?>">
@@ -465,12 +469,11 @@ $class_text_default = '';
                                 </div>
                             </div>
                         </form>
-                <?php
-                        }
+                        <?php
                     }
+                }
                 ?>
             </div>
-            -->
         </div>
         <!--end::Card-->
     </div>
@@ -480,12 +483,12 @@ $class_text_default = '';
             <div class="card-header flex-wrap border-0 pt-6 pb-0">
                 <div class="card-title">
                     <h3 class="card-label">Notes
-                        <span class="d-block text-muted pt-2 font-size-sm">Please add below if needed.</span></h3>
+                        <span class="d-block text-muted pt-2 font-size-sm d-print-none">Please add below if needed.</span></h3>
                 </div>
             </div>
             <div class="card-body">
                 <!--begin: Datatable-->
-                <div class="datatable datatable-bordered datatable-head-custom" id="kt_datatable"></div>
+                <div class="datatable datatable-bordered datatable-head-custom" id="kt_datatable_notes"></div>
                 <!--end: Datatable-->
 
                 <!--begin: New note form-->
@@ -494,7 +497,7 @@ $class_text_default = '';
                     <input type="hidden" name="page" id="page" value="<?=$_GET['page']?>"/>
                     <input type="hidden" name="id" id="id" value="<?=$_GET['id']?>"/>
                     <input type="hidden" name="recipient" id="recipient" value="<?=$cargo->getRecipient()?>"/>
-                    <div class="card-body">
+                    <div class="card-body d-print-none">
                         <div class="form-group row">
                             <div class="col-lg-12">
                                 <input type="text-area" id="note" name="note" class="form-control" placeholder="Text details"/>

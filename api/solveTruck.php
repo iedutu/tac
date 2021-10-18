@@ -80,7 +80,7 @@ if (isset ( $_POST ['id'] )) {
 
     $_SESSION['alert']['type'] = 'success';
     $_SESSION['alert']['message'] = 'Truck '.$truck->getPlateNumber().' with ameta '.$truck->getAmeta().' was marked as fully loaded.';
-    $_SESSION['alert']['message'] .= ' Notification e-mail sent to '.$truck->getRecipient().' and '.$_SESSION['operator'];
+    $_SESSION['alert']['message'] .= ' Notification e-mail sent to '.$recipient->getName().' and '.$originator->getName();
 
     header ( 'Location: /index.php?page=truckInfo&id='.$truck->getId() );
     exit();
