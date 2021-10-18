@@ -34,8 +34,8 @@
                             <!-- Header -->
                             <table border="0" cellpadding="0" cellspacing="0" width="600" id="template_header" style='background-color: #96588a; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif; border-radius: 3px 3px 0 0;'>
                                 <tr>
-                                    <td id="header_wrapper" style="padding: 36px 48px; display: block; background-color: <?=$email['color']?>;">
-                                        <h1 style='font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: 300; line-height: 150%; margin: 0; text-align: center; text-shadow: 0 1px 0 #ab79a1; -webkit-font-smoothing: antialiased; color: #ffffff;'>
+                                    <td id="header_wrapper" style="padding: 36px 48px; display: block; background-color: <?=$email['bg-color']?>;">
+                                        <h1 style='font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: 300; line-height: 150%; margin: 0; text-align: center; text-shadow: 0 1px 0 #ab79a1; -webkit-font-smoothing: antialiased; color: <?=$email['tx-color']?>;'>
                                             <?=$email['header']?>
                                         </h1>
                                     </td>

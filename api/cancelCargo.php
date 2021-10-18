@@ -65,7 +65,8 @@ try {
     $email['recipient']['name'] = $recipient->getName();
     $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargo';
     $email['link']['text'] = 'View the remaining cargo requests';
-    $email['color'] = Mails::$CANCELLED_COLOR;
+    $email['bg-color'] = Mails::$BG_CANCELLED_COLOR;
+    $email['tx-color'] = Mails::$TX_CANCELLED_COLOR;
 
     Mails::emailNotification($email);
 }

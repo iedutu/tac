@@ -45,7 +45,8 @@ try {
     $email['recipient']['name'] = $recipient->getName();
     $email['link']['url'] = 'https://rohel.iedutu.com/?page=truckInfo&id='.$truck->getId();
     $email['link']['text'] = 'View the truck order details';
-    $email['color'] = Mails::$DELETED_COLOR;
+    $email['bg-color'] = Mails::$BG_DELETED_COLOR;
+    $email['tx-color'] = Mails::$TX_DELETED_COLOR;
 
     Mails::emailNotification($email);
 }

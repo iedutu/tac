@@ -57,7 +57,8 @@ if (!empty ( $_POST ['id'] )) {
         $email['recipient']['name'] = $recipient->getName();
         $email['link']['url'] = 'https://rohel.iedutu.com/?page=truckInfo&id='.$truck->getId();
         $email['link']['text'] = 'View the truck order details';
-        $email['color'] = Mails::$PARTIALLY_LOADED_COLOR;
+        $email['bg-color'] = Mails::$BG_PARTIALLY_LOADED_COLOR;
+        $email['tx-color'] = Mails::$TX_PARTIALLY_LOADED_COLOR;
 
         Mails::emailNotification($email);
     }

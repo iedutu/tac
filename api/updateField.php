@@ -47,7 +47,8 @@ if(!empty($_POST['id'])) {
         $email['originator']['name'] = $originator->getName();
         $email['recipient']['e-mail'] = $recipient->getUsername();
         $email['recipient']['name'] = $recipient->getName();
-        $email['color'] = Mails::$UPDATED_COLOR;
+        $email['bg-color'] = Mails::$BG_UPDATED_COLOR;
+        $email['tx-color'] = Mails::$TX_UPDATED_COLOR;
 
         Mails::emailNotification($email);
     }

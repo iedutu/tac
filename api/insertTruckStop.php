@@ -48,7 +48,8 @@ if (isset ( $_POST ['_submitted'] )) {
         $email['recipient']['name'] = $recipient->getName();
         $email['link']['url'] = 'https://rohel.iedutu.com/?page=truckInfo&id='.$truck->getId();
         $email['link']['text'] = 'View the detailed truck order';
-        $email['color'] = Mails::$NEW_COLOR;
+        $email['bg-color'] = Mails::$BG_NEW_COLOR;
+        $email['tx-color'] = Mails::$TX_NEW_COLOR;
 
         Mails::emailNotification($email);
     } catch (ApplicationException $ae) {

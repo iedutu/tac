@@ -58,7 +58,8 @@ if (isset ( $_POST ['id'] )) {
         $email['recipient']['name'] = $recipient->getName();
         $email['link']['url'] = 'https://rohel.iedutu.com/?page=trucks';
         $email['link']['text'] = 'View the remaining truck orders';
-        $email['color'] = Mails::$CANCELLED_COLOR;
+        $email['bg-color'] = Mails::$BG_CANCELLED_COLOR;
+        $email['tx-color'] = Mails::$TX_CANCELLED_COLOR;
 
         Mails::emailNotification($email);
     }

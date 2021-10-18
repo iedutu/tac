@@ -50,7 +50,8 @@ if(!empty($_POST['id'])) {
         $email['recipient']['name'] = $recipient->getName();
         $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargoInfo&id='.$cargo->getId();
         $email['link']['text'] = 'View the updated cargo request';
-        $email['color'] = Mails::$ACKNOWLEDGED_COLOR;
+        $email['bg-color'] = Mails::$BG_ACKNOWLEDGED_COLOR;
+        $email['tx-color'] = Mails::$TX_ACKNOWLEDGED_COLOR;
 
         Mails::emailNotification($email);
     }
