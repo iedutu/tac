@@ -9,64 +9,53 @@ $return = true;
 $stops = [];
 
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
-include $_SERVER["DOCUMENT_ROOT"]."/lib/mail-settings.php";
 
-error_log('Received an array of ['.sizeof($_POST['ids']).'] elements.');
-for($i=0;$i<sizeof($_POST['ids']);$i++) {
-    error_log('data['.$i.'] = '.$_POST['ids'][$i].'.');
-}
 try {
-    // Retrieve the list of stops for our truck
-    $stops_count = DB::getMDB()->queryFirstField("SELECT
-                                        count(1)
-                                     FROM 
-                                        cargo_truck_stops
-                                     WHERE
-                                        truck_id=%d", $_SESSION['entry-id']);
-    error_log('I have ['.$stops_count.'] elements in my DB.');
-
-    // Remove the stops from the database
-    // TODO: Shall I mark them as CANCELLED instead?
-    // See if the user selected all
-    $deleted_stops = 0;
-    if($stops_count > sizeof($_POST['ids'])) {
-        for ($i = 0; $i < sizeof($_POST['ids']); $i++) {
-            DB::getMDB()->delete('cargo_truck_stops', 'id=%d', $_POST['ids'][$i]);
-            $deleted_stops++;
-        }
-    }
-    else {
-        for ($i = 0; $i < sizeof($_POST['ids']) - 1; $i++) {
-            DB::getMDB()->delete('cargo_truck_stops', 'id=%d', $_POST['ids'][$i]);
-            $deleted_stops++;
-        }
+    $truck = DB_utils::selectTruck($_SESSION['entry-id']);
+    if(empty($truck)) {
+        header ( 'Location: /index.php?page=trucks' );
+        exit();
     }
 
-    // Redo the stop_id numbers on the remaining records
-    DB::getMDB()->get()->multi_query('SET @num := -1; UPDATE cargo_truck_stops SET stop_id = @num := (@num+1) WHERE truck_id='.$_SESSION['entry-id'].' ORDER BY stop_id');
-    while (DB::getMDB()->get()->next_result()) {;}  // Required to fix the sync error: https://stackoverflow.com/questions/27899598/mysqli-multi-query-commands-out-of-sync-you-cant-run-this-command-now
+    if(empty($_POST['ids'])) {
+        header ( 'Location: /index.php?page=trucks' );
+        exit();
+    }
+
+    DB_utils::deleteTruckStops($truck, $_POST['ids']);
 
     // Set the trigger for the generation of the Match page
     DB_utils::writeValue('changes', '1');
 
     // Add a notification to the receiver of the cargo request
-    DB_utils::addNotification($_SESSION['recipient-id'], 4, 3, $_SESSION['entry-id']);
+    DB_utils::addNotification($truck->getRecipient(), 4, 3, $truck->getId());
 
-    DB::getMDB()->commit();
+    // Send a notification e-mail to the recipient
+    $originator = DB_utils::selectUserById($truck->getOriginator());
+    $recipient = DB_utils::selectUserById($truck->getRecipient());
+
+    $email['subject'] = 'Change in scheduled stops by ' . $originator->getName();
+    $email['title'] = 'ROHEL | E-mail';
+    $email['header'] = 'A number of scheduled stops were removed by ' . $originator->getName();
+    $email['body-1'] = 'has removed <strong>'.sizeof($_POST['ids']).'</strong> scheduled stops from a truck order from <strong>' . $truck->getFromCity() . '</strong>' . '.';
+    $email['body-2'] = 'The loading date is <strong>' . date(Utils::$PHP_DATE_FORMAT, $truck->getLoadingDate()) . '</strong>';
+    $email['originator']['e-mail'] = $originator->getUsername();
+    $email['originator']['name'] = $originator->getName();
+    $email['recipient']['e-mail'] = $recipient->getUsername();
+    $email['recipient']['name'] = $recipient->getName();
+    $email['link']['url'] = 'https://rohel.iedutu.com/?page=truckInfo&id='.$truck->getId();
+    $email['link']['text'] = 'View the truck order details';
+    $email['color'] = Mails::$DELETED_COLOR;
+
+    Mails::emailNotification($email);
 }
-catch (MeekroDBException $mdbe) {
-    Utils::handleMySQLException($mdbe);
-    return null;
+catch (ApplicationException $ae) {
+    return false;
 }
 catch (Exception $e) {
     Utils::handleException($e);
-    return null;
+    return false;
 }
 
-if($return) {
-    header('Content-Type: application/json');
-    echo json_encode(true);
-}
-else {
-    return null;
-}
+header('Content-Type: application/json');
+echo json_encode(true);

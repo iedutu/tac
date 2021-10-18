@@ -55,7 +55,7 @@
 										<div class="symbol symbol-circle symbol-30 bg-white overflow-hidden">
 											<div class="symbol-label">
 												<img alt="Userland" src="assets/media/svg/avatars/<?=$_SESSION['operator']['avatar']?>.svg" class="h-75 align-self-end" />
-											</div>
+                                            </div>
 										</div>
 									</div>
 								</div>

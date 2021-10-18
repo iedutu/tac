@@ -21,10 +21,5 @@ if(isset($mail)) {
     $mail->Username = '';
 //Password to use for SMTP authentication
     $mail->Password = '';
-//Set who the message is to be sent from
-    $mail->setFrom('webmaster@', 'Darth Vader');
-//Set an alternative reply-to address
-    $mail->addReplyTo('no-reply@', 'No Replies');
-//Set who the message is to be sent to
 }
 ?>

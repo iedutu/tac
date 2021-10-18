@@ -4,6 +4,7 @@ session_start ();
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
 use PHPMailer\PHPMailer\PHPMailer;
+use Rohel\TruckStop;
 
 if (! Utils::authorized(Utils::$INSERT)) {
     error_log("User not authorized to insert data in the database.");
@@ -13,32 +14,17 @@ if (! Utils::authorized(Utils::$INSERT)) {
 
 if (isset ( $_POST ['_submitted'] )) {
     try {
-        $stop_id = $_POST['stop_id'];
-        $stops_count = DB::getMDB()->queryFirstField("SELECT
-                                        count(1)
-                                     FROM 
-                                        cargo_truck_stops
-                                     WHERE
-                                        truck_id=%d", $_SESSION['entry-id']);
-        if($stop_id > $stops_count + 1) {
-            $stop_id = $stops_count + 1;
-        }
+        $stop = new TruckStop();
+        $stop->setStopId($_POST['stop_id']);
+        $stop->setTruckId($_SESSION['entry-id']);
+        $stop->setCity($_POST['city']);
+        $stop->setAddress($_POST['address']);
+        $stop->setLoadingMeters($_POST['loading_meters']);
+        $stop->setWeight($_POST['weight']);
+        $stop->setVolume($_POST['volume']);
+        $stop->setCmr($_POST['cmr']);
 
-        DB::getMDB()->insert('cargo_truck_stops', array(
-            'operator' => $_SESSION['operator']['username'],
-            'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
-            'city' => $_POST ['city'],
-            'truck_id' => $_SESSION['entry-id'],
-            'stop_id' => $stop_id-1,
-            'volume' => $_POST ['volume'],
-            'weight' => $_POST ['weight'],
-            'loading_meters' => $_POST ['loading_meters'],
-            'cmr' => $_POST ['cmr']
-        ));
-
-        $id = DB::getMDB()->insertId();
-
-        DB::getMDB()->query('UPDATE cargo_truck_stops SET stop_id=stop_id+1 WHERE ((truck_id=%d) AND (stop_id>=%d) AND (id<>%d))', $_SESSION['entry-id'], $stop_id-1, $id);
+        $id = DB_utils::insertTruckStop($stop);
 
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');
@@ -46,36 +32,28 @@ if (isset ( $_POST ['_submitted'] )) {
         // Add a notification to the receiver of the cargo request
         DB_utils::addNotification($_SESSION['recipient-id'], 1, 3, $id);
 
-        DB::getMDB()->commit();
-	    $url = 'http://www.rohel.ro/new/tac/?page=details&type=truck&id='.$id;
+        // Send a notification e-mail to the recipient
+        $truck = DB_utils::selectTruck($stop->getTruckId());
+        $originator = DB_utils::selectUserById($truck->getOriginator());
+        $recipient = DB_utils::selectUserById($truck->getRecipient());
 
-        // e-mail confirmation
-        $mail = new PHPMailer ();
-        include "../lib/mail-settings.php";
+        $email['subject'] = 'New truck order received from '.$originator->getName();
+        $email['title'] = 'ROHEL | E-mail';
+        $email['header'] = ' You have a new truck order from '.$originator->getName();
+        $email['body-1'] = 'has introduced a new scheduled truck stop in <strong>'.$stop->getCity().'</strong>.';
+        $email['body-2'] = 'The unloading date is <strong>'.date(Utils::$PHP_DATE_FORMAT, $truck->getUnloadingDate()).'</strong>';
+        $email['originator']['e-mail'] = $originator->getUsername();
+        $email['originator']['name'] = $originator->getName();
+        $email['recipient']['e-mail'] = $recipient->getUsername();
+        $email['recipient']['name'] = $recipient->getName();
+        $email['link']['url'] = 'https://rohel.iedutu.com/?page=truckInfo&id='.$truck->getId();
+        $email['link']['text'] = 'View the detailed truck order';
+        $email['color'] = Mails::$NEW_COLOR;
 
-        $mail->Subject = "New truck stop added by " . $_POST['originator'];
-
-        $cargo_details = 'TBD';
-
-        $mail->addAddress ( $_POST['recipient'], $_POST['recipient'] );
-
-        ob_start ();
-        include_once (dirname ( __FILE__ ) . "../../html/new_truck.html");
-        $body = ob_get_clean ();
-        $mail->msgHTML ( $body, dirname ( __FILE__ ), true ); // Create message bodies and embed images
-        if(!Utils::$DO_NOT_SEND_MAILS) {
-            $mail->send ();
-        }
-    } catch (\PHPMailer\PHPMailer\Exception $me) {
-        Utils::handleMailException($me);
+        Mails::emailNotification($email);
+    } catch (ApplicationException $ae) {
         $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'E-mail error ('.$me->getCode().':'.$me->getMessage().'). Please contact your system administrator.';
-
-        return 0;
-    } catch (MeekroDBException $mdbe) {
-        Utils::handleMySQLException($mdbe);
-        $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
+        $_SESSION['alert']['message'] = 'Application error ('.$ae->getCode().':'.$ae->getMessage().'). Please contact your system administrator.';
 
         return 0;
     } catch (Exception $e) {
@@ -85,6 +63,9 @@ if (isset ( $_POST ['_submitted'] )) {
 
         return 0;
     }
+
+    $_SESSION['alert']['type'] = 'success';
+    $_SESSION['alert']['message'] = 'A new notification was added into the system for the truck order. '.$truck->getRecipient().' was notified by e-mail.';
 
     header ( 'Location: /?page=truckInfo&id='.$_SESSION['entry-id']);
     exit();

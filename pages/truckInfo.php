@@ -70,7 +70,6 @@ else {
 
 $originator = DB_utils::selectUserById($truck->getOriginator());
 $recipient = DB_utils::selectUserById($truck->getRecipient());
-$_SESSION['email-recipient'] = $recipient->getUsername();
 
 // Read the changes which happened so far
 $audit = Audit::readTruck($truck->getId());

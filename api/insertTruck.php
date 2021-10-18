@@ -61,20 +61,24 @@ if (isset ( $_POST ['_submitted'] )) {
         // Add a notification to the receiver of the cargo request
         DB_utils::addNotification($truck->getRecipient(), 1, 2, $truck->getId());
 
-        // Send an e-mail notification
+        // Send a notification e-mail to the recipient
         $originator = DB_utils::selectUserById($truck->getOriginator());
         $recipient = DB_utils::selectUserById($truck->getRecipient());
 
-        $email['subject'] = 'New cargo request received from '.$originator->getName();
+        $email['subject'] = 'New truck order received from '.$originator->getName();
         $email['title'] = 'ROHEL | E-mail';
-        $email['header'] = ' You have a new cargo request from '.$originator->getName();
-        $email['template'] = $_SERVER["DOCUMENT_ROOT"].'/html/newTruck.html';
-        $email['originator'] = $originator->getUsername();
-        $email['recipient'] = $recipient->getUsername();
-        $email['status-label'] = 'label-info';
-        $email['status-name'] = 'NEW';
+        $email['header'] = ' You have a new truck order from '.$originator->getName();
+        $email['body-1'] = 'has introduced a new truck order for your consideration.';
+        $email['body-2'] = 'The unloading date is <strong>'.date(Utils::$PHP_DATE_FORMAT, $truck->getUnloadingDate()).'</strong>';
+        $email['originator']['e-mail'] = $originator->getUsername();
+        $email['originator']['name'] = $originator->getName();
+        $email['recipient']['e-mail'] = $recipient->getUsername();
+        $email['recipient']['name'] = $recipient->getName();
+        $email['link']['url'] = 'https://rohel.iedutu.com/?page=truckInfo&id='.$truck->getId();
+        $email['link']['text'] = 'View the detailed truck order';
+        $email['color'] = Mails::$NEW_COLOR;
 
-        Mails::emailNewTruckEntryNotification($truck, $email);
+        Mails::emailNotification($email);
     } catch (ApplicationException $ae) {
         $_SESSION['alert']['type'] = 'error';
         $_SESSION['alert']['message'] = 'Application error ('.$ae->getCode().':'.$ae->getMessage().'). Please contact your system administrator.';

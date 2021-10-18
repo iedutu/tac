@@ -72,8 +72,6 @@ $originator = DB_utils::selectUserById($cargo->getOriginator());
 $recipient = DB_utils::selectUserById($cargo->getRecipient());
 $acceptor = DB_utils::selectUserById($cargo->getAcceptedBy());
 
-$_SESSION['email-recipient'] = $recipient->getUsername();
-
 // Read the changes which happened so far
 $audit = Audit::readCargo($cargo->getId(), $_SESSION['role']);
 // Clean-up the changes

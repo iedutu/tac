@@ -10,6 +10,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/lib/datatypes/Rohel/User.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/lib/datatypes/Rohel/TruckMatch.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/lib/datatypes/Rohel/Notification.php";
 
+use Rohel\CargoNote;
 use Rohel\Notification;
 use Rohel\TruckMatch;
 use Rohel\Request;
@@ -420,11 +421,21 @@ class DB_utils
     public static function insertTruckStop(TruckStop $entry): int
     {
         try {
+            $stops_count = DB::getMDB()->queryFirstField("SELECT
+                                        count(1)
+                                     FROM 
+                                        cargo_truck_stops
+                                     WHERE
+                                        truck_id=%d", $entry->getTruckId());
+            if($entry->getStopId() > $stops_count + 1) {
+                $entry->setStopId($stops_count + 1);
+            }
+
             DB::getMDB()->insert('cargo_truck_stops', array(
                 'operator' => $_SESSION['operator']['username'],
                 'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
                 'truck_id' => $entry->getTruckId(),
-                'stop_id' => $entry->getStopId(),
+                'stop_id' => $entry->getStopId() - 1, // Counting starts from 0
                 'city' => $entry->getCity(),
                 'address' => $entry->getAddress(),
                 'loading_meters' => $entry->getLoadingMeters(),
@@ -432,12 +443,220 @@ class DB_utils
                 'volume' => $entry->getVolume()
             ));
 
+            $id = DB::getMDB()->insertId();
+            DB::getMDB()->query('UPDATE cargo_truck_stops SET stop_id=stop_id+1 WHERE ((truck_id=%d) AND (stop_id>=%d) AND (id<>%d))', $entry->getTruckId(), $entry->getStopId()-1, $id);
+            DB::getMDB()->commit();
+
+            return $id;
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe->getMessage());
+        }
+    }
+
+    /**
+     * @throws ApplicationException
+     */
+    public static function insertCargoNote(CargoNote $entry): int
+    {
+        try {
+            DB::getMDB()->insert('cargo_comments', array(
+                'operator' => $_SESSION['operator']['username'],
+                'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
+                'comment' => $entry->getNote(),
+                'cargo_id' => $entry->getCargoId()
+            ));
+            DB::getMDB()->commit();
+
             return DB::getMDB()->insertId();
         }
         catch (MeekroDBException $mdbe) {
             Utils::handleMySQLException($mdbe);
             throw new ApplicationException($mdbe->getMessage());
         }
+    }
+
+    /**
+     * @throws ApplicationException
+     */
+    public static function cancelCargo(int $id): bool
+    {
+        try {
+            DB::getMDB()->update('cargo_request', array(
+                'status' => 4
+            ), "id=%d", $id);
+            DB::getMDB()->commit();
+
+            return true;
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe->getMessage());
+        }
+    }
+
+    /**
+     * @throws ApplicationException
+     */
+    public static function acknowledgeCargo(Request $cargo, string $field, string $value): bool
+    {
+        try {
+            DB::getMDB()->update('cargo_request', array(
+                'acceptance' => date("Y-m-d H:i:s"),
+                'accepted_by' => $cargo->getAcceptedBy(),
+                $field => $value,
+                'status' => 2
+            ), "id=%d", $cargo->getId());
+            DB::getMDB()->commit();
+
+            return true;
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe->getMessage());
+        }
+    }
+
+    /**
+     * @throws ApplicationException
+     */
+    public static function deleteTruckStops(Truck $truck, $post): bool
+    {
+        try {
+            // Retrieve the list of stops for our truck
+            $stops_count = DB::getMDB()->queryFirstField("SELECT
+                                        count(1)
+                                     FROM 
+                                        cargo_truck_stops
+                                     WHERE
+                                        truck_id=%d", $truck->getId());
+
+            // Remove the stops from the database
+            // TODO: Shall I mark them as CANCELLED instead?
+            // See if the user selected all
+            $deleted_stops = 0;
+            if($stops_count > sizeof($post)) {
+                for ($i = 0; $i < sizeof($post); $i++) {
+                    DB::getMDB()->delete('cargo_truck_stops', 'id=%d', $post[$i]);
+                    $deleted_stops++;
+                }
+            }
+            else {
+                for ($i = 0; $i < sizeof($post) - 1; $i++) {
+                    DB::getMDB()->delete('cargo_truck_stops', 'id=%d', $post[$i]);
+                    $deleted_stops++;
+                }
+            }
+
+            // Redo the stop_id numbers on the remaining records
+            DB::getMDB()->get()->multi_query('SET @num := -1; UPDATE cargo_truck_stops SET stop_id = @num := (@num+1) WHERE truck_id='.$truck->getId().' ORDER BY stop_id');
+            while (DB::getMDB()->get()->next_result()) {;}  // Required to fix the sync error: https://stackoverflow.com/questions/27899598/mysqli-multi-query-commands-out-of-sync-you-cant-run-this-command-now
+            DB::getMDB()->commit();
+
+            return true;
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe->getMessage());
+        }
+    }
+
+    /**
+     * @throws ApplicationException
+     */
+    public static function cancelTruck(int $id): bool
+    {
+        try {
+            DB::getMDB()->update('cargo_trucks', array(
+                'status' => 4
+            ), "id=%d", $id);
+            DB::getMDB()->commit();
+
+            return true;
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe->getMessage());
+        }
+    }
+
+    /**
+     * @throws ApplicationException
+     */
+    public static function updateTruckStatus(Truck $truck, int $status): bool
+    {
+        try {
+            DB::getMDB()->update ( 'cargo_truck', array (
+                'status' => $status
+            ), "id=%d", $truck->getId());
+            DB::getMDB()->commit();
+
+            return true;
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe->getMessage());
+        }
+    }
+
+    /**
+     * @throws ApplicationException
+     */
+    public static function updateGenericField(string $key, string $value, int $id): ?string
+    {
+        try {
+            switch ($_SESSION['app']) {
+                case 'cargoInfo':
+                {
+                    $table = 'cargo_request';
+                    break;
+                }
+                case 'truckInfo':
+                {
+                    $table = 'cargo_truck';
+                    break;
+                }
+                default:
+                {
+                    error_log('In-place editing failed. Requested to change a filed without being notified of which page we are on.');
+                    return null;
+                }
+            }
+
+            switch ($_POST['id']) {
+                case 'acceptance':
+                case 'availability':
+                case 'expiration':
+                case 'loading_date':
+                case 'unloading_date':
+                {
+                    DB::getMDB()->update($table, array(
+                        $key => DB::getMDB()->sqleval("str_to_date(%s, %s)", $value, Utils::$SQL_DATE_FORMAT),
+                        'operator' => $_SESSION['operator']['username'],
+                    ), "id=%d", $id);
+                    DB::getMDB()->commit();
+
+                    break;
+                }
+                default:
+                {
+                    DB::getMDB()->update($table, array(
+                        $key => $value,
+                        'operator' => $_SESSION['operator']['username'],
+                    ), "id=%d", $id);
+                    DB::getMDB()->commit();
+
+                    break;
+                }
+            }
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe->getMessage());
+        }
+
+        return $table;
     }
 
     public static function insertMatch(TruckMatch $match): bool

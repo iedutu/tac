@@ -16,7 +16,7 @@ class Types
         }
         $pool->internalAddGeneratedFile(
             '
-š
+Ó
 types.protoRohel"ž
 Request
 
@@ -208,7 +208,12 @@ country_id
 kind (	
 entity_kind (	
 	entity_id (
-url (	bproto3'
+url (	"7
+	CargoNote
+
+id (
+cargo_id (
+note (	bproto3'
         , true);
 
         static::$is_initialized = true;

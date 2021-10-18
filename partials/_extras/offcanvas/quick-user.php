@@ -16,7 +16,7 @@
         <div class="d-flex align-items-center mt-5">
             <div class="symbol symbol-100 mr-5">
                 <div class="symbol-label" style="background-image:url('/assets/media/svg/avatars/<?=$_SESSION['operator']['avatar']?>.svg')"></div>
-                <i class="symbol-badge bg-success"></i>
+                <i class="symbol-badge bg-danger"></i>
             </div>
             <div class="d-flex flex-column">
                 <a href="#" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"><?=$_SESSION['operator']['name']?></a>

@@ -4,6 +4,7 @@ session_start ();
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
 use PHPMailer\PHPMailer\PHPMailer;
+use Rohel\CargoNote;
 
 if (! Utils::authorized(Utils::$INSERT)) {
     error_log("User not authorized to insert data in the database.");
@@ -13,72 +14,51 @@ if (! Utils::authorized(Utils::$INSERT)) {
 
 if (isset ( $_POST ['_submitted'] )) {
     try {
-        DB::getMDB()->insert('cargo_comments', array(
-            'operator' => $_SESSION['operator']['username'],
-//      'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
-            'comment' => $_POST ['note'],
-            'cargo_id' => $_POST ['id']
-        ));
+        $note = new CargoNote();
+        $note->setCargoId($_POST ['id']);
+        $note->setNote($_POST ['note']);
 
+        $id = DB_utils::insertCargoNote($note);
         // TODO: Overhaul the audit system.
-        Utils::insertCargoAuditEntry('cargo_comments', 'NEW-ENTRY', null, $_POST ['id']);
+        Utils::insertCargoAuditEntry('cargo_comments', 'NEW-ENTRY', null, $note->getId());
 
         // Add a notification to the receiver of the cargo request
-        DB_utils::addNotification($_POST ['recipient'], 1, 4, $_POST ['id']);
+        DB_utils::addNotification($_POST ['recipient'], 1, 4, $note->getId());
 
-        DB::getMDB()->commit();
+        // Send a notification e-mail to the recipient
+        $cargo = DB_utils::selectRequest($note->getCargoId());
+        $originator = DB_utils::selectUserById($cargo->getOriginator());
+        $recipient = DB_utils::selectUserById($cargo->getRecipient());
 
-        $mail_recipient = '';
-        $cargo = DB_utils::selectRequest($_POST['id']);
+        $email['subject'] = 'New note added by ' . $originator->getName();
+        $email['title'] = 'ROHEL | E-mail';
+        $email['header'] = 'A new note for a cargo request was added in the system by ' . $originator->getName();
+        $email['body-1'] = 'has introduced a new note to a cargo request bound for <strong>' . $cargo->getToCity() . '</strong>' . ': ' . $note->getNote();
+        $email['body-2'] = 'The loading date is <strong>' . date(Utils::$PHP_DATE_FORMAT, $cargo->getLoadingDate()) . '</strong>';
+        $email['originator']['e-mail'] = $originator->getUsername();
+        $email['originator']['name'] = $originator->getName();
+        $email['recipient']['e-mail'] = $recipient->getUsername();
+        $email['recipient']['name'] = $recipient->getName();
+        $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargoInfo&id=' . $cargo->getId();
+        $email['link']['text'] = 'View the order details';
+        $email['color'] = Mails::$NEW_COLOR;
 
-        // Send any relevant e-mail
-        $mail = new PHPMailer ();
-        include "../lib/mail-settings.php";
-
-        $mail->Subject = "New cargo comment from " . $_SESSION ['operator'];
-
-        $cargo_message = $_POST['_comment'];
-        $url = 'http://www.rohel.ro/new/cargo/index.php?page=details&type=cargo&id='.$_GET ['id'];
-
-        if($_SESSION['operator'] == $cargo->getOriginator()) {
-            $mail->addAddress ( $cargo->getRecipient(), $cargo->getRecipient() );
-            $mail_recipient = $cargo->getRecipient();
-        }
-        else {
-            $mail->addAddress ( $cargo->getOriginator(), $cargo->getOriginator() );
-            $mail_recipient = $cargo->getOriginator();
-        }
-
-        ob_start ();
-        include_once (dirname ( __FILE__ ) . "/../html/cargo_comment.html");
-        $body = ob_get_clean ();
-        $mail->msgHTML ( $body, dirname ( __FILE__ ), true ); // Create message bodies and embed images
-
-        if(!Utils::$DO_NOT_SEND_MAILS) {
-            $mail->send ();
-        }
-    } catch (\PHPMailer\PHPMailer\Exception $me) {
-        Utils::handleMailException($me);
+        Mails::emailNotification($email);
+    }
+    catch (ApplicationException $ae) {
         $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'E-mail error ('.$me->getCode().':'.$me->getMessage().'). Please contact your system administrator.';
-
+        $_SESSION['alert']['message'] = 'Application error ('.$ae->getCode().':'.$ae->getMessage().'). Please contact your system administrator.';
         return 0;
-    } catch (MeekroDBException $mdbe) {
-        Utils::handleMySQLException($mdbe);
-        $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
-
-        return 0;
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
         Utils::handleException($e);
         $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'General error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
-
+        $_SESSION['alert']['message'] = 'Application error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
         return 0;
     }
 
     $_SESSION['alert']['type'] = 'success';
-    $_SESSION['alert']['message'] = 'A new notification was added into the system for the cargo request. '.$mail_recipient.' was notified by e-mail.';
+    $_SESSION['alert']['message'] = 'A new notification was added into the system for the cargo request. '.$recipient->getName().' ('.$recipient->getUsername().') was notified by e-mail.';
 }
 
 

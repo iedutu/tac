@@ -53,14 +53,18 @@ if (isset ( $_POST ['_submitted'] )) {
 
         $email['subject'] = 'New cargo request received from '.$originator->getName();
         $email['title'] = 'ROHEL | E-mail';
-        $email['template'] = $_SERVER["DOCUMENT_ROOT"].'/html/newCargo.html';
         $email['header'] = ' You have a new cargo request from '.$originator->getName();
-        $email['originator'] = $originator->getUsername();
-        $email['recipient'] = $recipient->getUsername();
-        $email['status-label'] = 'label-info';
-        $email['status-name'] = 'NEW';
+        $email['body-1'] = 'has introduced a new cargo request for your consideration and acknowledgement.';
+        $email['body-2'] = 'The loading date is <strong>'.date(Utils::$PHP_DATE_FORMAT, $cargo->getLoadingDate()).'</strong>';
+        $email['originator']['e-mail'] = $originator->getUsername();
+        $email['originator']['name'] = $originator->getName();
+        $email['recipient']['e-mail'] = $recipient->getUsername();
+        $email['recipient']['name'] = $recipient->getName();
+        $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargoInfo&id='.$cargo->getId();
+        $email['link']['text'] = 'View & acknowledge the new order';
+        $email['color'] = Mails::$NEW_COLOR;
 
-        Mails::emailNewCargoEntryNotification($cargo, $email);
+        Mails::emailNotification($email);
     }
     catch (ApplicationException $ae) {
         $_SESSION['alert']['type'] = 'error';

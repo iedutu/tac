@@ -3,52 +3,9 @@ session_start();
 
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
-if(isset($_POST['id'])) {
-    // TODO: Ensure you do not need any date related checks before updating
-
-    $table = '';
+if(!empty($_POST['id'])) {
     try {
-        switch ($_SESSION['app']) {
-            case 'cargoInfo':
-            {
-                $table = 'cargo_request';
-                break;
-            }
-            case 'truckInfo':
-            {
-                $table = 'cargo_truck';
-                break;
-            }
-            default:
-            {
-                error_log('In-place editing failed. Requested to change a filed without being notified of which page we are on.');
-                return;
-            }
-        }
-
-        switch($_POST['id']) {
-            case 'acceptance':
-            case 'availability':
-            case 'expiration':
-            case 'loading_date':
-            case 'unloading_date':
-            {
-                DB::getMDB()->update($table, array(
-                    $_POST['id'] => DB::getMDB()->sqleval("str_to_date(%s, %s)", $_POST['value'], Utils::$SQL_DATE_FORMAT),
-                    'operator' => $_SESSION['operator']['username'],
-                ), "id=%d", $_SESSION['entry-id']);
-
-                break;
-            }
-            default: {
-                DB::getMDB()->update($table, array(
-                    $_POST['id'] => $_POST['value'],
-                    'operator' => $_SESSION['operator']['username'],
-                ), "id=%d", $_SESSION['entry-id']);
-
-                break;
-            }
-        }
+        $table = DB_utils::updateGenericField($_POST['id'], $_POST['value'], $_SESSION['entry-id']);
 
         Utils::insertCargoAuditEntry($table, $_POST['id'], $_SESSION['entry-id'], $_POST['value']);
         Utils::audit_update($table, $_POST['id'], $_SESSION['entry-id']);
@@ -59,16 +16,45 @@ if(isset($_POST['id'])) {
         // Add a notification to the receiver of the cargo request
         DB_utils::addNotification($_SESSION['recipient-id'], 2, $_SESSION['entry-kind'], $_SESSION['entry-id']);
 
-        DB::getMDB()->commit();
+        // Send a notification e-mail to the recipient
+        $recipient = DB_utils::selectUserById($_SESSION['recipient-id']);
+        $originator = DB_utils::selectUserById($_SESSION['originator-id']);
 
-        Utils::email_notification($_POST['id'], $_POST['value'], $_SESSION['entry-id']);
-    } catch (\PHPMailer\PHPMailer\Exception $me) {
-        Utils::handleMailException($me);
+        if($_SESSION['app'] = 'cargo') {
+            $cargo = DB_utils::selectRequest($_SESSION['entry-id']);
+
+            $email['subject'] = 'Cargo request modified by ' . $originator->getName();
+            $email['title'] = 'ROHEL | E-mail';
+            $email['header'] = 'A cargo request was modified by ' . $originator->getName();
+            $email['body-1'] = 'has modified a field ('.$_POST['id'].' => '.$_POST['value'].') on cargo request bound to <strong>' . $cargo->getToCity() . '</strong>' . '.';
+            $email['body-2'] = 'The loading date is <strong>' . date(Utils::$PHP_DATE_FORMAT, $cargo->getLoadingDate()) . '</strong>';
+            $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargoInfo&id='.$cargo->getId();
+            $email['link']['text'] = 'View the cargo request details';
+        }
+        else {
+            $truck = DB_utils::selectTruck($_SESSION['entry-id']);
+
+            $email['subject'] = 'Truck order modified by ' . $originator->getName();
+            $email['title'] = 'ROHEL | E-mail';
+            $email['header'] = 'A truck order was modified by ' . $originator->getName();
+            $email['body-1'] = 'has modified a field ('.$_POST['id'].' => '.$_POST['value'].') on truck order from <strong>' . $truck->getFromCity() . '</strong>' . '.';
+            $email['body-2'] = 'The loading date is <strong>' . date(Utils::$PHP_DATE_FORMAT, $truck->getLoadingDate()) . '</strong>';
+            $email['link']['url'] = 'https://rohel.iedutu.com/?page=truckInfo&id='.$truck->getId();
+            $email['link']['text'] = 'View the truck order details';
+        }
+
+        $email['originator']['e-mail'] = $originator->getUsername();
+        $email['originator']['name'] = $originator->getName();
+        $email['recipient']['e-mail'] = $recipient->getUsername();
+        $email['recipient']['name'] = $recipient->getName();
+        $email['color'] = Mails::$UPDATED_COLOR;
+
+        Mails::emailNotification($email);
+    }
+    catch (ApplicationException $ae) {
         return null;
-    } catch (MeekroDBException $mdbe) {
-        Utils::handleMySQLException($mdbe);
-        return 0;
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
         Utils::handleException($e);
         return null;
     }
