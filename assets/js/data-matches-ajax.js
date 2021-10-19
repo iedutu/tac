@@ -105,15 +105,15 @@ let KTDatatableMatchesList = function() {
                             },
                             2: {
                                 'title': 'Needed',
-                                'class': ' label-warning'
+                                'class': ' label-danger'
                             },
                             3: {
                                 'title': 'Free',
-                                'class': ' label-danger'
+                                'class': ' label-info'
                             },
                             4: {
                                 'title': 'Partial',
-                                'class': ' label-primary'
+                                'class': ' label-warning'
                             },
                             5: {
                                 'title': 'Solved',

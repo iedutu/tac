@@ -3,7 +3,7 @@
         <!--begin::Card-->
         <div class="card card-custom gutter-b">
             <div class="card-header">
-                <h3 class="card-title">New cargo request</h3>
+                <h3 class="card-title">New cargo</h3>
             </div>
             <form class="form" id="kt_rohel_cargo_form" action="/api/insertCargo.php" method="post">
                 <input type="hidden" name="_submitted" id="_submitted" value="yes"/>

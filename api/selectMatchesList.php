@@ -83,12 +83,6 @@ try {
                             AND
                             (a.recipient_id=c.id and c.office_id=e.id)
                         )
-                        AND
-						(
-                            (a.originator_id=b.id AND b.country_id=1)
-                            OR
-                            (a.recipient_id=c.id AND c.country_id=1)
-						)
 					    order by ".$field." ".$sort, Utils::$SQL_DATE_FORMAT, Utils::$SQL_DATE_FORMAT);
 
     // error_log(DB::getMDB()->lastQuery());

@@ -67,18 +67,12 @@ try {
                                             )
                                         )
                                      AND
-                                        ((status = 1) OR (status = 2))
+                                        ((status = 1) OR (status = 2) OR (status = 3))
                                      AND
                                      (
                                          (a.originator_id=b.id and b.office_id=d.id)
                                          AND
                                          (a.recipient_id=c.id and c.office_id=e.id)
-                                     )
-                                     AND
-                                     (
-                                         (a.originator_id=b.id AND b.country_id=1)
-                                         OR
-                                         (a.recipient_id=c.id AND c.country_id=1)
                                      )
                                      order by ".$field." ".$sort,
                                             Utils::$SQL_DATE_FORMAT,

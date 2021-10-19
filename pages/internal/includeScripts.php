@@ -37,7 +37,7 @@ switch($_SESSION['app']) {
 //        echo '<script src="/assets/js/src/jquery.jeditable.js"></script>';
 //        echo '<script src="/assets/js/src/jquery.jeditable.datepicker.js"></script>';
         echo '<script src="/assets/js/jeditable/jquery.jeditable.min.js"></script>';
-        echo '<script src="/assets/js/jeditable/jquery.jeditable.datepicker.min.js"></script>';
+        echo '<script src="/assets/js/src/jquery.jeditable.datepicker.js"></script>';
         echo '<script src="/assets/js/jeditable-cargo.js"></script>';
         echo '<script src="/assets/js/data-cargo-comments.js"></script>';
         echo '<script src="/assets/js/form-validation-cargo-note.js"></script>';
@@ -45,7 +45,7 @@ switch($_SESSION['app']) {
         break;
     }
     case 'truckInfo': {
-        echo '<script src="/assets/js/src/jquery.jeditable.js"></script>';
+        echo '<script src="/assets/js/jeditable/jquery.jeditable.min.js"></script>';
         echo '<script src="/assets/js/src/jquery.jeditable.datepicker.js"></script>';
         echo '<script src="/assets/js/jeditable-truck.js"></script>';
         if(isset($_SESSION['originator'])) {
@@ -55,6 +55,12 @@ switch($_SESSION['app']) {
         else {
             echo '<script src="/assets/js/data-truck-stops-ajax-read-only.js"></script>';
         }
+
+        break;
+    }
+    case 'reports': {
+        echo '<script src="/assets/js/datepicker-reports.js"></script>';
+        echo '<script src="/assets/js/form-validation-reports.js"></script>';
 
         break;
     }

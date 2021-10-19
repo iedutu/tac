@@ -64,23 +64,17 @@ try {
                             cargo_users c, 
                             cargo_offices d, 
                             cargo_offices e
-                       WHERE 
+                  WHERE 
 						(
 							((a.status = 1) AND (SYSDATE() < (a.expiration + INTERVAL 1 DAY))) OR
 							((a.status = 2) AND (SYSDATE() < (a.acceptance + INTERVAL %d DAY)))
 						)
-						AND
+                        AND
                         (
                             (a.originator_id=b.id and b.office_id=d.id)
                             AND
                             (a.recipient_id=c.id and c.office_id=e.id)
                         )
-                        AND
-						(
-                            (a.originator_id=b.id AND b.country_id=1)
-                            OR
-                            (a.recipient_id=c.id AND c.country_id=1)
-						)
 					    order by ".$field." ".$sort, Utils::$SQL_DATE_FORMAT, Utils::$CARGO_PERIOD, $_SESSION['operator']['country-id']);
 
     // error_log(DB::getMDB()->lastQuery());

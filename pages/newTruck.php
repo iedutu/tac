@@ -23,7 +23,7 @@
                         </div>
                         <div class="col-lg-4">
                             <label>Address of origin:</label>
-                            <input type="text" id="to_city" name="from_address" class="form-control" placeholder="Street address"/>
+                            <input type="text" id="from_address" name="from_address" class="form-control" placeholder="Street address"/>
                             <span class="form-text text-muted">Leave empty if not applicable</span>
                         </div>
                     </div>

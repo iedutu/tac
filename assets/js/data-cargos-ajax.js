@@ -29,6 +29,7 @@ var KTDatatableCargoList = function() {
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true,
+                saveState: false
             },
 
             // layout definition

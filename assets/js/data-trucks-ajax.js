@@ -29,6 +29,7 @@ var KTDatatableTruckList = function() {
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true,
+                saveState: false
             },
 
             // layout definition
@@ -132,7 +133,7 @@ var KTDatatableTruckList = function() {
                         },
                         2: {
                             'title': 'Partial',
-                            'class': ' label-light-success'
+                            'class': ' label-light-warning'
                         },
                         3: {
                             'title': 'Solved',

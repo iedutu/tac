@@ -32,6 +32,10 @@ switch($_SESSION['app']) {
         include 'pages/internal/displayEmpty.php';
         break;
     }
+    case 'reports': {
+        include 'pages/exportData.php';
+        break;
+    }
     default: {
         break;
     }

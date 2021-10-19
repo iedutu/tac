@@ -1027,10 +1027,10 @@ class DB_utils
                 $match->setRecipientId($cargo->getRecipient());
 
                 if(empty($cargo->getPlateNumber())) {
-                    $match->setStatus(5);
+                    $match->setStatus(2);
                 }
                 else {
-                    $match->setStatus(2);
+                    $match->setStatus(5);
                 }
 
                 DB_utils::insertMatch($match);
