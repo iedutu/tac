@@ -22,13 +22,13 @@ class Notification extends \Google\Protobuf\Internal\Message
      */
     protected $from = '';
     /**
-     * Generated from protobuf field <code>string kind = 3;</code>
+     * Generated from protobuf field <code>int32 kind = 3;</code>
      */
-    protected $kind = '';
+    protected $kind = 0;
     /**
-     * Generated from protobuf field <code>string entity_kind = 4;</code>
+     * Generated from protobuf field <code>int32 entity_kind = 4;</code>
      */
-    protected $entity_kind = '';
+    protected $entity_kind = 0;
     /**
      * Generated from protobuf field <code>int32 entity_id = 5;</code>
      */
@@ -37,6 +37,18 @@ class Notification extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>string url = 6;</code>
      */
     protected $url = '';
+    /**
+     * Generated from protobuf field <code>int32 user_id = 7;</code>
+     */
+    protected $user_id = 0;
+    /**
+     * Generated from protobuf field <code>int32 originator_id = 8;</code>
+     */
+    protected $originator_id = 0;
+    /**
+     * Generated from protobuf field <code>int32 viewed = 9;</code>
+     */
+    protected $viewed = 0;
 
     /**
      * Constructor.
@@ -46,10 +58,13 @@ class Notification extends \Google\Protobuf\Internal\Message
      *
      *     @type int $id
      *     @type string $from
-     *     @type string $kind
-     *     @type string $entity_kind
+     *     @type int $kind
+     *     @type int $entity_kind
      *     @type int $entity_id
      *     @type string $url
+     *     @type int $user_id
+     *     @type int $originator_id
+     *     @type int $viewed
      * }
      */
     public function __construct($data = NULL) {
@@ -102,8 +117,8 @@ class Notification extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string kind = 3;</code>
-     * @return string
+     * Generated from protobuf field <code>int32 kind = 3;</code>
+     * @return int
      */
     public function getKind()
     {
@@ -111,21 +126,21 @@ class Notification extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string kind = 3;</code>
-     * @param string $var
+     * Generated from protobuf field <code>int32 kind = 3;</code>
+     * @param int $var
      * @return $this
      */
     public function setKind($var)
     {
-        GPBUtil::checkString($var, True);
+        GPBUtil::checkInt32($var);
         $this->kind = $var;
 
         return $this;
     }
 
     /**
-     * Generated from protobuf field <code>string entity_kind = 4;</code>
-     * @return string
+     * Generated from protobuf field <code>int32 entity_kind = 4;</code>
+     * @return int
      */
     public function getEntityKind()
     {
@@ -133,13 +148,13 @@ class Notification extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string entity_kind = 4;</code>
-     * @param string $var
+     * Generated from protobuf field <code>int32 entity_kind = 4;</code>
+     * @param int $var
      * @return $this
      */
     public function setEntityKind($var)
     {
-        GPBUtil::checkString($var, True);
+        GPBUtil::checkInt32($var);
         $this->entity_kind = $var;
 
         return $this;
@@ -185,6 +200,72 @@ class Notification extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkString($var, True);
         $this->url = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>int32 user_id = 7;</code>
+     * @return int
+     */
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
+
+    /**
+     * Generated from protobuf field <code>int32 user_id = 7;</code>
+     * @param int $var
+     * @return $this
+     */
+    public function setUserId($var)
+    {
+        GPBUtil::checkInt32($var);
+        $this->user_id = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>int32 originator_id = 8;</code>
+     * @return int
+     */
+    public function getOriginatorId()
+    {
+        return $this->originator_id;
+    }
+
+    /**
+     * Generated from protobuf field <code>int32 originator_id = 8;</code>
+     * @param int $var
+     * @return $this
+     */
+    public function setOriginatorId($var)
+    {
+        GPBUtil::checkInt32($var);
+        $this->originator_id = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>int32 viewed = 9;</code>
+     * @return int
+     */
+    public function getViewed()
+    {
+        return $this->viewed;
+    }
+
+    /**
+     * Generated from protobuf field <code>int32 viewed = 9;</code>
+     * @param int $var
+     * @return $this
+     */
+    public function setViewed($var)
+    {
+        GPBUtil::checkInt32($var);
+        $this->viewed = $var;
 
         return $this;
     }

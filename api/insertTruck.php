@@ -3,6 +3,7 @@ session_start ();
 
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
+use Rohel\Notification;
 use Rohel\Truck;
 use Rohel\TruckStop;
 
@@ -30,7 +31,7 @@ if (isset ( $_POST ['_submitted'] )) {
         $truck->setPlateNumber($_POST ['plate_number']);
         $truck->setDetails($_POST ['details']);
 
-        $id = DB_utils::insertTruck($truck);
+        $truck->setId(DB_utils::insertTruck($truck));
         $truck_final_destination = '';
 
         $stops = [];
@@ -43,7 +44,7 @@ if (isset ( $_POST ['_submitted'] )) {
             $stop->setCity($_POST['stops'][$i]['to_city']);
             $stop->setAddress($_POST['stops'][$i]['to_address']);
             $stop->setStopId($i);
-            $stop->setTruckId($id);
+            $stop->setTruckId($truck->getId());
 
             $truck_final_destination = $stop->getCity();
 
@@ -58,8 +59,15 @@ if (isset ( $_POST ['_submitted'] )) {
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');
 
-        // Add a notification to the receiver of the cargo request
-        DB_utils::addNotification($truck->getRecipient(), 1, 2, $truck->getId());
+        // Add a notification to the receiver of the truck
+        $note = new Notification();
+        $note->setUserId($truck->getRecipient());
+        $note->setOriginatorId($_SESSION['operator']['id']);
+        $note->setKind(1);
+        $note->setEntityKind(2);
+        $note->setEntityId($truck->getId());
+
+        DB_utils::addNotification($note);
 
         // Send a notification e-mail to the recipient
         $originator = DB_utils::selectUserById($truck->getOriginator());

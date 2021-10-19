@@ -1,4 +1,7 @@
 <?php
+
+use Rohel\Notification;
+
 session_start();
 
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
@@ -13,9 +16,6 @@ if(!empty($_POST['id'])) {
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');
 
-        // Add a notification to the receiver of the cargo request
-        DB_utils::addNotification($_SESSION['recipient-id'], 2, $_SESSION['entry-kind'], $_SESSION['entry-id']);
-
         // Send a notification e-mail to the recipient
         $recipient = DB_utils::selectUserById($_SESSION['recipient-id']);
         $originator = DB_utils::selectUserById($_SESSION['originator-id']);
@@ -24,6 +24,20 @@ if(!empty($_POST['id'])) {
             case 'cargo':
             case 'cargoInfo': {
                 $cargo = DB_utils::selectRequest($_SESSION['entry-id']);
+
+                // Add a notification to the receiver of the cargo request
+                $note = new Notification();
+                if($_SESSION['role'] == 'recipient') {
+                    $note->setUserId($cargo->getOriginator());
+                } else {
+                    $note->setUserId($cargo->getRecipient());
+                }
+                $note->setOriginatorId($_SESSION['operator']['id']);
+                $note->setKind(2);
+                $note->setEntityKind(1);
+                $note->setEntityId($cargo->getId());
+
+                DB_utils::addNotification($note);
 
                 $email['subject'] = 'Cargo request modified by ' . $originator->getName();
                 $email['title'] = 'ROHEL | E-mail';
@@ -38,6 +52,16 @@ if(!empty($_POST['id'])) {
             case 'trucks':
             case 'truckInfo':  {
                 $truck = DB_utils::selectTruck($_SESSION['entry-id']);
+
+                // Add a notification to the receiver of the cargo request
+                $note = new Notification();
+                $note->setUserId($truck->getRecipient());
+                $note->setOriginatorId($_SESSION['operator']['id']);
+                $note->setKind(2);
+                $note->setEntityKind(2);
+                $note->setEntityId($truck->getId());
+
+                DB_utils::addNotification($note);
 
                 $email['subject'] = 'Truck order modified by ' . $originator->getName();
                 $email['title'] = 'ROHEL | E-mail';

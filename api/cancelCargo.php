@@ -1,6 +1,7 @@
 <?php
 
 use PHPMailer\PHPMailer\PHPMailer;
+use Rohel\Notification;
 
 session_start ();
 
@@ -42,7 +43,14 @@ try {
     DB_utils::writeValue('changes', '1');
 
     // Add a notification to the receiver of the cargo request
-    DB_utils::addNotification($cargo->getRecipient(), 4, 1, $cargo->getId());
+    $note = new Notification();
+    $note->setUserId($cargo->getRecipient());
+    $note->setOriginatorId($_SESSION['operator']['id']);
+    $note->setKind(4);
+    $note->setEntityKind(1);
+    $note->setEntityId($cargo->getId());
+
+    DB_utils::addNotification($note);
 
     $_SESSION['alert']['type'] = 'success';
     $_SESSION['alert']['message'] = 'Cargo request was successfully cancelled.';

@@ -1,10 +1,7 @@
 <?php
 session_start ();
 
-include $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
-include $_SERVER["DOCUMENT_ROOT"]."/lib/db-settings.php";
-require_once $_SERVER["DOCUMENT_ROOT"]."/lib/site-functions.php";
-require_once $_SERVER["DOCUMENT_ROOT"]."/lib/db-functions.php";
+include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
 if (!empty( $_POST ['_signin'] )) { // Regular sign-in
     $username = $_POST ['username'];

@@ -4,6 +4,7 @@ session_start ();
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
 use PHPMailer\PHPMailer\PHPMailer;
+use Rohel\Notification;
 use Rohel\TruckStop;
 
 if (! Utils::authorized(Utils::$INSERT)) {
@@ -29,11 +30,18 @@ if (isset ( $_POST ['_submitted'] )) {
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');
 
-        // Add a notification to the receiver of the cargo request
-        DB_utils::addNotification($_SESSION['recipient-id'], 1, 3, $id);
+        // Add a notification to the receiver of the truck
+        $truck = DB_utils::selectTruck($stop->getTruckId());
+        $note = new Notification();
+        $note->setUserId($truck->getRecipient());
+        $note->setOriginatorId($_SESSION['operator']['id']);
+        $note->setKind(1);
+        $note->setEntityKind(3);
+        $note->setEntityId($truck->getId());
+
+        DB_utils::addNotification($note);
 
         // Send a notification e-mail to the recipient
-        $truck = DB_utils::selectTruck($stop->getTruckId());
         $originator = DB_utils::selectUserById($truck->getOriginator());
         $recipient = DB_utils::selectUserById($truck->getRecipient());
 

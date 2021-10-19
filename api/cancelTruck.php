@@ -1,6 +1,6 @@
 <?php
 
-use PHPMailer\PHPMailer\PHPMailer;
+use Rohel\Notification;
 
 session_start ();
 
@@ -40,8 +40,15 @@ if (isset ( $_POST ['id'] )) {
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');
 
-        // Add a notification to the receiver of the cargo request
-        DB_utils::addNotification($_SESSION['recipient-id'], 4, 2, $_POST['id']);
+        // Add a notification to the receiver of the truck
+        $note = new Notification();
+        $note->setUserId($truck->getRecipient());
+        $note->setOriginatorId($_SESSION['operator']['id']);
+        $note->setKind(4);
+        $note->setEntityKind(2);
+        $note->setEntityId($truck->getId());
+
+        DB_utils::addNotification($note);
 
         // Send a notification e-mail to the recipient
         $originator = DB_utils::selectUserById($truck->getOriginator());

@@ -58,7 +58,13 @@ class Mails
             $body = ob_get_clean();
             $mail->msgHTML($body, dirname(__FILE__), true); // Create message bodies and embed images
             if (!self::$DO_NOT_SEND_MAILS) {
-                $mail->send();
+                error_log('Sending mail');
+                if($mail->send()) {
+                    error_log('OK');
+                }
+                else {
+                    error_log('NOK');
+                }
             }
         } catch (\PHPMailer\PHPMailer\Exception $me) {
             Utils::handleMailException($me);

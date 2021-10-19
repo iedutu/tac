@@ -165,10 +165,13 @@ message User {
 message Notification {
   int32 id = 1;
   string from = 2;
-  string kind = 3;
-  string entity_kind = 4;
+  int32 kind = 3;
+  int32 entity_kind = 4;
   int32 entity_id = 5;
   string url = 6;
+  int32 user_id = 7;
+  int32 originator_id = 8;
+  int32 viewed = 9;
 }
 
 message CargoNote {

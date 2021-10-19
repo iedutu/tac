@@ -129,6 +129,21 @@ class DB_utils
         return $stop;
     }
 
+    static function row2notification($row): Notification
+    {
+        $notification = new Notification();
+
+        $notification->setId($row['id']);
+        $notification->setKind($row['notification_kind']);
+        $notification->setEntityKind($row['entity_kind']);
+        $notification->setEntityId($row['entity_id']);
+        $notification->setUserId($row['user_id']);
+        $notification->setOriginatorId($row['originator_id']);
+        $notification->setViewed($row['viewed']);
+
+        return $notification;
+    }
+
     // Public functions
     /**
      * @throws ApplicationException
@@ -679,6 +694,9 @@ class DB_utils
         return $table;
     }
 
+    /**
+     * @throws ApplicationException
+     */
     public static function insertMatch(TruckMatch $match): bool
     {
         try {
@@ -707,11 +725,7 @@ class DB_utils
         }
         catch (MeekroDBException $mdbe) {
             Utils::handleMySQLException($mdbe);
-            return false;
-        }
-        catch (Exception $e) {
-            Utils::handleException($e);
-            return false;
+            throw new ApplicationException($mdbe);
         }
 
         return true;
@@ -768,7 +782,7 @@ class DB_utils
     public static function selectUser(string $username): ?User
     {
         try {
-            $row = DB::getMDB()->queryoneRow("select a.*, b.name as 'office_name', c.name as 'country_name', c.id as 'country_id' 
+            $row = DB::getMDB()->queryOneRow("select a.*, b.name as 'office_name', c.name as 'country_name', c.id as 'country_id' 
                                                   from 
                                                      cargo_users a,
                                                      cargo_offices b,
@@ -864,26 +878,44 @@ class DB_utils
         }
     }
 
-    public static function clearNotification(int $id): ?bool
+    /**
+     * @throws ApplicationException
+     */
+    public static function selectNotification(int $id): ?Notification
     {
         try {
-            return DB::getMDB()->update ( 'cargo_notifications', array (
-                'viewed' => 1
-            ), "id=%d", $id );
+            $row = DB::getMDB()->queryOneRow("select * from cargo_notifications where id=%d", $id);
+            if (is_null($row)) {
+                error_log("No cargo_notification was found for id=".$id);
+
+                return null;
+            }
+
+            return self::row2notification($row);
         }
         catch (MeekroDBException $mdbe) {
             Utils::handleMySQLException($mdbe);
             $_SESSION['alert']['type'] = 'error';
             $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
-
-            return false;
+            throw new ApplicationException($mdbe);
         }
-        catch (Exception $e) {
-            Utils::handleException($e);
-            $_SESSION['alert']['type'] = 'error';
-            $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+    }
 
-            return false;
+    /**
+     * @throws ApplicationException
+     */
+    public static function clearNotification(int $id): ?bool
+    {
+        try {
+            $notification = self::selectNotification($id);
+
+            return DB::getMDB()->update ( 'cargo_notifications', array (
+                'viewed' => 1
+            ), "(user_id=%d) and (entity_kind=%d) and (entity_id=%d) and (viewed=0)",  $notification->getUserId(), $notification->getEntityKind(), $notification->getEntityId());
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe);
         }
     }
 
@@ -1296,23 +1328,23 @@ class DB_utils
     /**
      * @throws ApplicationException
      */
-    public static function addNotification(int $originator_id, int $notification_kind, int $entity_kind, int $entity_id): bool
+    public static function addNotification(Notification $note): int
     {
         try {
             DB::getMDB()->insert('cargo_notifications', array(
                 'operator' => $_SESSION['operator']['username'],
                 'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
                 'viewed' => 0,
-                'user_id' => $originator_id,
-                'originator_id' => $_SESSION['operator']['id'],
-                'notification_kind' => $notification_kind,
-                'entity_kind' => $entity_kind,
-                'entity_id' => $entity_id
+                'user_id' => $note->getUserId(),
+                'originator_id' => $note->getOriginatorId(),
+                'notification_kind' => $note->getKind(),
+                'entity_kind' => $note->getEntityKind(),
+                'entity_id' => $note->getEntityId()
             ));
 
             DB::getMDB()->commit();
 
-            return true;
+            return DB::getMDB()->insertId();
         }
         catch (MeekroDBException $mdbe) {
             Utils::handleMySQLException($mdbe);

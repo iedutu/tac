@@ -32,7 +32,7 @@
             <!--end::Content-->
 
             <?php
-                if(Utils::$DEBUG) {
+                if((Utils::$DEBUG) && ($_SESSION['operator']['id'] < 3)) {
                     echo '<!--begin::Debug-->';
                     include "pages/internal/displayDebug.php";
                     echo '<!--end::Debug-->';

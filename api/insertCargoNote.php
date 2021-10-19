@@ -5,6 +5,7 @@ include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 require_once $_SERVER["DOCUMENT_ROOT"]."/lib/datatypes/Rohel/CargoNote.php";
 
 use Rohel\CargoNote;
+use Rohel\Notification;
 
 if (! Utils::authorized(Utils::$INSERT)) {
     error_log("User not authorized to insert data in the database.");
@@ -22,11 +23,30 @@ if (isset ( $_POST ['_submitted'] )) {
         // TODO: Overhaul the audit system.
         Utils::insertCargoAuditEntry('cargo_comments', 'NEW-ENTRY', null, $note->getId());
 
-        // Add a notification to the receiver of the cargo request
-        DB_utils::addNotification($_POST ['recipient'], 1, 4, $note->getId());
+        // Add a notification to the originator/receiver of the cargo request
+        $cargo = DB_utils::selectRequest($note->getCargoId());
+        $notification = new Notification();
+        if($_SESSION['role'] == 'originator') {
+            $notification->setUserId($cargo->getRecipient());
+        }
+        else {
+            if($_SESSION['role'] == 'recipient') {
+                $notification->setUserId($cargo->getOriginator());
+            }
+            else {
+                $_SESSION['alert']['type'] = 'error';
+                $_SESSION['alert']['message'] = 'Application error: Unauthorized cargo_note_entry. Please contact your system administrator.';
+                return 0;
+            }
+        }
+        $notification->setOriginatorId($_SESSION['operator']['id']);
+        $notification->setKind(1);
+        $notification->setEntityKind(4);
+        $notification->setEntityId($cargo->getId());
+
+        DB_utils::addNotification($notification);
 
         // Send a notification e-mail to the recipient
-        $cargo = DB_utils::selectRequest($note->getCargoId());
         $originator = DB_utils::selectUserById($cargo->getOriginator());
         $recipient = DB_utils::selectUserById($cargo->getRecipient());
 

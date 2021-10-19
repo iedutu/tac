@@ -9,7 +9,7 @@ use Rohel\TruckUpdates;
 class Utils
 {
     public static bool $DEBUG = true;
-    public static bool $DO_NOT_SEND_MAILS = true;
+    public static bool $DO_NOT_SEND_MAILS = false;
     public static int $CARGO_PERIOD = 5;
     public static int $REPORTS_PERIOD = 180;
     public static int $QUERY = 1;
@@ -23,6 +23,8 @@ class Utils
     public static int $REPORTS = 11;
     public static int $OPERATIONAL = 12;
     public static string $CANCELLED = 'CANCELLED';
+    public static $WEBMASTER_EMAIL = 'webapp@rohel.ro';
+    public static $WEBMASTER_NAME = 'Team Rohel';
 
     public static function clean_up()
     {
@@ -83,6 +85,8 @@ class Utils
                 $email['body-2'] = 'Please use the following password for your next visit to our application: <strong>' . $password . '</strong>';
                 $email['recipient']['e-mail'] = $recipient->getUsername();
                 $email['recipient']['name'] = $recipient->getName();
+                $email['originator']['e-mail'] = Utils::$WEBMASTER_EMAIL;
+                $email['originator']['name'] = Utils::$WEBMASTER_NAME;
                 $email['link']['url'] = self::$BASE_URL;
                 $email['link']['text'] = 'Application link';
                 $email['bg-color'] = Mails::$BG_ACKNOWLEDGED_COLOR;
@@ -145,275 +149,6 @@ class Utils
 
         return false;
     }
-
-    public static function mailingTruckDetails(Truck $truck): string
-    {
-        $loading_date = 'N/A';
-        $unloading_date = 'N/A';
-
-        if (($truck->getLoadingDate() != null) && ($truck->getLoadingDate() != 0)) {
-            $loading_date = date('Y-m-d', strtotime($truck->getLoadingDate()));
-        }
-
-        if (($truck->getUnloadingDate() != null) && ($truck->getUnloadingDate() != 0)) {
-            $unloading_date = date('Y-m-d', strtotime($truck->getUnloadingDate()));
-        }
-
-        $details = '<table border="0" cellpadding="2" cellspacing="0" class="message">
-                    <tr>
-                        <td>
-                            Originator:
-                        </td>
-                        <td>
-                            ' . $truck->getOriginator() . '
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Recipient:
-                        </td>
-                        <td>
-                            ' . $truck->getRecipient() . '
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Available in:
-                        </td>
-                        <td>
-                            ' . $truck->getFromCity() . '
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Available for:
-                        </td>
-                        <td>
-                            ' . $truck->getToCity() . '
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Available from:
-                        </td>
-                        <td>
-                            ' . ((empty($truck->getAvailability())) ? 'N/A' : $truck->getAvailability()) . '
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Available until:
-                        </td>
-                        <td>
-                            ' . ((empty($truck->getExpiration())) ? 'N/A' : $truck->getExpiration()) . '
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Details
-                        </td>
-                        <td>
-                            ' . ((empty($truck->getDetails())) ? 'N/A' : $truck->getDetails()) . '
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Freight
-                        </td>
-                        <td>
-                            ' . ((empty($truck->getFreight())) ? 0 : $truck->getFreight()) . ' euro
-                        </td>
-                    </tr>
-                </table>';
-
-        return $details;
-    }
-
-    public static function mailingCargoDetails(Request $cargo): string
-    {
-        $loading_date = 'N/A';
-        $unloading_date = 'N/A';
-
-        if (($cargo->getLoadingDate() != null) && ($cargo->getLoadingDate() != 0)) {
-            $loading_date = date('Y-m-d', strtotime($cargo->getLoadingDate()));
-        }
-
-        if (($cargo->getUnloadingDate() != null) && ($cargo->getUnloadingDate() != 0)) {
-            $unloading_date = date('Y-m-d', strtotime($cargo->getUnloadingDate()));
-        }
-
-        $details = '
-           <table border="0" cellpadding="2" cellspacing="0" class="message">
-                <tr>
-                    <td>
-    Originator:
-                    </td>
-                    <td>
-    ' . $cargo->getOriginator() . '
-    </td>
-                </tr>
-                <tr>
-                    <td>
-    Recipient:
-                    </td>
-                    <td>
-    ' . $cargo->getRecipient() . '
-    </td>
-                </tr>
-                <tr>
-                    <td>
-    Client:
-                    </td>
-                    <td>
-    ' . ((!empty($cargo->getClient())) ? 'N/A' : $cargo->getClient()) . '
-    </td>
-                </tr>
-                <tr>
-                    <td>
-    From:
-                    </td>
-                    <td>
-    ' . $cargo->getFromCity() . '
-    </td>
-                </tr>
-                <tr>
-                    <td>
-    To:
-                    </td>
-                    <td>
-    ' . $cargo->getToCity() . '
-    </td>
-                </tr>
-                <tr>
-                    <td>
-    Loading
-                    </td>
-                    <td>
-    ' . $loading_date . '
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-    Unloading
-                    </td>
-                    <td>
-    ' . $unloading_date . '
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-    Goods description
-    </td>
-                    <td>
-    ' . ((!empty($cargo->getDescription())) ? 'N/A' : $cargo->getDescription()) . '
-    </td>
-                </tr>
-                <tr>
-                    <td>
-    Number of collies
-    </td>
-                    <td>
-    ' . (($cargo->getCollies() == 0) ? 'N/A' : $cargo->getCollies()) . '
-    </td>
-                </tr>
-                <tr>
-                    <td>
-    Gross weight
-    </td>
-                    <td>
-    ' . (($cargo->getWeight() == 0) ? 'N/A' : $cargo->getWeight()) . ' kg
-    </td>
-                </tr>
-                <tr>
-                    <td>
-    Volume
-                    </td>
-                    <td>
-    ' . (($cargo->getVolume() == 0) ? 'N/A' : $cargo->getVolume()) . ' cbm
-    </td>
-                </tr>
-                <tr>
-                    <td>
-    Loading meters
-    </td>
-                    <td>
-    ' . (($cargo->getLoadingMeters() == 0) ? 'N/A' : $cargo->getLoadingMeters()) . ' m
-    </td>
-                </tr>
-                <tr>
-                    <td>
-    Freight
-                    </td>
-                    <td>
-    ' . (($cargo->getFreight() == 0) ? 'N/A' : $cargo->getFreight()) . '
-    </td>
-                </tr>
-                <tr>
-                    <td>
-    Plate number
-    </td>
-                    <td>
-    ' . ((!empty($cargo->getPlateNumber())) ? 'N/A' : $cargo->getPlateNumber()) . '
-    </td>
-                </tr>
-                <tr>
-                    <td>
-    AMETA
-                    </td>
-                    <td>
-    ' . ((!empty($cargo->getAmeta())) ? 'N/A' : $cargo->getAmeta()) . '
-    </td>
-                </tr>
-            </table>
-    ';
-
-        return $details;
-    }
-
-    public static function email_notification(string $element_name, string $element_value, string $id): bool
-    {
-        // Send any relevant e-mail
-        $mail = new PHPMailer ();
-        include $_SERVER["DOCUMENT_ROOT"] . "/lib/mail-settings.php";
-
-        $entity = '';
-        switch ($_SESSION['app']) {
-            case 'cargoInfo':
-            {
-                $entity = 'Cargo request';
-                break;
-            }
-            case 'truckInfo':
-            {
-                $entity = 'Truck';
-                break;
-            }
-            default:
-            {
-                $entity = 'Unknown';
-                break;
-            }
-        }
-        $mail->Subject = $entity . ' modified by ' . $_SESSION ['operator']['username'];
-
-        $url = 'http://rohel.iedutu.com/?page=' . $_SESSION['app'] . '&id=' . $id;
-
-        $mail->addAddress($_SESSION['email-recipient'], $_SESSION['email-recipient']);
-        $mail->addAddress($_SESSION['operator']['username'], $_SESSION['operator']['username']);
-
-        ob_start();
-        include $_SERVER["DOCUMENT_ROOT"] . "/html/updateField.html";
-
-        $body = ob_get_clean();
-        $mail->msgHTML($body, dirname(__FILE__), true); // Create message bodies and embed images
-
-        if (!Utils::$DO_NOT_SEND_MAILS) {
-            $mail->send();
-        }
-
-        return true;
-    }
-
 
     public static function cargoUpdateStatuses() {
         $today = date("Y-m-d");
@@ -559,6 +294,8 @@ class Utils
         if (!isset($_SESSION ['operator']['id'])) {
             return false;
         }
+
+        return true;
     }
 
     public static function audit_update(string $table, string $row, int $id) {
@@ -632,7 +369,6 @@ class Utils
                     case 'freight':         { $a->setFreight(true); break;}
                     case 'plate_number':    { $a->setPlateNumber(true); break;}
                     case 'ameta':           { $a->setAmeta(true); break;}
-                    case 'order_type':      { $a->setOrderType(true); break;}
                     case 'cargo_type':      { $a->setCargoType(true); break;}
                     case 'truck_type':      { $a->setTruckType(true); break;}
                     case 'contract_type':   { $a->setContractType(true); break;}

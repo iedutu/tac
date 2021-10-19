@@ -4,6 +4,7 @@ session_start ();
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
 use PHPMailer\PHPMailer\PHPMailer;
+use Rohel\Notification;
 use Rohel\Request;
 
 if (! Utils::authorized(Utils::$INSERT)) {
@@ -37,7 +38,7 @@ if (isset ( $_POST ['_submitted'] )) {
         if(!empty($_POST['adr'])) $cargo->setAdr($_POST ['adr']);
         $cargo->setOrderType($_POST ['order_type']);
 
-        $id = DB_utils::insertRequest($cargo);
+        $cargo->setId(DB_utils::insertRequest($cargo));
         // Keep a record of what happened
         Utils::insertCargoAuditEntry('cargo_request', 'NEW-ENTRY', null, $_POST ['recipient']);
 
@@ -45,7 +46,14 @@ if (isset ( $_POST ['_submitted'] )) {
         DB_utils::writeValue('changes', '1');
 
         // Add a notification to the receiver of the cargo request
-        DB_utils::addNotification($_POST ['recipient'], 1, 1, $id);
+        $note = new Notification();
+        $note->setUserId($cargo->getRecipient());
+        $note->setOriginatorId($_SESSION['operator']['id']);
+        $note->setKind(1);
+        $note->setEntityKind(1);
+        $note->setEntityId($cargo->getId());
+
+        DB_utils::addNotification($note);
 
         // Send a notification e-mail to the recipient
         $originator = DB_utils::selectUserById($cargo->getOriginator());

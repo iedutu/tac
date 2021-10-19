@@ -1,4 +1,7 @@
 <?php
+
+use Rohel\Notification;
+
 session_start();
 
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
@@ -24,6 +27,10 @@ if(!empty($_POST['id'])) {
         $cargo->setAcceptedBy($_SESSION ['operator']['id']);
         DB_utils::acknowledgeCargo($cargo, $_POST ['id'], $_POST ['value']);
 
+        Utils::audit_update('cargo_request', 'accepted_by', $cargo->getId());
+        Utils::audit_update('cargo_request', 'acceptance', $cargo->getId());
+        Utils::audit_update('cargo_request', 'plate_number', $cargo->getId());
+
         Utils::insertCargoAuditEntry('cargo_request', 'acceptance', $cargo->getId(), date("Y-m-d H:i:s"));
         Utils::insertCargoAuditEntry('cargo_request', 'accepted_by', $cargo->getId(), $cargo->getAcceptedBy());
         Utils::insertCargoAuditEntry('cargo_request', 'status', $cargo->getId(), 2);
@@ -31,8 +38,15 @@ if(!empty($_POST['id'])) {
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');
 
-        // Add a notification to the receiver of the cargo request
-        DB_utils::addNotification($_SESSION['originator-id'], 3, 1, $cargo->getId());
+        // Add a notification to the originator of the cargo request
+        $note = new Notification();
+        $note->setUserId($cargo->getOriginator());
+        $note->setOriginatorId($_SESSION['operator']['id']);
+        $note->setKind(3);
+        $note->setEntityKind(1);
+        $note->setEntityId($cargo->getId());
+
+        DB_utils::addNotification($note);
 
         // Send a notification e-mail to the recipient
         $acceptor = DB_utils::selectUserById($cargo->getAcceptedBy());

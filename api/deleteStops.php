@@ -1,5 +1,6 @@
 <?php
 
+use Rohel\Notification;
 use Rohel\TruckStop;
 
 session_start ();
@@ -28,7 +29,14 @@ try {
     DB_utils::writeValue('changes', '1');
 
     // Add a notification to the receiver of the cargo request
-    DB_utils::addNotification($truck->getRecipient(), 4, 3, $truck->getId());
+    $note = new Notification();
+    $note->setUserId($truck->getRecipient());
+    $note->setOriginatorId($_SESSION['operator']['id']);
+    $note->setKind(4);
+    $note->setEntityKind(3);
+    $note->setEntityId($truck->getId());
+
+    DB_utils::addNotification($note);
 
     // Send a notification e-mail to the recipient
     $originator = DB_utils::selectUserById($truck->getOriginator());
