@@ -40,7 +40,7 @@ if (!empty( $_POST ['_signin'] )) { // Regular sign-in
                         header('Location: /?page=' . $_GET['page'] . '&id=' . $_GET['id']);
                     } else {
                         unset($_SESSION['page']);
-                        header('Location: /page=' . $_GET['page']);
+                        header('Location: /?page=' . $_GET['page']);
                     }
                 } else {
                     header('Location: /');
