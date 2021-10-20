@@ -21,7 +21,7 @@ if (isset ( $_POST ['_submitted'] )) {
 
         $id = DB_utils::insertCargoNote($note);
         // TODO: Overhaul the audit system.
-        Utils::insertCargoAuditEntry('cargo_comments', 'NEW-ENTRY', null, $note->getId());
+        Utils::insertCargoAuditEntry('cargo_comments', 'NEW-ENTRY', null, $id);
 
         // Add a notification to the originator/receiver of the cargo request
         $cargo = DB_utils::selectRequest($note->getCargoId());

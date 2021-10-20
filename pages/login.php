@@ -15,48 +15,56 @@ if (!empty( $_POST ['_signin'] )) { // Regular sign-in
     $username = $_POST ['username'];
     $password = hash("sha256", $_POST ['password']);
 
-    $user = DB_utils::selectUser($username);
-    if ($user != null) {    // user exists
-        if(strtoupper($password) == strtoupper($user->getPassword())) {  // correct password
-            $_SESSION['app'] = 'cargo';
-            $_SESSION['operator']['id'] = $user->getId();
-            $_SESSION['operator']['username'] = $user->getUsername();
-            $_SESSION['operator']['name'] = $user->getName();
-            $_SESSION['operator']['insert'] = $user->getInsert() == 1;
-            $_SESSION['operator']['reports'] = $user->getReports() == 1;
-            $_SESSION['operator']['country-id'] = $user->getCountryId();
-            $_SESSION['operator']['country-name'] = $user->getCountryName();
-            $_SESSION['operator']['office-name'] = $user->getOffice();
-            $_SESSION['operator']['avatar'] = rand(1, 50);
+    try {
+        $user = DB_utils::selectUser($username);
+        if ($user != null) {    // user exists
+            if (strtoupper($password) == strtoupper($user->getPassword())) {  // correct password
+                $_SESSION['app'] = 'cargo';
+                $_SESSION['operator']['id'] = $user->getId();
+                $_SESSION['operator']['username'] = $user->getUsername();
+                $_SESSION['operator']['name'] = $user->getName();
+                $_SESSION['operator']['insert'] = $user->getInsert() == 1;
+                $_SESSION['operator']['reports'] = $user->getReports() == 1;
+                $_SESSION['operator']['country-id'] = $user->getCountryId();
+                $_SESSION['operator']['country-name'] = $user->getCountryName();
+                $_SESSION['operator']['office-name'] = $user->getOffice();
+                $_SESSION['operator']['avatar'] = rand(1, 50);
 
-            if(!empty($_SESSION['page'])) {
-                if(!empty($_SESSION['id'])) {
-                    unset($_SESSION['page']);
-                    unset($_SESSION['id']);
-                    header ( 'Location: /?page='.$_GET['page'].'&id='.$_GET['id'] );
-                }
-                else {
-                    unset($_SESSION['page']);
-                    header ( 'Location: /page='.$_GET['page'] );
-                }
-            }
-            else {
-                header('Location: /');
-            }
+                // Audit the user login
+                Utils::insertUserAuditEntry();
 
-            return;
-        }
-        else {
-            error_log('Wrong password. Got '.$password.', expected '.$user->getPassword());
-            $_SESSION['alert']['type']='error';
-            $_SESSION['alert']['width']=12;
-            $_SESSION['alert']['message']='Wrong username/password.';
+                if (!empty($_SESSION['page'])) {
+                    if (!empty($_SESSION['id'])) {
+                        unset($_SESSION['page']);
+                        unset($_SESSION['id']);
+                        header('Location: /?page=' . $_GET['page'] . '&id=' . $_GET['id']);
+                    } else {
+                        unset($_SESSION['page']);
+                        header('Location: /page=' . $_GET['page']);
+                    }
+                } else {
+                    header('Location: /');
+                }
+
+                return;
+            } else {
+                error_log('Wrong password. Got ' . $password . ', expected ' . $user->getPassword());
+                $_SESSION['alert']['type'] = 'error';
+                $_SESSION['alert']['width'] = 12;
+                $_SESSION['alert']['message'] = 'Wrong username/password.';
+            }
+        } else {
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['width'] = 12;
+            $_SESSION['alert']['message'] = 'No such user found in the system.';
         }
     }
-    else {
-        $_SESSION['alert']['type']='error';
-        $_SESSION['alert']['width']=12;
-        $_SESSION['alert']['message']='No such user found in the system.';
+    catch(ApplicationException $ae) {
+        return false;
+    }
+    catch(Exception $e) {
+        Utils::handleException($e);
+        return false;
     }
 }
 else {

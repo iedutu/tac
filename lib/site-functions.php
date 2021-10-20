@@ -9,7 +9,6 @@ use Rohel\TruckUpdates;
 class Utils
 {
     public static bool $DEBUG = true;
-    public static bool $DO_NOT_SEND_MAILS = false;
     public static int $CARGO_PERIOD = 5;
     public static int $REPORTS_PERIOD = 180;
     public static int $QUERY = 1;
@@ -18,7 +17,7 @@ class Utils
     public static string $PHP_DATE_FORMAT = 'd-m-Y';
     public static string $SQL_DATE_FORMAT = '%d-%m-%Y';
     public static int $PASSWORD_LENGTH = 6;
-    public static string $BASE_URL = 'https://rohel.iedutu.com/';
+    public static string $BASE_URL = 'http://rohel.iedutu.com/';
 
     public static int $REPORTS = 11;
     public static int $OPERATIONAL = 12;
@@ -232,6 +231,19 @@ class Utils
                 'field' => $field,
                 'key' => $key,
                 'new' => $new
+            ));
+        }
+        catch(MeekroDBException $mdbe) {
+            self::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe->getMessage());
+        }
+    }
+
+    public static function insertUserAuditEntry() {
+        try {
+            DB::getMDB()->insert('cargo_user_audit', array(
+                'operator_id' => $_SESSION ['operator']['id'],
+                'IP' => $_SERVER['REMOTE_ADDR']
             ));
         }
         catch(MeekroDBException $mdbe) {
