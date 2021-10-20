@@ -20,20 +20,29 @@ if(!empty($_POST['id'])) {
         $recipient = DB_utils::selectUserById($_SESSION['recipient-id']);
         $originator = DB_utils::selectUserById($_SESSION['originator-id']);
 
-        switch($_SESSION['app']) {
-            case 'cargo':
-            case 'cargoInfo': {
+        switch($table) {
+            case 'cargo_request': {
                 $cargo = DB_utils::selectRequest($_SESSION['entry-id']);
 
                 // Add a notification to the receiver of the cargo request
                 $note = new Notification();
+
                 if($_SESSION['role'] == 'recipient') {
                     $note->setUserId($cargo->getOriginator());
                 } else {
                     $note->setUserId($cargo->getRecipient());
                 }
+
                 $note->setOriginatorId($_SESSION['operator']['id']);
-                $note->setKind(2);
+
+                // When the recipient is changed
+                if($_POST['id'] == 'recipient') {
+                    $note->setKind(1);
+                }
+                else {
+                    $note->setKind(2);
+                }
+
                 $note->setEntityKind(1);
                 $note->setEntityId($cargo->getId());
 
@@ -49,15 +58,22 @@ if(!empty($_POST['id'])) {
 
                 break;
             }
-            case 'trucks':
-            case 'truckInfo':  {
+            case 'cargo_truck':  {
                 $truck = DB_utils::selectTruck($_SESSION['entry-id']);
 
                 // Add a notification to the receiver of the cargo request
                 $note = new Notification();
                 $note->setUserId($truck->getRecipient());
                 $note->setOriginatorId($_SESSION['operator']['id']);
-                $note->setKind(2);
+
+                // When the recipient is changed
+                if($_POST['id'] == 'recipient') {
+                    $note->setKind(1);
+                }
+                else {
+                    $note->setKind(2);
+                }
+
                 $note->setEntityKind(2);
                 $note->setEntityId($truck->getId());
 
@@ -96,5 +112,5 @@ catch (ApplicationException $ae) {
     return null;
 }
 
-    echo $_POST['value'];
+    echo DB_utils::returnValue($table, $_POST['id'], $_POST['value'], $_SESSION['entry-id']);
 }

@@ -43,8 +43,6 @@ class Audit {
                 $data = $a->serializeToString();
             }
 
-            error_log("Data to be written: " . $data);
-            error_log("Filename: " . $filename);
             file_put_contents($filename, $data);
         } catch (Exception $e) {
             error_log("Generic write error: " . $e->getMessage());
@@ -63,12 +61,12 @@ class Audit {
             $a = new RequestUpdates();
 
             if (!is_file($filename)) {
-                error_log("File not found: " . $filename . ". Returning an empty object.");
+//                error_log("File not found: " . $filename . ". Returning an empty object.");
                 return $a;
             }
 
             $data = file_get_contents($filename);
-            error_log("Data read: " . $data);
+//            error_log("Data read: " . $data);
 
             if (Utils::$DEBUG) {
                 $a->mergeFromJsonString($data);
@@ -92,7 +90,7 @@ class Audit {
 
         try {
             if (!is_file($filename)) {
-                error_log("File not found: " . $filename . ". Ignoring the call.");
+//                error_log("File not found: " . $filename . ". Ignoring the call.");
             }
             else {
                 unlink($filename);
@@ -134,7 +132,7 @@ class Audit {
                 $data = $a->serializeToString();
             }
 
-            error_log("Data to be written: " . $data);
+//            error_log("Data to be written: " . $data);
             file_put_contents($filename, $data);
         } catch (Exception $e) {
             error_log("Generic write error: " . $e->getMessage());
@@ -153,12 +151,12 @@ class Audit {
 
         try {
             if (!is_file($filename)) {
-                error_log("File not found: " . $filename . ". Returning an empty object.");
+//                error_log("File not found: " . $filename . ". Returning an empty object.");
                 return $a;
             }
 
             $data = file_get_contents($filename);
-            error_log("Data read: " . $data);
+//            error_log("Data read: " . $data);
 
             if (Utils::$DEBUG) {
                 $a->mergeFromJsonString($data);
@@ -183,7 +181,7 @@ class Audit {
 
         try {
             if (!is_file($filename)) {
-                error_log("File not found: " . $filename . ". Ignoring the call.");
+//                error_log("File not found: " . $filename . ". Ignoring the call.");
             }
             else {
                 unlink($filename);

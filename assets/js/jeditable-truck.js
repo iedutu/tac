@@ -34,11 +34,20 @@ $(document).ready(function() {
         }
     });
 
-    $('.editable-select').editable('api/updateField.php', {
+    $('.editable-select').editable('api/updateRecipient.php', {
         type           : 'select',
         indicator      : 'Saving ...',
         loadurl        : 'api/truckContractType.php',
         inputcssclass : 'form-control',
         cssclass       : 'form'
     });
+
+    $('.editable-select-3').editable('api/changeRecipient.php', {
+        type           : 'select',
+        indicator      : 'Saving ...',
+        loadurl        : 'api/selectUsers.php',
+        inputcssclass : 'form-control',
+        cssclass       : 'form'
+    });
+
 });

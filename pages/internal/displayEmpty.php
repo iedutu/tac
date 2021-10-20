@@ -1,1 +1,1 @@
-<?php
+<a href="/" class="label font-weight-bold label-lg label-danger label-inline" data-toggle="tooltip" data-placement="top" title="Amazing tooltip!">Just one tooltip</a>

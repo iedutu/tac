@@ -97,34 +97,41 @@ let KTDatatableMatchesList = function() {
                         let status = {
                             0: {
                                 'title': 'Error!',
+                                'tooltip': 'This is not supposed to come up.',
                                 'class': ' label-danger'
                             },
                             1: {
                                 'title': 'Available',
+                                'tooltip': 'Truck booked for ROUND-TRIP',
                                 'class': ' label-success'
                             },
                             2: {
                                 'title': 'Needed',
+                                'tooltip': 'Truck needed for a new order',
                                 'class': ' label-danger'
                             },
                             3: {
                                 'title': 'Free',
+                                'tooltip': 'Truck booked for ONE-WAY',
                                 'class': ' label-info'
                             },
                             4: {
                                 'title': 'Partial',
+                                'tooltip': 'Partially loaded truck',
                                 'class': ' label-warning'
                             },
                             5: {
                                 'title': 'Solved',
+                                'tooltip': 'Truck assigned to this order',
                                 'class': ' label-success'
                             },
                             6: {
                                 'title': 'Closed',
+                                'tooltip': 'Fully loaded truck',
                                 'class': ' label-success'
                             },
                         };
-                        return '<a href="/?page='+row.item_kind+'&id='+row.item_id+'" class="label font-weight-bold label-lg ' + status[row.status].class + ' label-inline">' + status[row.status].title + '</a>';
+                        return '<a href="/?page='+row.item_kind+'&id='+row.item_id+'" class="label font-weight-bold label-lg ' + status[row.status].class + ' label-inline" data-toggle="tooltip" data-placement="top" title="' + status[row.status].tooltip + '">' + status[row.status].title + '</a>';
                     },
                 }, {
                     field: 'availability',

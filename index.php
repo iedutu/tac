@@ -189,7 +189,7 @@ $_REQUEST['sort']['sort'] = null;
 <script src="/assets/plugins/global/plugins.bundle.js"></script>
 <script src="/assets/plugins/custom/prismjs/prismjs.bundle.js"></script>
 <script src="/assets/js/scripts.bundle.js"></script>
-
+<script src="/assets/js/data-tooltip.js"></script>
 <!--end::Global Theme Bundle-->
 
 <!--begin::Page Vendors(used by this page)-->

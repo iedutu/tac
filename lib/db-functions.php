@@ -659,6 +659,7 @@ class DB_utils
                 }
             }
 
+            self::beforeUpdateGenericField($table, $key, $value, $id);
             switch ($_POST['id']) {
                 case 'acceptance':
                 case 'availability':
@@ -685,6 +686,47 @@ class DB_utils
                     break;
                 }
             }
+            self::afterUpdateGenericField($table, $key, $value, $id);
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe->getMessage());
+        }
+
+        return $table;
+    }
+
+    /**
+     * @throws ApplicationException
+     */
+    public static function updateRecipient(string $value, int $entity_id): ?string
+    {
+        try {
+            switch ($_SESSION['app']) {
+                case 'cargoInfo':
+                {
+                    $table = 'cargo_request';
+                    break;
+                }
+                case 'truckInfo':
+                {
+                    $table = 'cargo_truck';
+                    break;
+                }
+                default:
+                {
+                    error_log('In-place editing failed. Requested to change a filed without being notified of which page we are on.');
+                    return null;
+                }
+            }
+
+            $newRecipient = DB_utils::selectUser($value);
+
+            DB::getMDB()->update($table, array(
+                'recipient_id' => $newRecipient->getId(),
+                'operator' => $_SESSION['operator']['username'],
+            ), "id=%d", $entity_id);
+            DB::getMDB()->commit();
         }
         catch (MeekroDBException $mdbe) {
             Utils::handleMySQLException($mdbe);
@@ -1350,5 +1392,24 @@ class DB_utils
             Utils::handleMySQLException($mdbe);
             throw new ApplicationException($mdbe->getMessage());
         }
+    }
+
+    /**
+     * @throws ApplicationException
+     */
+    private static function beforeUpdateGenericField(string $table, string $key, string $value, int $entity_id): void
+    {
+        // use for any changes required before a generic update
+    }
+
+    private static function afterUpdateGenericField(string $table, string $key, string $value, int $entity_id)
+    {
+        // use for any changes required after a generic update
+    }
+
+    public static function returnValue(string $table, string $key, string $value, int $entity_id): string
+    {
+        // ugly hack to fool the SELECT jeditor. Does not work ...
+        return $value;
     }
 }

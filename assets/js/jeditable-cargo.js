@@ -42,6 +42,14 @@ $(document).ready(function() {
         cssclass       : 'form'
     });
 
+    $('.editable-select-3').editable('api/updateRecipient.php', {
+        type           : 'select',
+        indicator      : 'Saving ...',
+        loadurl        : 'api/selectUsers.php',
+        inputcssclass : 'form-control',
+        cssclass       : 'form'
+    });
+
     // There is a bug with Keen, its datepicker and the jeditable package. The only
     // Solution I found was to manually format the date in assets/js/src/jquery.jeditable.datepicker.js
     //

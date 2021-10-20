@@ -274,7 +274,14 @@ $class_text_default = '';
                                 <tr>
                                     <td class="text-right">Cargo recipient</td>
                                     <td>
-                                        <p style="display: inline"><?=$recipient->getUsername()?></p>
+                                        <?php
+                                        if($editable['originator']) {
+                                            echo '<b style="display: inline" id="recipient_id" name="recipient_id" class="editable-select-3 '.($audit->getRecipient()?$class_text_new:$class_text_default).'">'.$recipient->getUsername().'</b>';
+                                        }
+                                        else {
+                                            echo '<p style="display: inline" class="'.($audit->getRecipient()?$class_text_new:$class_text_default).'">'.$recipient->getUsername().'</p>';
+                                        }
+                                        ?>
                                     </td>
                                 </tr>
                                 <tr>

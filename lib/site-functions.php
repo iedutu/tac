@@ -331,7 +331,7 @@ class Utils
                 switch($row) {
                     case 'id':              { $a->setId(true); break;}
                     case 'operator':        { $a->setOperator(true); break;}
-                    case 'originator':      { $a->setOriginator(true); break;}
+                    case 'originator_id':   { $a->setOriginator(true); break;}
                     case 'client':          { $a->setClient(true); break;}
                     case 'from_city':       { $a->setFromCity(true); break;}
                     case 'from_address':    { $a->setFromAddress(true); break;}
@@ -352,7 +352,7 @@ class Utils
                     case 'ameta':           { $a->setAmeta(true); break;}
                     case 'order_type':      { $a->setOrderType(true); break;}
                     case 'adr':             { $a->setAdr(true); break;}
-                    case 'recipient':       { $a->setRecipient(true); break;}
+                    case 'recipient_id':    { $a->setRecipient(true); break;}
                     case 'status':          { $a->setStatus(true); break;}
                     case 'accepted_by':     { $a->setAcceptedBy(true); break;}
                     default:                { error_log('Wrong data row received: '.$row); break;}
@@ -368,8 +368,8 @@ class Utils
                 switch($row) {
                     case 'id':              { $a->setId(true); break;}
                     case 'operator':        { $a->setOperator(true); break;}
-                    case 'originator':      { $a->setOriginator(true); break;}
-                    case 'recipient':       { $a->setRecipient(true); break;}
+                    case 'originator_id':   { $a->setOriginator(true); break;}
+                    case 'recipient_id':    { $a->setRecipient(true); break;}
                     case 'accepted_by':     { $a->setAcceptedBy(true); break;}
                     case 'status':          { $a->setStatus(true); break;}
                     case 'from_city':       { $a->setFromCity(true); break;}
