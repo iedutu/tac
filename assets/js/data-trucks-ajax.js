@@ -52,7 +52,6 @@ var KTDatatableTruckList = function() {
             columns: [{
                 field: 'id',
                 title: '#',
-                sortable: 'asc',
                 width: 50,
                 type: 'number',
                 selector: false,

@@ -57,7 +57,6 @@ var KTDatatableCargoList = function() {
                 {
                     field: 'id',
                     title: '#',
-                    sortable: 'asc',
                     width: 50,
                     type: 'number',
                     selector: false,
@@ -127,6 +126,7 @@ var KTDatatableCargoList = function() {
                     },
                 }, {
                     field: 'ameta',
+                    width: 60,
                     title: 'Ameta',
                     template: function(row) {
                         if(row.ameta === null) {
@@ -136,6 +136,7 @@ var KTDatatableCargoList = function() {
                     },
                 }, {
                     field: 'status',
+                    width: 95,
                     title: 'Status',
                     // callback function support for column rendering
                     template: function(row) {
