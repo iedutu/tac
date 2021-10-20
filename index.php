@@ -7,7 +7,19 @@ $page = "";
 
 if (! isset ( $_SESSION ['operator']['id'] )) {
     // No-one logged-in
-    header ( 'Location: pages/login.php' );
+
+    if(!empty($_GET['page'])) {
+        if(!empty($_GET['id'])) {
+            header ( 'Location: pages/login.php?page='.$_GET['page'].'&id='.$_GET['id'] );
+        }
+        else {
+            header ( 'Location: pages/login.php?page='.$_GET['page'] );
+        }
+    }
+    else {
+        header('Location: pages/login.php');
+    }
+
     return;
 }
 else {

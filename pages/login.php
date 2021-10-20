@@ -3,6 +3,14 @@ session_start ();
 
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
+if(!empty($_GET['page'])) {
+    $_SESSION['page'] = $_GET['page'];
+}
+
+if(!empty($_GET['id'])) {
+    $_SESSION['id'] = $_GET['id'];
+}
+
 if (!empty( $_POST ['_signin'] )) { // Regular sign-in
     $username = $_POST ['username'];
     $password = hash("sha256", $_POST ['password']);
@@ -21,8 +29,22 @@ if (!empty( $_POST ['_signin'] )) { // Regular sign-in
             $_SESSION['operator']['office-name'] = $user->getOffice();
             $_SESSION['operator']['avatar'] = rand(1, 50);
 
-            header('Location: /');
-            exit();
+            if(!empty($_SESSION['page'])) {
+                if(!empty($_SESSION['id'])) {
+                    unset($_SESSION['page']);
+                    unset($_SESSION['id']);
+                    header ( 'Location: /?page='.$_GET['page'].'&id='.$_GET['id'] );
+                }
+                else {
+                    unset($_SESSION['page']);
+                    header ( 'Location: /page='.$_GET['page'] );
+                }
+            }
+            else {
+                header('Location: /');
+            }
+
+            return;
         }
         else {
             error_log('Wrong password. Got '.$password.', expected '.$user->getPassword());
