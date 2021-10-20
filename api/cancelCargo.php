@@ -28,7 +28,7 @@ try {
         exit();
     }
 
-    if ($cargo->getOriginator() != $_SESSION['operator']) {
+    if ($cargo->getOriginator() != $_SESSION['operator']['id']) {
         $_SESSION['alert']['type'] = 'error';
         $_SESSION['alert']['message'] = 'You cannot cancel orders created by others.';
 

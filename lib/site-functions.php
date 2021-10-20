@@ -109,16 +109,14 @@ class Utils
 
     public static function isCargo(): bool
     {
-        if ($_SESSION['app'] == 'cargo') {
+        if (($_SESSION['app'] == 'cargo') || ($_SESSION['app'] == 'newCargo') || ($_SESSION['app'] == 'cargoInfo')){
             return true;
         }
 
-        if ($_SESSION['app'] == 'newCargo') {
-            return true;
-        }
-
-        if ($_SESSION['app'] == 'cargoInfo') {
-            return true;
+        if ((!empty($_GET['page'])) && (!empty($_GET['data']))) {
+            if($_GET['page'] == 'reports' && $_GET['data'] == 'cargo') {
+                return true;
+            }
         }
 
         return false;
@@ -126,16 +124,14 @@ class Utils
 
     public static function isTruck(): bool
     {
-        if ($_SESSION['app'] == 'trucks') {
+        if (($_SESSION['app'] == 'trucks') || ($_SESSION['app'] == 'newTruck') || ($_SESSION['app'] == 'truckInfo')){
             return true;
         }
 
-        if ($_SESSION['app'] == 'newTruck') {
-            return true;
-        }
-
-        if ($_SESSION['app'] == 'truckInfo') {
-            return true;
+        if ((!empty($_GET['page'])) && (!empty($_GET['data']))) {
+            if($_GET['page'] == 'reports' && $_GET['data'] == 'trucks') {
+                return true;
+            }
         }
 
         return false;
@@ -143,8 +139,14 @@ class Utils
 
     public static function isMatch(): bool
     {
-        if ($_SESSION['app'] == 'matches') {
+        if ($_SESSION['app'] == 'matches'){
             return true;
+        }
+
+        if ((!empty($_GET['page'])) && (!empty($_GET['data']))) {
+            if($_GET['page'] == 'reports' && $_GET['data'] == 'matches') {
+                return true;
+            }
         }
 
         return false;

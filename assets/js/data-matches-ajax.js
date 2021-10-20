@@ -120,7 +120,7 @@ let KTDatatableMatchesList = function() {
                                 'class': ' label-success'
                             },
                             6: {
-                                'title': 'Full',
+                                'title': 'Closed',
                                 'class': ' label-success'
                             },
                         };
