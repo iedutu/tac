@@ -27,9 +27,11 @@ if(!empty($_POST['id'])) {
         $cargo->setAcceptedBy($_SESSION ['operator']['id']);
         DB_utils::acknowledgeCargo($cargo, $_POST ['id'], $_POST ['value']);
 
-        Utils::audit_update('cargo_request', 'accepted_by', $cargo->getId());
-        Utils::audit_update('cargo_request', 'acceptance', $cargo->getId());
-        Utils::audit_update('cargo_request', 'plate_number', $cargo->getId());
+        Utils::highlightPageItem('cargo_request', 'accepted_by', $cargo->getId());
+        Utils::highlightPageItem('cargo_request', 'acceptance', $cargo->getId());
+        error_log('------- before --------');
+        Utils::highlightPageItem('cargo_request', 'plate_number', $cargo->getId());
+        error_log('------- after --------');
 
         Utils::insertCargoAuditEntry('cargo_request', 'acceptance', $cargo->getId(), date("Y-m-d H:i:s"));
         Utils::insertCargoAuditEntry('cargo_request', 'accepted_by', $cargo->getId(), $cargo->getAcceptedBy());

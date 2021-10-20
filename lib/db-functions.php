@@ -727,6 +727,8 @@ class DB_utils
                 'operator' => $_SESSION['operator']['username'],
             ), "id=%d", $entity_id);
             DB::getMDB()->commit();
+
+            $_SESSION['recipient-id'] = $newRecipient->getId();
         }
         catch (MeekroDBException $mdbe) {
             Utils::handleMySQLException($mdbe);
@@ -928,7 +930,7 @@ class DB_utils
         try {
             $row = DB::getMDB()->queryOneRow("select * from cargo_notifications where id=%d", $id);
             if (is_null($row)) {
-                error_log("No cargo_notification was found for id=".$id);
+ //             error_log("No cargo_notification was found for id=".$id);
 
                 return null;
             }
@@ -946,14 +948,13 @@ class DB_utils
     /**
      * @throws ApplicationException
      */
-    public static function clearNotification(int $id): ?bool
+    public static function clearNotifications(int $user_id, int $entity_kind, int $entity_id): ?bool
     {
         try {
-            $notification = self::selectNotification($id);
 
             return DB::getMDB()->update ( 'cargo_notifications', array (
                 'viewed' => 1
-            ), "(user_id=%d) and (entity_kind=%d) and (entity_id=%d) and (viewed=0)",  $notification->getUserId(), $notification->getEntityKind(), $notification->getEntityId());
+            ), "(user_id=%d) and (entity_kind=%d) and (entity_id=%d) and (viewed=0)",  $user_id, $entity_kind, $entity_id);
         }
         catch (MeekroDBException $mdbe) {
             Utils::handleMySQLException($mdbe);
@@ -1143,7 +1144,7 @@ class DB_utils
                                 { // Cargo
                                     $title = 'New cargo request';
                                     $text = 'A new cargo request was added by ' . $notification->getFrom();
-                                    $url = '/?viewedItem=' . $notification->getId() . '&page=cargoInfo&id=' . $notification->getEntityId();
+                                    $url = '/?page=cargoInfo&id=' . $notification->getEntityId();
 
                                     break;
                                 }
@@ -1151,7 +1152,7 @@ class DB_utils
                                 { // Truck
                                     $title = 'New available truck';
                                     $text = 'A new available truck was added by ' . $notification->getFrom();
-                                    $url = '/?viewedItem=' . $notification->getId() . '&page=truckInfo&id=' . $notification->getEntityId();
+                                    $url = '/page=truckInfo&id=' . $notification->getEntityId();
 
                                     break;
                                 }
@@ -1159,7 +1160,7 @@ class DB_utils
                                 { // Truck stop
                                     $title = 'New truck stop added';
                                     $text = 'A new truck stop was added for an existing truck by ' . $notification->getFrom();
-                                    $url = '/?viewedItem=' . $notification->getId() . '&page=truckInfo&id=' . $notification->getEntityId();
+                                    $url = '/page=truckInfo&id=' . $notification->getEntityId();
 
                                     break;
                                 }
@@ -1167,7 +1168,7 @@ class DB_utils
                                 { // Cargo comment
                                     $title = 'New cargo comment added';
                                     $text = 'A new comment was added for an existing cargo by ' . $notification->getFrom();
-                                    $url = '/?viewedItem=' . $notification->getId() . '&page=cargoInfo&id=' . $notification->getEntityId();
+                                    $url = '/?page=cargoInfo&id=' . $notification->getEntityId();
 
                                     break;
                                 }
@@ -1187,7 +1188,7 @@ class DB_utils
                                 { // Cargo
                                     $title = 'Changed cargo';
                                     $text = 'An existing cargo request was modified by  ' . $notification->getFrom();
-                                    $url = '/?viewedItem=' . $notification->getId() . '&page=cargoInfo&id=' . $notification->getEntityId();
+                                    $url = '/?page=cargoInfo&id=' . $notification->getEntityId();
 
                                     break;
                                 }
@@ -1195,7 +1196,7 @@ class DB_utils
                                 { // Truck
                                     $title = 'Changed available truck';
                                     $text = 'An existing available truck was modified by  ' . $notification->getFrom();
-                                    $url = '/?viewedItem=' . $notification->getId() . '&page=cargoInfo&id=' . $notification->getEntityId();
+                                    $url = '/?page=cargoInfo&id=' . $notification->getEntityId();
 
                                     break;
                                 }
@@ -1215,7 +1216,7 @@ class DB_utils
                                 { // Cargo
                                     $title = 'Approved cargo';
                                     $text = 'Your cargo request was approved by  ' . $notification->getFrom();
-                                    $url = '/?viewedItem=' . $notification->getId() . '&page=cargoInfo&id=' . $notification->getEntityId();
+                                    $url = '/?page=cargoInfo&id=' . $notification->getEntityId();
 
                                     break;
                                 }
@@ -1235,7 +1236,7 @@ class DB_utils
                                 { // Cargo
                                     $title = 'Cancelled cargo request';
                                     $text = 'A cargo request was removed by ' . $notification->getFrom();
-                                    $url = '/?viewedItem=' . $notification->getId() . '&page=cargo';
+                                    $url = '/?page=cargoInfo&id='.$notification->getEntityId();
 
                                     break;
                                 }
@@ -1243,7 +1244,7 @@ class DB_utils
                                 { // Truck
                                     $title = 'Cancelled truck';
                                     $text = 'A truck entry was removed by ' . $notification->getFrom();
-                                    $url = '/?viewedItem=' . $notification->getId() . '&page=trucks';
+                                    $url = '/page=truckInfo&id='.$notification->getEntityId();
 
                                     break;
                                 }
@@ -1251,7 +1252,7 @@ class DB_utils
                                 { // Truck stop
                                     $title = 'Removed truck stop';
                                     $text = 'A scheduled stop for an existing truck was removed by ' . $notification->getFrom();
-                                    $url = '/?viewedItem=' . $notification->getId() . '&page=truckInfo&id=' . $notification->getEntityId();
+                                    $url = '/page=truckInfo&id=' . $notification->getEntityId();
 
                                     break;
                                 }

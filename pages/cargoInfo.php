@@ -260,7 +260,12 @@ $class_text_default = '';
                                             }
                                         }
                                         else {
-                                            echo '<p style="display: inline" id="plate_number">'.$cargo->getPlateNumber().'</p>';
+                                            if($cargo->getOriginator() == $_SESSION['operator']['id']) {
+                                                echo '<p style="display: inline" id="plate_number" class="'.($audit->getPlateNumber()?$class_text_new:$class_text_default).'">'.$cargo->getPlateNumber().'</p>';
+                                            }
+                                            else {
+                                                echo '<p style="display: inline" id="plate_number">' . $cargo->getPlateNumber() . '</p>';
+                                            }
                                         }
                                         ?>
                                     </td>
@@ -523,3 +528,12 @@ $class_text_default = '';
         <!--end::Card-->
     </div>
 </div>
+
+<?php
+    // Notifications clean-up
+    try {
+        DB_utils::clearNotifications($_SESSION['operator']['id'], 1, $_SESSION['entry-id']);
+    } catch (ApplicationException $e) {
+        //
+    }
+?>

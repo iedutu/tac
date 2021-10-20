@@ -57,9 +57,7 @@ class Mails
             include_once($_SERVER["DOCUMENT_ROOT"].'/assets/html/'.$template);
             $body = ob_get_clean();
             $mail->msgHTML($body, dirname(__FILE__), true); // Create message bodies and embed images
-            error_log('Can I send e-mails?');
             if (!self::$DO_NOT_SEND_MAILS) {
-                error_log('Sending mail');
                 if($mail->send()) {
                     error_log('OK');
                 }

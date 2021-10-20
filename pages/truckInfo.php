@@ -406,3 +406,12 @@ else {
         </div>
     </div>
 </div>
+
+<?php
+    // Notifications clean-up
+    try {
+        DB_utils::clearNotifications($_SESSION['operator']['id'], 2, $_SESSION['entry-id']);
+    } catch (ApplicationException $e) {
+        //
+    }
+?>

@@ -8,23 +8,39 @@ include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
 if(!empty($_POST['id'])) {
     try {
+        $recipient = DB_utils::selectUserById($_SESSION['recipient-id']);
         $table = DB_utils::updateRecipient($_POST['value'], $_SESSION['entry-id']);
+        $newRecipient = DB_utils::selectUserById($_SESSION['recipient-id']);
 
         Utils::insertCargoAuditEntry($table, $_POST['id'], $_SESSION['entry-id'], $_POST['value']);
-        Utils::audit_update($table, $_POST['id'], $_SESSION['entry-id']);
+        Utils::highlightPageItem($table, $_POST['id'], $_SESSION['entry-id']);
 
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');
 
-        // Send a notification e-mail to both the old and new recipient
-        $recipient = DB_utils::selectUserById($_SESSION['recipient-id']);
-        $newRecipient = DB_utils::selectUser($_POST['value']);
+        // Send a notification e-mail and in-app notification to both the old and new recipient
         $originator = DB_utils::selectUserById($_SESSION['originator-id']);
 
         if($table == 'cargo_request') {
             $entry = DB_utils::selectRequest($_SESSION['entry-id']);
-            $originator = DB_utils::selectUserById($entry->getOriginator());
-            $recipient = DB_utils::selectUserById($entry->getRecipient());
+
+            // Add a notification to the recipient of the cargo request
+            $note = new Notification();
+            $note->setUserId($newRecipient->getId());
+            $note->setOriginatorId($originator->getId());
+            $note->setKind(1);
+            $note->setEntityKind(1);
+            $note->setEntityId($entry->getId());
+
+            error_log('Add notification for new: '.$note->getUserId());
+            DB_utils::addNotification($note);
+
+            // Add a notification to the old recipient of the cargo request for cancellation
+            $note->setUserId($recipient->getId());
+            $note->setKind(4);
+
+            error_log('Add notification for old: '.$note->getUserId());
+            DB_utils::addNotification($note);
 
             // Notify the new recipient
             $email['subject'] = 'New cargo request received from '.$originator->getName();
@@ -66,9 +82,25 @@ if(!empty($_POST['id'])) {
         }
         else {
             if($table == 'cargo_truck') {
-                $entry = self::selectTruck($_SESSION['entry-id']);
-                $originator = self::selectUserById($entry->getOriginator());
-                $recipient = self::selectUserById($entry->getRecipient());
+                $entry = DB_utils::selectTruck($_SESSION['entry-id']);
+                $originator = DB_utils::selectUserById($entry->getOriginator());
+                $recipient = DB_utils::selectUserById($entry->getRecipient());
+
+                // Add a notification to the receiver of the truck
+                $note = new Notification();
+                $note->setUserId($newRecipient->getId());
+                $note->setOriginatorId($originator->getId());
+                $note->setKind(1);
+                $note->setEntityKind(2);
+                $note->setEntityId($entry->getId());
+
+                DB_utils::addNotification($note);
+
+                // Add a notification to the old recipient of the truck for cancellation
+                $note->setUserId($recipient->getId());
+                $note->setKind(4);
+
+                DB_utils::addNotification($note);
 
                 // Notify the new recipient
                 $email['subject'] = 'New truck order received from '.$originator->getName();

@@ -312,7 +312,7 @@ class Utils
         return true;
     }
 
-    public static function audit_update(string $table, string $row, int $id) {
+    public static function highlightPageItem(string $table, string $row, int $id) {
         switch($table) {
             case 'cargo_request': {
                 if($_SESSION['role'] == 'originator') {
