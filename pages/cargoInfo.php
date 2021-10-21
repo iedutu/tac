@@ -260,6 +260,19 @@ $class_text_default = '';
                                         ?>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td class="text-right">Package</td>
+                                    <td>
+                                        <?php
+                                        if($editable['originator']) {
+                                            echo '<b style="display: inline" id="package" class="editable-text '.($audit->getPackage()?$class_text_new:$class_text_default).'">'.$cargo->getPackage().'</b>';
+                                        }
+                                        else {
+                                            echo '<p style="display: inline" id="package" class="'.($audit->getPackage()?$class_text_new:$class_text_default).'">'.$cargo->getPackage().'</p>';
+                                        }
+                                        ?>
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </td>

@@ -118,9 +118,13 @@ class RequestUpdates extends \Google\Protobuf\Internal\Message
      */
     protected $accepted_by = false;
     /**
-     * Generated from protobuf field <code>string dimensions = 27;</code>
+     * Generated from protobuf field <code>bool dimensions = 27;</code>
      */
-    protected $dimensions = '';
+    protected $dimensions = false;
+    /**
+     * Generated from protobuf field <code>bool package = 28;</code>
+     */
+    protected $package = false;
 
     /**
      * Constructor.
@@ -154,7 +158,8 @@ class RequestUpdates extends \Google\Protobuf\Internal\Message
      *     @type bool $recipient
      *     @type bool $status
      *     @type bool $accepted_by
-     *     @type string $dimensions
+     *     @type bool $dimensions
+     *     @type bool $package
      * }
      */
     public function __construct($data = NULL) {
@@ -735,8 +740,8 @@ class RequestUpdates extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string dimensions = 27;</code>
-     * @return string
+     * Generated from protobuf field <code>bool dimensions = 27;</code>
+     * @return bool
      */
     public function getDimensions()
     {
@@ -744,14 +749,36 @@ class RequestUpdates extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string dimensions = 27;</code>
-     * @param string $var
+     * Generated from protobuf field <code>bool dimensions = 27;</code>
+     * @param bool $var
      * @return $this
      */
     public function setDimensions($var)
     {
-        GPBUtil::checkString($var, True);
+        GPBUtil::checkBool($var);
         $this->dimensions = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>bool package = 28;</code>
+     * @return bool
+     */
+    public function getPackage()
+    {
+        return $this->package;
+    }
+
+    /**
+     * Generated from protobuf field <code>bool package = 28;</code>
+     * @param bool $var
+     * @return $this
+     */
+    public function setPackage($var)
+    {
+        GPBUtil::checkBool($var);
+        $this->package = $var;
 
         return $this;
     }

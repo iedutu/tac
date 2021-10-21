@@ -64,6 +64,7 @@ class DB_utils
         if(!empty($row['loading_date'])) $request->setLoadingDate(strtotime($row['loading_date']));
         $request->setLoadingMeters($row['loading_meters']);
         $request->setDimensions($row['dimensions']);
+        $request->setPackage($row['package']);
         $request->setOperator($row['operator']);
         $request->setOrderType($row['order_type']);
         $request->setOriginator($row['originator_id']);
@@ -293,6 +294,7 @@ class DB_utils
                 'volume' => $entry->getVolume(),
                 'loading_meters' => $entry->getLoadingMeters(),
                 'dimensions' => $entry->getDimensions(),
+                'package' => $entry->getPackage(),
                 'instructions' => $entry->getInstructions(),
                 'freight' => $entry->getFreight(),
                 'order_type' => $entry->getOrderType(),

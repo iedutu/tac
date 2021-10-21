@@ -356,6 +356,7 @@ class Utils
                     case 'status':          { $a->setStatus(true); break;}
                     case 'accepted_by':     { $a->setAcceptedBy(true); break;}
                     case 'dimensions':      { $a->setDimensions(true); break;}
+                    case 'package':         { $a->setPackage(true); break;}
                     default:                { error_log('Wrong data row received in Utils::highlightPageItem() => '.$row); break;}
                 }
                 Audit::writeCargo($a);

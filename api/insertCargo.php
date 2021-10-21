@@ -38,6 +38,7 @@ if (isset ( $_POST ['_submitted'] )) {
         if(!empty($_POST['adr'])) $cargo->setAdr($_POST ['adr']);
         $cargo->setOrderType($_POST ['order_type']);
         $cargo->setDimensions($_POST ['dimensions']);
+        $cargo->setPackage($_POST ['package']);
 
         $cargo->setId(DB_utils::insertRequest($cargo));
         // Keep a record of what happened

@@ -10,7 +10,7 @@
 
 								<!--begin::Logo-->
 								<div class="header-logo mr-10 d-none d-lg-flex">
-									<a href="index.php">
+									<a href="/">
 										<img alt="Logo" src="/assets/media/logos/package.svg" class="h-40px" />
 									</a>
 								</div>

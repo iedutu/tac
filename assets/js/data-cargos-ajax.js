@@ -60,6 +60,7 @@ var KTDatatableCargoList = function() {
                     width: 50,
                     type: 'number',
                     selector: false,
+                    sortable: 'desc',
                     textAlign: 'center',
                     template: function(row) {
                         return '<a href="/?page=cargoInfo&id='+row.id+'">'+row.id+'</a>';
@@ -78,7 +79,7 @@ var KTDatatableCargoList = function() {
 								</div>\
 								<div class="ml-2">\
 									<div class="text-dark-75 font-weight-bold line-height-sm">' + row.originator_office + '</div>\
-									<a href="#" class="font-size-sm text-dark-50 text-hover-primary">' + row.originator_name + '</a>\
+									<a href="mailto:'+row.originator_email+'" class="font-size-sm text-dark-50 text-hover-primary">' + row.originator_name + '</a>\
 								</div>\
 							</div>';
 
@@ -97,7 +98,7 @@ var KTDatatableCargoList = function() {
 								</div>\
 								<div class="ml-2">\
 									<div class="text-dark-75 font-weight-bold line-height-sm">' + row.recipient_office + '</div>\
-									<a href="#" class="font-size-sm text-dark-50 text-hover-primary">' + row.recipient_name + '</a>\
+									<a href="mailto:'+row.recipient_email+'" class="font-size-sm text-dark-50 text-hover-primary">' + row.recipient_name + '</a>\
 								</div>\
 							</div>';
 

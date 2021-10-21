@@ -129,6 +129,10 @@ class Request extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>string dimensions = 29;</code>
      */
     protected $dimensions = '';
+    /**
+     * Generated from protobuf field <code>string package = 30;</code>
+     */
+    protected $package = '';
 
     /**
      * Constructor.
@@ -165,6 +169,7 @@ class Request extends \Google\Protobuf\Internal\Message
      *     @type int|string $creation_date
      *     @type int|string $update_date
      *     @type string $dimensions
+     *     @type string $package
      * }
      */
     public function __construct($data = NULL) {
@@ -806,6 +811,28 @@ class Request extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkString($var, True);
         $this->dimensions = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>string package = 30;</code>
+     * @return string
+     */
+    public function getPackage()
+    {
+        return $this->package;
+    }
+
+    /**
+     * Generated from protobuf field <code>string package = 30;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setPackage($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->package = $var;
 
         return $this;
     }

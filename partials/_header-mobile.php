@@ -3,7 +3,7 @@
 		<div id="kt_header_mobile" class="header-mobile header-mobile-fixed">
 
 			<!--begin::Logo-->
-			<a href="index.html">
+			<a href="/">
 				<img alt="Logo" src="/assets/media/logos/package.svg" class="max-h-30px" />
 			</a>
 

@@ -145,9 +145,9 @@
                             <span class="form-text text-muted">Please enter the cargo dimensions</span>
                         </div>
                         <div class="col-lg-4">
-                            <label>[placeholder] :</label>
-                            <input type="text" id="placeholder" name="placeholder" class="form-control" placeholder=""/>
-                            <span class="form-text text-muted">Please enter [placeholder]</span>
+                            <label>Package :</label>
+                            <input type="text" id="package" name="package" class="form-control" placeholder="Packaging"/>
+                            <span class="form-text text-muted">Please enter the packaging data</span>
                         </div>
                     </div>
                 </div>
