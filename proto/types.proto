@@ -31,6 +31,7 @@ message Request {
   int32 accepted_by = 26;
   uint64 creation_date = 27;
   uint64 update_date = 28;
+  string dimensions = 29;
 }
 
 message RequestUpdates {
@@ -60,6 +61,7 @@ message RequestUpdates {
   bool recipient = 24;
   bool status = 25;
   bool accepted_by = 26;
+  string dimensions = 27;
 }
 
 message Truck {

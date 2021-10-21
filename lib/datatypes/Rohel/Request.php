@@ -125,6 +125,10 @@ class Request extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>uint64 update_date = 28;</code>
      */
     protected $update_date = 0;
+    /**
+     * Generated from protobuf field <code>string dimensions = 29;</code>
+     */
+    protected $dimensions = '';
 
     /**
      * Constructor.
@@ -160,6 +164,7 @@ class Request extends \Google\Protobuf\Internal\Message
      *     @type int $accepted_by
      *     @type int|string $creation_date
      *     @type int|string $update_date
+     *     @type string $dimensions
      * }
      */
     public function __construct($data = NULL) {
@@ -779,6 +784,28 @@ class Request extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkUint64($var);
         $this->update_date = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>string dimensions = 29;</code>
+     * @return string
+     */
+    public function getDimensions()
+    {
+        return $this->dimensions;
+    }
+
+    /**
+     * Generated from protobuf field <code>string dimensions = 29;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setDimensions($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->dimensions = $var;
 
         return $this;
     }

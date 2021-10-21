@@ -34,7 +34,7 @@ let KTDatatableMatchesList = function() {
 
             // layout definition
             layout: {
-                scroll: false,
+                scroll: true,
                 footer: false,
             },
 
@@ -188,6 +188,10 @@ let KTDatatableMatchesList = function() {
                         return '<b>' + row.ameta + '</b>';
                     },
                 }],
+        });
+
+        datatable.on('datatable-on-layout-updated', function() {
+            KTApp.initTooltips();
         });
 
         $('#kt_datatable_search_status').on('change', function() {

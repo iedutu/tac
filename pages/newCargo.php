@@ -10,7 +10,7 @@
                 <div class="card-body">
                     <div class="form-group row">
                         <div class="col-lg-4">
-                            <label>Cargo recipient</label>
+                            <label for="recipient" class="form-label">Cargo recipient</label>
                             <select class="form-control" id="recipient" name="recipient">
                                 <?php DB_utils::selectActiveUsers(); ?>
                             </select>
@@ -136,6 +136,18 @@
                                 <option value="Depo">Depo</option>
                             </select>
                             <span class="form-text text-muted">Please choose the delivery instructions</span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-4">
+                            <label>Cargo dimensions:</label>
+                            <input type="text" id="dimensions" name="dimensions" class="form-control" placeholder="L x W x H"/>
+                            <span class="form-text text-muted">Please enter the cargo dimensions</span>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>[placeholder] :</label>
+                            <input type="text" id="placeholder" name="placeholder" class="form-control" placeholder=""/>
+                            <span class="form-text text-muted">Please enter [placeholder]</span>
                         </div>
                     </div>
                 </div>

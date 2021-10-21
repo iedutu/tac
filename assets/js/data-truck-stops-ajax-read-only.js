@@ -86,6 +86,10 @@ let KTDatatableTruckStopsReadOnly = function() {
         };
 
         let datatable = $('#kt_datatable_cargo_truck_stops_read_only').KTDatatable(options);
+
+        datatable.on('datatable-on-layout-updated', function() {
+            KTApp.initTooltips();
+        });
     };
 
     return {

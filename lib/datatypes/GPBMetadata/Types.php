@@ -16,8 +16,8 @@ class Types
         }
         $pool->internalAddGeneratedFile(
             '
-å
-types.protoRohel"û
+¥
+types.protoRohel"≤
 Request
 
 id (
@@ -53,7 +53,9 @@ order_type (	
 status (
 accepted_by (
 creation_date (
-update_date ("˘
+update_date (
+
+dimensions (	"ç
 RequestUpdates
 
 id (
@@ -87,7 +89,9 @@ order_type (
 adr (
 	recipient (
 status (
-accepted_by ("Â
+accepted_by (
+
+dimensions (	"Â
 Truck
 
 id (

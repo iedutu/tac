@@ -117,6 +117,10 @@ class RequestUpdates extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>bool accepted_by = 26;</code>
      */
     protected $accepted_by = false;
+    /**
+     * Generated from protobuf field <code>string dimensions = 27;</code>
+     */
+    protected $dimensions = '';
 
     /**
      * Constructor.
@@ -150,6 +154,7 @@ class RequestUpdates extends \Google\Protobuf\Internal\Message
      *     @type bool $recipient
      *     @type bool $status
      *     @type bool $accepted_by
+     *     @type string $dimensions
      * }
      */
     public function __construct($data = NULL) {
@@ -725,6 +730,28 @@ class RequestUpdates extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkBool($var);
         $this->accepted_by = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>string dimensions = 27;</code>
+     * @return string
+     */
+    public function getDimensions()
+    {
+        return $this->dimensions;
+    }
+
+    /**
+     * Generated from protobuf field <code>string dimensions = 27;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setDimensions($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->dimensions = $var;
 
         return $this;
     }

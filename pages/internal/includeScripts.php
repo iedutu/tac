@@ -35,7 +35,6 @@ switch($_SESSION['app']) {
     }
     case 'cargoInfo': {
 //        echo '<script src="/assets/js/src/jquery.jeditable.js"></script>';
-//        echo '<script src="/assets/js/src/jquery.jeditable.datepicker.js"></script>';
         echo '<script src="/assets/js/jeditable/jquery.jeditable.min.js"></script>';
         echo '<script src="/assets/js/src/jquery.jeditable.datepicker.js"></script>';
         echo '<script src="/assets/js/jeditable-cargo.js"></script>';

@@ -31,23 +31,28 @@ $status_code = '';
 
 switch($cargo->getStatus()) {
     case 1: {
-        $status_code = '<span class="label label-lg label-info label-inline mr-2 font-weight-bolder">New</span>';
+        $tooltip = 'data-toggle="tooltip" data-placement="top" title="New cargo"';
+        $status_code = '<span class="label label-lg label-info label-inline mr-2 font-weight-bolder" '.$tooltip.'>New</span>';
         break;
     }
     case 2: {
-        $status_code = '<span class="label label-lg label-success label-inline mr-2 font-weight-bolder">Accepted</span>';
+        $tooltip = 'data-toggle="tooltip" data-placement="top" title="Accepted cargo"';
+        $status_code = '<span class="label label-lg label-success label-inline mr-2 font-weight-bolder" '.$tooltip.'>Accepted</span>';
         break;
     }
     case 3: {
-        $status_code = '<span class="label label-lg label-warning label-inline mr-2">Closed</span>';
+        $tooltip = 'data-toggle="tooltip" data-placement="top" title="Closed cargo"';
+        $status_code = '<span class="label label-lg label-warning label-inline mr-2" '.$tooltip.'>Closed</span>';
         break;
     }
     case 4: {
-        $status_code = '<span class="label label-lg label-danger label-inline mr-2">Cancelled</span>';
+        $tooltip = 'data-toggle="tooltip" data-placement="top" title="Cancelled cargo"';
+        $status_code = '<span class="label label-lg label-danger label-inline mr-2" '.$tooltip.'>Cancelled</span>';
         break;
     }
     case 5: {
-        $status_code = '<span class="label label-lg label-dark label-inline mr-2">Expired</span>';
+        $tooltip = 'data-toggle="tooltip" data-placement="top" title="Expired cargo"';
+        $status_code = '<span class="label label-lg label-dark label-inline mr-2" '.$tooltip.'>Expired</span>';
         break;
     }
     default: {
@@ -243,29 +248,14 @@ $class_text_default = '';
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-right">License plate</td>
+                                    <td class="text-right">Dimensions</td>
                                     <td>
                                         <?php
-                                        if($editable['recipient']) {
-                                            if($cargo->getStatus() == 1) {
-                                                echo '<b style="display: inline" id="plate_number" class="editable-acknowledge-text text-danger"></b>';
-                                            }
-                                            else {
-                                                if($cargo->getStatus() == 2) {
-                                                    echo '<b style="display: inline" id="plate_number" class="editable-text '.($audit->getPlateNumber()?$class_text_new:$class_text_default).'">' . $cargo->getPlateNumber() . '</b>';
-                                                }
-                                                else {
-                                                    echo '<p style="display: inline" id="plate_number" class="'.($audit->getPlateNumber()?$class_text_new:$class_text_default).'">'.$cargo->getPlateNumber().'</p>';
-                                                }
-                                            }
+                                        if($editable['originator']) {
+                                            echo '<b style="display: inline" id="dimensions" class="editable-text '.($audit->getDimensions()?$class_text_new:$class_text_default).'">'.$cargo->getDimensions().'</b>';
                                         }
                                         else {
-                                            if($cargo->getOriginator() == $_SESSION['operator']['id']) {
-                                                echo '<p style="display: inline" id="plate_number" class="'.($audit->getPlateNumber()?$class_text_new:$class_text_default).'">'.$cargo->getPlateNumber().'</p>';
-                                            }
-                                            else {
-                                                echo '<p style="display: inline" id="plate_number">' . $cargo->getPlateNumber() . '</p>';
-                                            }
+                                            echo '<p style="display: inline" id="dimensions" class="'.($audit->getDimensions()?$class_text_new:$class_text_default).'">'.$cargo->getDimensions().'</p>';
                                         }
                                         ?>
                                     </td>
@@ -396,6 +386,34 @@ $class_text_default = '';
                                     <td class="text-right">Freight</td>
                                     <td>
                                         <p style="display: inline" id="freight" class="<?=$audit->getFreight()?$class_text_new:$class_text_default?>">&euro; <?=$cargo->getFreight()?></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-right">License plate</td>
+                                    <td>
+                                        <?php
+                                        if($editable['recipient']) {
+                                            if($cargo->getStatus() == 1) {
+                                                echo '<b style="display: inline" id="plate_number" class="editable-acknowledge-text text-danger"></b>';
+                                            }
+                                            else {
+                                                if($cargo->getStatus() == 2) {
+                                                    echo '<b style="display: inline" id="plate_number" class="editable-text '.($audit->getPlateNumber()?$class_text_new:$class_text_default).'">' . $cargo->getPlateNumber() . '</b>';
+                                                }
+                                                else {
+                                                    echo '<p style="display: inline" id="plate_number" class="'.($audit->getPlateNumber()?$class_text_new:$class_text_default).'">'.$cargo->getPlateNumber().'</p>';
+                                                }
+                                            }
+                                        }
+                                        else {
+                                            if($cargo->getOriginator() == $_SESSION['operator']['id']) {
+                                                echo '<p style="display: inline" id="plate_number" class="'.($audit->getPlateNumber()?$class_text_new:$class_text_default).'">'.$cargo->getPlateNumber().'</p>';
+                                            }
+                                            else {
+                                                echo '<p style="display: inline" id="plate_number">' . $cargo->getPlateNumber() . '</p>';
+                                            }
+                                        }
+                                        ?>
                                     </td>
                                 </tr>
                                 <tr>

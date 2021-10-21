@@ -113,6 +113,10 @@ let KTDatatableTruckStops = function() {
                 }
             });
 
+        datatable.on('datatable-on-layout-updated', function() {
+            KTApp.initTooltips();
+        });
+
         $('#kt_datatable_delete_btn').on('click', function(e) {
             var ids = datatable.rows('.datatable-row-active').
             nodes().

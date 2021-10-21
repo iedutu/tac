@@ -168,6 +168,10 @@ var KTDatatableCargoList = function() {
 
         });
 
+        datatable.on('datatable-on-layout-updated', function() {
+            KTApp.initTooltips();
+        });
+
         $('#kt_datatable_search_status').on('change', function() {
             datatable.search($(this).val(), 'status');
         });

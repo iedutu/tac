@@ -35,19 +35,23 @@ $status_code = '';
 
 switch($truck->getStatus()) {
     case 1: {
-        $status_code = '<span class="label label-lg label-info label-inline mr-2 font-weight-bolder">New</span>';
+        $tooltip = 'data-toggle="tooltip" data-placement="top" title="New truck"';
+        $status_code = '<span class="label label-lg label-info label-inline mr-2 font-weight-bolder" '.$tooltip.'>New</span>';
         break;
     }
     case 2: {
-        $status_code = '<span class="label label-lg label-success label-inline mr-2 font-weight-bolder">Partially loaded</span>';
+        $tooltip = 'data-toggle="tooltip" data-placement="top" title="Partially loaded truck"';
+        $status_code = '<span class="label label-lg label-success label-inline mr-2 font-weight-bolder" '.$tooltip.'>Partially loaded</span>';
         break;
     }
     case 3: {
-        $status_code = '<span class="label label-lg label-primary label-inline mr-2">Fully loaded</span>';
+        $tooltip = 'data-toggle="tooltip" data-placement="top" title="Fully loaded truck"';
+        $status_code = '<span class="label label-lg label-primary label-inline mr-2" '.$tooltip.'>Fully loaded</span>';
         break;
     }
     case 4: {
-        $status_code = '<span class="label label-lg label-danger label-inline mr-2">Cancelled</span>';
+        $tooltip = 'data-toggle="tooltip" data-placement="top" title="Cancelled truck"';
+        $status_code = '<span class="label label-lg label-danger label-inline mr-2" '.$tooltip.'>Cancelled</span>';
         break;
     }
     default: {
