@@ -46,17 +46,21 @@
 							</div>
 
 							<!--end::Header Menu Wrapper-->
-
+                            <?php
+                                $_SESSION['operator']['notification-count'] = DB_utils::notificationsCount();
+                            ?>
 							<!--begin::Topbar-->
 							<div class="topbar">
 								<!--begin::User-->
 								<div class="topbar-item mr-3">
-									<div class="btn btn-icon btn-hover-transparent-white w-auto d-flex align-items-center btn-lg px-2" id="kt_quick_user_toggle">
+									<div class="btn btn-icon btn-hover-transparent-white w-auto d-flex align-items-center btn-lg px-2 <?=$_SESSION['operator']['notification-count']>0?'pulse pulse-danger':''?>" <?=$_SESSION['operator']['notification-count']>0?'data-toggle="tooltip" data-placement="bottom" title="You have '.$_SESSION['operator']['notification-count'].' new notifications!"':''?> id="kt_quick_user_toggle">
 										<div class="symbol symbol-circle symbol-30 bg-white overflow-hidden">
 											<div class="symbol-label">
 												<img alt="Userland" src="assets/media/svg/avatars/<?=$_SESSION['operator']['avatar']?>.svg" class="h-75 align-self-end" />
+                                                <?=$_SESSION['operator']['notification-count']>0?'<span class="pulse-ring"></span>':''?>
                                             </div>
 										</div>
+
 									</div>
 								</div>
 

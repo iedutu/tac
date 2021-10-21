@@ -207,17 +207,6 @@ class Utils
         ) );
     }
 
-    public static function trucks_audit($table, $field, $key, $new) {
-        DB::getMDB()->insert ( 'trucks_audit', array (
-            'operator' => $_SESSION ['operator']['username'],
-            'IP' => $_SERVER['REMOTE_ADDR'],
-            'table' => $table,
-            'field' => $field,
-            'key' => $key,
-            'new' => $new
-        ) );
-    }
-
     /**
      * @throws ApplicationException
      */
@@ -252,30 +241,6 @@ class Utils
         }
     }
 
-    public static function docs_audit($table, $field, $key, $new) {
-        DB::getMDB()->insert ( 'docs_audit', array (
-            'operator_id' => $_SESSION['operator_id'],
-            'operator' => $_SESSION['operator'],
-            'IP' => $_SERVER['REMOTE_ADDR'],
-            'table' => $table,
-            'field' => $field,
-            'key' => $key,
-            'new' => $new
-        ) );
-    }
-
-    public static function docs_confirm_audit($table, $field, $key, $new, $op_id, $op) {
-        DB::getMDB()->insert ( 'docs_audit', array (
-            'operator_id' => $op_id,
-            'operator' => $op,
-            'IP' => $_SERVER['REMOTE_ADDR'],
-            'table' => $table,
-            'field' => $field,
-            'key' => $key,
-            'new' => $new
-        ) );
-    }
-
     public static function logout() {
         session_destroy();
         $_SESSION = array();
@@ -302,14 +267,6 @@ class Utils
             case Utils::$INSERT: return $_SESSION['operator']['insert'];
             default: return false;
         }
-    }
-
-    public static function authorizedDocs() {
-        if (!isset($_SESSION ['operator']['id'])) {
-            return false;
-        }
-
-        return true;
     }
 
     public static function highlightPageItem(string $table, string $row, int $id) {

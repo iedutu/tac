@@ -957,9 +957,15 @@ class DB_utils
     {
         try {
 
-            return DB::getMDB()->update ( 'cargo_notifications', array (
+            $result = DB::getMDB()->update ( 'cargo_notifications', array (
                 'viewed' => 1
             ), "(user_id=%d) and (entity_kind=%d) and (entity_id=%d) and (viewed=0)",  $user_id, $entity_kind, $entity_id);
+
+            if(self::notificationsCount() == 0) {
+                $_SESSION['operator']['notification-count'] = 0;
+            }
+
+            return $result;
         }
         catch (MeekroDBException $mdbe) {
             Utils::handleMySQLException($mdbe);
@@ -1340,21 +1346,18 @@ class DB_utils
     public static function notificationMessage(): ?string
     {
         try {
-            $row = DB::getMDB()->queryFirstField('SELECT 
-                                            count(1) 
-                                         FROM 
-                                            cargo_notifications 
-                                         WHERE
-                                            (user_id=%d) 
-                                            and
-                                            (viewed=0)
-                                         ORDER BY SYS_CREATION_DATE', $_SESSION['operator']['id']);
+            if(empty($_SESSION['operator']['notification-count'])) {
+                $count = self::notificationsCount();
+            }
+            else {
+                $count = $_SESSION['operator']['notification-count'];
+            }
 
-            if(empty($row)) {
+            if($count == 0) {
                 return '<small class="d-block pt-2 font-size-sm" style="color: darkgreen">No new notifications!</small>';
             }
             else {
-                return '<small class="d-block pt-2 font-size-sm" style="color: red">'.$row.' messages</small>';
+                return '<small class="d-block pt-2 font-size-sm" style="color: red">'.$count.' messages</small>';
             }
         }
         catch (MeekroDBException $mdbe) {
@@ -1370,6 +1373,38 @@ class DB_utils
             $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
 
             return null;
+        }
+    }
+
+    public static function notificationsCount(): int
+    {
+        try {
+            $row = DB::getMDB()->queryFirstField('SELECT 
+                                            count(1) 
+                                         FROM 
+                                            cargo_notifications 
+                                         WHERE
+                                            (user_id=%d) 
+                                            and
+                                            (viewed=0)
+                                         ORDER BY SYS_CREATION_DATE', $_SESSION['operator']['id']);
+
+            if(empty($row)) {
+                return 0;
+            }
+            else {
+                return intval($row);
+            }
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+
+            return 0;
+        }
+        catch (Exception $e) {
+            Utils::handleException($e);
+
+            return 0;
         }
     }
 
