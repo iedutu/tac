@@ -57,7 +57,7 @@
 										<div class="symbol symbol-circle symbol-30 bg-white overflow-hidden">
 											<div class="symbol-label">
 												<img alt="Userland" src="assets/media/svg/avatars/<?=$_SESSION['operator']['avatar']?>.svg" class="h-75 align-self-end" />
-                                                <?=$_SESSION['operator']['notification-count']>0?'<span class="pulse-ring"></span>':''?>
+                                                <?=$_SESSION['operator']['notification-count']>0?'<span id="kt_user_icon_ring" class="pulse-ring"></span>':''?>
                                             </div>
 										</div>
 

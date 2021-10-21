@@ -55,7 +55,7 @@ else {
     }
 
     if (Utils::authorized(null, Utils::$QUERY)) {
-        if (!isset($_SESSION["update_done"])) {
+        if (empty($_SESSION["update_done"])) {
             Utils::cargoUpdateStatuses();
         }
     }

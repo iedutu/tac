@@ -359,6 +359,36 @@ class Utils
             }
         }
     }
+
+    public static function updateNotifications()
+    {
+    // Notifications clean-up
+    try {
+        DB_utils::clearNotifications($_SESSION['operator']['id'], 1, $_SESSION['entry-id']);
+        $_SESSION['operator']['notification-count'] = DB_utils::notificationsCount();
+        if($_SESSION['operator']['notification-count'] == 0) {
+        echo '
+        <script>
+            document.getElementById("kt_user_icon_ring").classList.remove("pulse-ring");
+            document.getElementById("kt_quick_user_toggle").classList.remove("pulse");
+            document.getElementById("kt_quick_user_toggle").classList.remove("pulse-danger");
+            document.getElementById("kt_quick_user_toggle").removeAttribute("data-toggle");
+            document.getElementById("kt_quick_user_toggle").removeAttribute("data-placement");
+            document.getElementById("kt_quick_user_toggle").removeAttribute("title");
+        </script>
+        ';
+        }
+        else {
+            echo '
+            <script>
+                document.getElementById("kt_quick_user_toggle").setAttribute("title", "You have '.$_SESSION['operator']['notification-count'].' new notifications!");
+            </script>
+            ';
+        }
+    } catch (ApplicationException $e) {
+        //
+    }
+    }
 }
 
 class ApplicationException extends Exception

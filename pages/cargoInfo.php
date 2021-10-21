@@ -560,11 +560,4 @@ $class_text_default = '';
     </div>
 </div>
 
-<?php
-    // Notifications clean-up
-    try {
-        DB_utils::clearNotifications($_SESSION['operator']['id'], 1, $_SESSION['entry-id']);
-    } catch (ApplicationException $e) {
-        //
-    }
-?>
+<?php Utils::updateNotifications() ?>
