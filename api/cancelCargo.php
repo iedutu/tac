@@ -42,7 +42,7 @@ try {
     // Set the trigger for the generation of the Match page
     DB_utils::writeValue('changes', '1');
 
-    // Add a notification to the receiver of the cargo request
+    // Add a notification to the receiver of the cargo
     $note = new Notification();
     $note->setUserId($cargo->getRecipient());
     $note->setOriginatorId($_SESSION['operator']['id']);
@@ -53,26 +53,26 @@ try {
     DB_utils::addNotification($note);
 
     $_SESSION['alert']['type'] = 'success';
-    $_SESSION['alert']['message'] = 'Cargo request was successfully cancelled.';
+    $_SESSION['alert']['message'] = 'cargo was successfully cancelled.';
     if (!empty($cargo->getAmeta())) {
-        $_SESSION['alert']['message'] = 'Cargo request with ameta ' . $cargo->getAmeta() . ' was successfully cancelled.';
+        $_SESSION['alert']['message'] = 'cargo with ameta ' . $cargo->getAmeta() . ' was successfully cancelled.';
     }
 
     // Send a notification e-mail to the recipient
     $originator = DB_utils::selectUserById($cargo->getOriginator());
     $recipient = DB_utils::selectUserById($cargo->getRecipient());
 
-    $email['subject'] = 'Cargo request cancelled by ' . $originator->getName();
+    $email['subject'] = 'cargo cancelled by ' . $originator->getName();
     $email['title'] = 'ROHEL | E-mail';
-    $email['header'] = 'A cargo request was cancelled by ' . $originator->getName();
-    $email['body-1'] = 'has cancelled a cargo request bound for <strong>' . $cargo->getToCity() . '</strong>' . '.';
+    $email['header'] = 'A cargo was cancelled by ' . $originator->getName();
+    $email['body-1'] = 'has cancelled a cargo bound for <strong>' . $cargo->getToCity() . '</strong>' . '.';
     $email['body-2'] = 'The loading date was <strong>' . date(Utils::$PHP_DATE_FORMAT, $cargo->getLoadingDate()) . '</strong>';
     $email['originator']['e-mail'] = $originator->getUsername();
     $email['originator']['name'] = $originator->getName();
     $email['recipient']['e-mail'] = $recipient->getUsername();
     $email['recipient']['name'] = $recipient->getName();
     $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargo';
-    $email['link']['text'] = 'View the remaining cargo requests';
+    $email['link']['text'] = 'View the remaining cargos';
     $email['bg-color'] = Mails::$BG_CANCELLED_COLOR;
     $email['tx-color'] = Mails::$TX_CANCELLED_COLOR;
 

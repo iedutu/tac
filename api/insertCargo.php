@@ -47,7 +47,7 @@ if (isset ( $_POST ['_submitted'] )) {
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');
 
-        // Add a notification to the receiver of the cargo request
+        // Add a notification to the receiver of the cargo
         $note = new Notification();
         $note->setUserId($cargo->getRecipient());
         $note->setOriginatorId($_SESSION['operator']['id']);
@@ -61,10 +61,10 @@ if (isset ( $_POST ['_submitted'] )) {
         $originator = DB_utils::selectUserById($cargo->getOriginator());
         $recipient = DB_utils::selectUserById($cargo->getRecipient());
 
-        $email['subject'] = 'New cargo request received from '.$originator->getName();
+        $email['subject'] = 'New cargo received from '.$originator->getName();
         $email['title'] = 'ROHEL | E-mail';
-        $email['header'] = ' You have a new cargo request from '.$originator->getName();
-        $email['body-1'] = 'has introduced a new cargo request for your consideration and acknowledgement.';
+        $email['header'] = ' You have a new cargo from '.$originator->getName();
+        $email['body-1'] = 'has introduced a new cargo for your consideration and acknowledgement.';
         $email['body-2'] = 'The loading date is <strong>'.date(Utils::$PHP_DATE_FORMAT, $cargo->getLoadingDate()).'</strong>';
         $email['originator']['e-mail'] = $originator->getUsername();
         $email['originator']['name'] = $originator->getName();
@@ -90,7 +90,7 @@ if (isset ( $_POST ['_submitted'] )) {
     }
 
     $_SESSION['alert']['type'] = 'success';
-    $_SESSION['alert']['message'] = 'A new notification was added into the system for the cargo request. '.$recipient->getName().' was notified by e-mail.';
+    $_SESSION['alert']['message'] = 'A new notification was added into the system for the cargo. '.$recipient->getName().' was notified by e-mail.';
 
     header ( "Location: /?page=cargo" );
     exit();

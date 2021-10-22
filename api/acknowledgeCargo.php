@@ -40,7 +40,7 @@ if(!empty($_POST['id'])) {
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');
 
-        // Add a notification to the originator of the cargo request
+        // Add a notification to the originator of the cargo
         $note = new Notification();
         $note->setUserId($cargo->getOriginator());
         $note->setOriginatorId($_SESSION['operator']['id']);
@@ -55,17 +55,17 @@ if(!empty($_POST['id'])) {
         $originator = DB_utils::selectUserById($cargo->getOriginator());
         $recipient = DB_utils::selectUserById($cargo->getRecipient());
 
-        $email['subject'] = 'Cargo request acknowledged by ' . $acceptor->getName();
+        $email['subject'] = 'cargo acknowledged by ' . $acceptor->getName();
         $email['title'] = 'ROHEL | E-mail';
-        $email['header'] = 'A cargo request was acknowldged by ' . $acceptor->getName();
-        $email['body-1'] = 'has acknowledged a cargo request bound for <strong>' . $cargo->getToCity() . '</strong>' . '.';
+        $email['header'] = 'A cargo was acknowldged by ' . $acceptor->getName();
+        $email['body-1'] = 'has acknowledged a cargo bound for <strong>' . $cargo->getToCity() . '</strong>' . '.';
         $email['body-2'] = 'The loading date is <strong>' . date(Utils::$PHP_DATE_FORMAT, $cargo->getLoadingDate()) . '</strong>';
         $email['originator']['e-mail'] = $recipient->getUsername();
         $email['originator']['name'] = $recipient->getName();
         $email['recipient']['e-mail'] = $originator->getUsername();
         $email['recipient']['name'] = $originator->getName();
         $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargoInfo&id='.$cargo->getId();
-        $email['link']['text'] = 'View the updated cargo request';
+        $email['link']['text'] = 'View the updated cargo';
         $email['bg-color'] = Mails::$BG_ACKNOWLEDGED_COLOR;
         $email['tx-color'] = Mails::$TX_ACKNOWLEDGED_COLOR;
 

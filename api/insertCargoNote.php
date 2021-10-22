@@ -23,7 +23,7 @@ if (isset ( $_POST ['_submitted'] )) {
         // TODO: Overhaul the audit system.
         Utils::insertCargoAuditEntry('cargo_comments', 'NEW-ENTRY', null, $id);
 
-        // Add a notification to the originator/receiver of the cargo request
+        // Add a notification to the originator/receiver of the cargo
         $cargo = DB_utils::selectRequest($note->getCargoId());
         $originator = DB_utils::selectUserById($cargo->getOriginator());
         $recipient = DB_utils::selectUserById($cargo->getRecipient());
@@ -62,8 +62,8 @@ if (isset ( $_POST ['_submitted'] )) {
         // Send a notification e-mail to the recipient
         $email['subject'] = 'New note added by ' . $originator->getName();
         $email['title'] = 'ROHEL | E-mail';
-        $email['header'] = 'A new note for a cargo request was added in the system by ' . $originator->getName();
-        $email['body-1'] = 'has introduced a new note to a cargo request bound for <strong>' . $cargo->getToCity() . '</strong>' . ': ' . $note->getNote();
+        $email['header'] = 'A new note for a cargo was added in the system by ' . $originator->getName();
+        $email['body-1'] = 'has introduced a new note to a cargo bound for <strong>' . $cargo->getToCity() . '</strong>' . ': ' . $note->getNote();
         $email['body-2'] = 'The loading date is <strong>' . date(Utils::$PHP_DATE_FORMAT, $cargo->getLoadingDate()) . '</strong>';
         $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargoInfo&id=' . $cargo->getId();
         $email['link']['text'] = 'View the order details';
@@ -86,10 +86,10 @@ if (isset ( $_POST ['_submitted'] )) {
 
     $_SESSION['alert']['type'] = 'success';
     if($_SESSION['role'] == 'recipient') {
-        $_SESSION['alert']['message'] = 'A new notification was added into the system for the cargo request. ' . $originator->getName() . ' (' . $originator->getUsername() . ') was notified by e-mail.';
+        $_SESSION['alert']['message'] = 'A new notification was added into the system for the cargo. ' . $originator->getName() . ' (' . $originator->getUsername() . ') was notified by e-mail.';
     }
     else {
-        $_SESSION['alert']['message'] = 'A new notification was added into the system for the cargo request. ' . $recipient->getName() . ' (' . $recipient->getUsername() . ') was notified by e-mail.';
+        $_SESSION['alert']['message'] = 'A new notification was added into the system for the cargo. ' . $recipient->getName() . ' (' . $recipient->getUsername() . ') was notified by e-mail.';
     }
 }
 

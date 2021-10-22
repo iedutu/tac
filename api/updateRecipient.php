@@ -24,7 +24,7 @@ if(!empty($_POST['id'])) {
         if($table == 'cargo_request') {
             $entry = DB_utils::selectRequest($_SESSION['entry-id']);
 
-            // Add a notification to the recipient of the cargo request
+            // Add a notification to the recipient of the cargo
             $note = new Notification();
             $note->setUserId($newRecipient->getId());
             $note->setOriginatorId($originator->getId());
@@ -35,7 +35,7 @@ if(!empty($_POST['id'])) {
             error_log('Add notification for new: '.$note->getUserId());
             DB_utils::addNotification($note);
 
-            // Add a notification to the old recipient of the cargo request for cancellation
+            // Add a notification to the old recipient of the cargo for cancellation
             $note->setUserId($recipient->getId());
             $note->setKind(4);
 
@@ -43,10 +43,10 @@ if(!empty($_POST['id'])) {
             DB_utils::addNotification($note);
 
             // Notify the new recipient
-            $email['subject'] = 'New cargo request received from '.$originator->getName();
+            $email['subject'] = 'New cargo received from '.$originator->getName();
             $email['title'] = 'ROHEL | E-mail';
-            $email['header'] = ' You have a new cargo request from '.$originator->getName();
-            $email['body-1'] = 'has introduced a new cargo request for your consideration and acknowledgement.';
+            $email['header'] = ' You have a new cargo from '.$originator->getName();
+            $email['body-1'] = 'has introduced a new cargo for your consideration and acknowledgement.';
             $email['body-2'] = 'The loading date is <strong>'.date(Utils::$PHP_DATE_FORMAT, $entry->getLoadingDate()).'</strong>';
             $email['originator']['e-mail'] = $originator->getUsername();
             $email['originator']['name'] = $originator->getName();
@@ -61,17 +61,17 @@ if(!empty($_POST['id'])) {
             unset($email);
 
             // Notify the old originator
-            $email['subject'] = 'Cargo request cancelled by ' . $originator->getName();
+            $email['subject'] = 'cargo cancelled by ' . $originator->getName();
             $email['title'] = 'ROHEL | E-mail';
-            $email['header'] = 'A cargo request was cancelled by ' . $originator->getName();
-            $email['body-1'] = 'has cancelled a cargo request bound for <strong>' . $entry->getToCity() . '</strong>' . '.';
+            $email['header'] = 'A cargo was cancelled by ' . $originator->getName();
+            $email['body-1'] = 'has cancelled a cargo bound for <strong>' . $entry->getToCity() . '</strong>' . '.';
             $email['body-2'] = 'The loading date was <strong>' . date(Utils::$PHP_DATE_FORMAT, $entry->getLoadingDate()) . '</strong>';
             $email['originator']['e-mail'] = $originator->getUsername();
             $email['originator']['name'] = $originator->getName();
             $email['recipient']['e-mail'] = $recipient->getUsername();
             $email['recipient']['name'] = $recipient->getName();
             $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargo';
-            $email['link']['text'] = 'View the remaining cargo requests';
+            $email['link']['text'] = 'View the remaining cargos';
             $email['bg-color'] = Mails::$BG_CANCELLED_COLOR;
             $email['tx-color'] = Mails::$TX_CANCELLED_COLOR;
 
