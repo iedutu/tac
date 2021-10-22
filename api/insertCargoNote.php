@@ -25,17 +25,30 @@ if (isset ( $_POST ['_submitted'] )) {
 
         // Add a notification to the originator/receiver of the cargo request
         $cargo = DB_utils::selectRequest($note->getCargoId());
+        $originator = DB_utils::selectUserById($cargo->getOriginator());
+        $recipient = DB_utils::selectUserById($cargo->getRecipient());
+
         $notification = new Notification();
         if($_SESSION['role'] == 'originator') {
             $notification->setUserId($cargo->getRecipient());
+
+            $email['originator']['e-mail'] = $originator->getUsername();
+            $email['originator']['name'] = $originator->getName();
+            $email['recipient']['e-mail'] = $recipient->getUsername();
+            $email['recipient']['name'] = $recipient->getName();
         }
         else {
             if($_SESSION['role'] == 'recipient') {
                 $notification->setUserId($cargo->getOriginator());
+
+                $email['recipient']['e-mail'] = $originator->getUsername();
+                $email['recipient']['name'] = $originator->getName();
+                $email['originator']['e-mail'] = $recipient->getUsername();
+                $email['originator']['name'] = $recipient->getName();
             }
             else {
                 $_SESSION['alert']['type'] = 'error';
-                $_SESSION['alert']['message'] = 'Application error: Unauthorized cargo_note_entry. Please contact your system administrator.';
+                $_SESSION['alert']['message'] = 'Application error: Someone outside of the roles of originator/recipient has attempted to add a note. Please contact your system administrator.';
                 return 0;
             }
         }
@@ -47,18 +60,11 @@ if (isset ( $_POST ['_submitted'] )) {
         DB_utils::addNotification($notification);
 
         // Send a notification e-mail to the recipient
-        $originator = DB_utils::selectUserById($cargo->getOriginator());
-        $recipient = DB_utils::selectUserById($cargo->getRecipient());
-
         $email['subject'] = 'New note added by ' . $originator->getName();
         $email['title'] = 'ROHEL | E-mail';
         $email['header'] = 'A new note for a cargo request was added in the system by ' . $originator->getName();
         $email['body-1'] = 'has introduced a new note to a cargo request bound for <strong>' . $cargo->getToCity() . '</strong>' . ': ' . $note->getNote();
         $email['body-2'] = 'The loading date is <strong>' . date(Utils::$PHP_DATE_FORMAT, $cargo->getLoadingDate()) . '</strong>';
-        $email['originator']['e-mail'] = $originator->getUsername();
-        $email['originator']['name'] = $originator->getName();
-        $email['recipient']['e-mail'] = $recipient->getUsername();
-        $email['recipient']['name'] = $recipient->getName();
         $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargoInfo&id=' . $cargo->getId();
         $email['link']['text'] = 'View the order details';
         $email['bg-color'] = Mails::$BG_NEW_COLOR;

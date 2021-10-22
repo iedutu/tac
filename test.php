@@ -18,7 +18,7 @@ try {
     $email['bg-color'] = Mails::$BG_NEW_COLOR;
     $email['tx-color'] = Mails::$TX_NEW_COLOR;
 
-    Mails::$DO_NOT_SEND_MAILS = true;
+    Mails::$ALLOW_MAILS = true;
     Mails::emailNotification($email);
     echo 'Done!';
 } catch (ApplicationException $ae) {

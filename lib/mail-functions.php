@@ -16,7 +16,7 @@ class Mails
     // .light: #F3F6F9      #7E8299
 
     public static bool $DEBUG = true;
-    public static bool $DO_NOT_SEND_MAILS = true;
+    public static bool $ALLOW_MAILS = true;
     public static string $BASE_HREF = 'https://rohel.iedutu.com';
 
     public static string $BG_NEW_COLOR = '#8950FC';
@@ -57,12 +57,12 @@ class Mails
             include_once($_SERVER["DOCUMENT_ROOT"].'/assets/html/'.$template);
             $body = ob_get_clean();
             $mail->msgHTML($body, dirname(__FILE__), true); // Create message bodies and embed images
-            if (!self::$DO_NOT_SEND_MAILS) {
+            if (self::$ALLOW_MAILS) {
                 if($mail->send()) {
-                    error_log('OK');
+                    error_log('E-mail sent to: '.$email['recipient']['e-mail']);
                 }
                 else {
-                    error_log('NOK');
+                    error_log('Unable to send mail.');
                 }
             }
         } catch (\PHPMailer\PHPMailer\Exception $me) {

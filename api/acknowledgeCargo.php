@@ -60,10 +60,10 @@ if(!empty($_POST['id'])) {
         $email['header'] = 'A cargo request was acknowldged by ' . $acceptor->getName();
         $email['body-1'] = 'has acknowledged a cargo request bound for <strong>' . $cargo->getToCity() . '</strong>' . '.';
         $email['body-2'] = 'The loading date is <strong>' . date(Utils::$PHP_DATE_FORMAT, $cargo->getLoadingDate()) . '</strong>';
-        $email['originator']['e-mail'] = $originator->getUsername();
-        $email['originator']['name'] = $originator->getName();
-        $email['recipient']['e-mail'] = $recipient->getUsername();
-        $email['recipient']['name'] = $recipient->getName();
+        $email['originator']['e-mail'] = $recipient->getUsername();
+        $email['originator']['name'] = $recipient->getName();
+        $email['recipient']['e-mail'] = $originator->getUsername();
+        $email['recipient']['name'] = $originator->getName();
         $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargoInfo&id='.$cargo->getId();
         $email['link']['text'] = 'View the updated cargo request';
         $email['bg-color'] = Mails::$BG_ACKNOWLEDGED_COLOR;
