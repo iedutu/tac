@@ -172,7 +172,14 @@ else {
 
                         <!--begin::Action-->
                         <div class="pb-lg-0 pb-5">
-                            <button type="button" id="kt_login_signin_submit" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Sign In</button>
+                            <button
+                                    data-sitekey="6Lecq-scAAAAALlVasOeAFEPjyAuzrzY-pXNEQrn"
+                                    data-action='submit'
+                                    type="button"
+                                    id="kt_login_signin_submit"
+                                    class="g-recaptcha btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">
+                                Sign In
+                            </button>
                         </div>
                         <!--end::Action-->
                     </form>
@@ -247,7 +254,14 @@ else {
                         <!--end::Form group-->
                         <!--begin::Form group-->
                         <div class="form-group d-flex flex-wrap pb-lg-0">
-                            <button type="button" id="kt_login_forgot_submit" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-4">Submit</button>
+                            <button
+                                    data-sitekey="6Lecq-scAAAAALlVasOeAFEPjyAuzrzY-pXNEQrn"
+                                    data-action='submit'
+                                    type="button"
+                                    id="kt_login_forgot_submit"
+                                    class="g-recaptcha btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-4">
+                                Submit
+                            </button>
                             <button type="button" id="kt_login_forgot_cancel" class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3">Cancel</button>
                         </div>
                         <!--end::Form group-->
@@ -280,6 +294,7 @@ else {
 <!--end::Global Theme Bundle-->
 <!--begin::Page Scripts(used by this page)-->
 <script src="/assets/js/login.js"></script>
+<script src="https://www.google.com/recaptcha/api.js"></script>
 <!--end::Page Scripts-->
 </body>
 <!--end::Body-->

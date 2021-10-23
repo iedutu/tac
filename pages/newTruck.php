@@ -10,26 +10,26 @@
                 <div class="card-body">
                     <div class="form-group row">
                         <div class="col-lg-4">
-                            <label>Truck recipient</label>
+                            <label class="form-control-label">Truck recipient <span class="text-danger">*</span></label>
                             <select class="form-control" id="recipient" name="recipient">
                                 <?php DB_utils::selectActiveUsers(); ?>
                             </select>
                             <span class="form-text text-muted">Please select your colleague</span>
                         </div>
                         <div class="col-lg-4">
-                            <label>City of origin:</label>
+                            <label class="form-control-label">City of origin: <span class="text-danger">*</span></label>
                             <input type="text" id="from_city" name="from_city" class="form-control" placeholder="City name"/>
                             <span class="form-text text-muted">Please enter the truck origin</span>
                         </div>
                         <div class="col-lg-4">
-                            <label>Address of origin:</label>
+                            <label class="form-control-label">Address of origin:</label>
                             <input type="text" id="from_address" name="from_address" class="form-control" placeholder="Street address"/>
                             <span class="form-text text-muted">Leave empty if not applicable</span>
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-lg-4">
-                            <label>Cargo type:</label>
+                            <label class="form-control-label">Cargo type: <span class="text-danger">*</span></label>
                             <select class="form-control" id="cargo_type" name="cargo_type">
                                 <option value="FTL">FTL</option>
                                 <option value="LTL">LTL</option>
@@ -38,7 +38,7 @@
                             <span class="form-text text-muted">Please select the cargo loading details</span>
                         </div>
                         <div class="col-lg-4">
-                            <label>Contract type:</label>
+                            <label class="form-control-label">Contract type: <span class="text-danger">*</span></label>
                             <select class="form-control" id="contract_type" name="contract_type">
                                 <option value="Round-trip">Round-trip</option>
                                 <option value="One-way">One-way</option>
@@ -46,19 +46,19 @@
                             <span class="form-text text-muted">Please select the type of the contract</span>
                         </div>
                         <div class="col-lg-4">
-                            <label>ADR:</label>
+                            <label class="form-control-label">ADR:</label>
                             <input type="text" id="adr" name="adr" class="form-control" placeholder="Leave empty if no ADR"/>
                             <span class="form-text text-muted">Please enter ADR description</span>
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-lg-4">
-                            <label>License plate:</label>
+                            <label class="form-control-label">License plate: <span class="text-danger">*</span></label>
                             <input type="text" id="plate_number" name="plate_number" class="form-control" placeholder="License plate (ex. B-144-FFR)."/>
                             <span class="form-text text-muted">Please enter the truck license plate.</span>
                         </div>
                         <div class="col-lg-4">
-                            <label>Loading date:</label>
+                            <label class="form-control-label">Loading date: <span class="text-danger">*</span></label>
                             <div class="input-group date mb-2">
                                 <input type="text" class="form-control" placeholder="Click to select a date." id="rohel_truck_loading" name="rohel_truck_loading"/>
                                 <div class="input-group-append">
@@ -69,7 +69,7 @@
                             </div>
                         </div>
                         <div class="col-lg-4">
-                            <label>Unloading date:</label>
+                            <label class="form-control-label">Unloading date: <span class="text-danger">*</span></label>
                             <div class="input-group date mb-2">
                                 <input type="text" class="form-control" placeholder="Click to select a date." id="rohel_truck_unloading" name="rohel_truck_unloading"/>
                                 <div class="input-group-append">
@@ -82,17 +82,17 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-lg-4">
-                            <label>Ameta:</label>
+                            <label class="form-control-label">Ameta: <span class="text-danger">*</span></label>
                             <input type="text" id="ameta" name="ameta" class="form-control" placeholder="Ameta"/>
                             <span class="form-text text-muted">Please enter the ameta code</span>
                         </div>
                         <div class="col-lg-4">
-                            <label>Freight:</label>
+                            <label class="form-control-label">Freight: <span class="text-danger">*</span></label>
                             <input type="text" id="freight" name="freight" class="form-control" placeholder="Price in Euros"/>
                             <span class="form-text text-muted">Please enter the cost of the transport</span>
                         </div>
                         <div class="col-lg-4">
-                            <label>Driver details:</label>
+                            <label class="form-control-label">Driver details: <span class="text-danger">*</span></label>
                             <input type="text" id="details" name="details" class="form-control" placeholder="<Name>, <Mobile number>"/>
                             <span class="form-text text-muted">Please enter the driver details.</span>
                         </div>
