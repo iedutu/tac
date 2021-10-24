@@ -15,14 +15,15 @@ $field = 'SYS_CREATION_DATE';
 
 try {
     $result = DB::getMDB()->query ( "SELECT
-                            operator,
-                            DATE_FORMAT(SYS_CREATION_DATE, %s) date,
-                            comment
+                            b.username as 'username',
+                            b.name as 'name',
+                            DATE_FORMAT(a.SYS_CREATION_DATE, %s) as 'date',
+                            a.comment as 'comment'
                        FROM 
-                            cargo_comments 
+                            cargo_comments a, cargo_users b
                        WHERE
-                            cargo_id=%d
-					   ORDER BY SYS_CREATION_DATE desc", Utils::$SQL_DATE_FORMAT, $_SESSION['entry-id']);
+                            (a.cargo_id=%d) AND (a.operator_id=b.id)
+					   ORDER BY a.SYS_CREATION_DATE desc", Utils::$SQL_DATE_FORMAT, $_SESSION['entry-id']);
 
     // error_log(DB::getMDB()->lastQuery());
 } catch (MeekroDBException $mdbe) {

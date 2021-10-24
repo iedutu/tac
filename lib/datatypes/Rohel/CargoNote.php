@@ -22,7 +22,11 @@ class CargoNote extends \Google\Protobuf\Internal\Message
      */
     protected $cargo_id = 0;
     /**
-     * Generated from protobuf field <code>string note = 3;</code>
+     * Generated from protobuf field <code>int32 operator_id = 3;</code>
+     */
+    protected $operator_id = 0;
+    /**
+     * Generated from protobuf field <code>string note = 4;</code>
      */
     protected $note = '';
 
@@ -34,6 +38,7 @@ class CargoNote extends \Google\Protobuf\Internal\Message
      *
      *     @type int $id
      *     @type int $cargo_id
+     *     @type int $operator_id
      *     @type string $note
      * }
      */
@@ -87,7 +92,29 @@ class CargoNote extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string note = 3;</code>
+     * Generated from protobuf field <code>int32 operator_id = 3;</code>
+     * @return int
+     */
+    public function getOperatorId()
+    {
+        return $this->operator_id;
+    }
+
+    /**
+     * Generated from protobuf field <code>int32 operator_id = 3;</code>
+     * @param int $var
+     * @return $this
+     */
+    public function setOperatorId($var)
+    {
+        GPBUtil::checkInt32($var);
+        $this->operator_id = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>string note = 4;</code>
      * @return string
      */
     public function getNote()
@@ -96,7 +123,7 @@ class CargoNote extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string note = 3;</code>
+     * Generated from protobuf field <code>string note = 4;</code>
      * @param string $var
      * @return $this
      */

@@ -1,13 +1,13 @@
 "use strict";
 // Class definition
 
-var KTDatatableRemoteAjaxDemo = function() {
+let KTDatatableRemoteAjaxDemo = function() {
     // Private functions
 
     // basic demo
-    var demo = function() {
+    let notesData = function() {
 
-        var datatable = $('#kt_datatable_notes').KTDatatable({
+        let datatable = $('#kt_datatable_notes').KTDatatable({
             // datasource definition
             data: {
                 type: 'remote',
@@ -18,7 +18,7 @@ var KTDatatableRemoteAjaxDemo = function() {
                         // headers: {'x-my-custom-header': 'some value', 'x-test-header': 'the value'},
                         map: function(raw) {
                             // sample data mapping
-                            var dataSet = raw;
+                            let dataSet = raw;
                             if (typeof raw.data !== 'undefined') {
                                 dataSet = raw.data;
                             }
@@ -43,16 +43,15 @@ var KTDatatableRemoteAjaxDemo = function() {
 
             pagination: true,
 
-            search: {
-                input: $('#kt_datatable_search_query'),
-                key: 'generalSearch'
-            },
-
             // columns definition
             columns: [
                 {
-                    field: 'operator',
-                    title: 'Author'
+                    field: 'username',
+                    title: 'Author',
+                    width: 60,
+                    template: function (row) {
+                        return '<p class="label-inline" data-toggle="tooltip" data-placement="top" title="' + row.username + '">' + row.name + '</p>';
+                    },
                 }, {
                     field: 'date',
                     title: 'Date',
@@ -64,17 +63,16 @@ var KTDatatableRemoteAjaxDemo = function() {
 
         });
 
-        $('#kt_datatable_search_status').on('change', function() {
-            datatable.search($(this).val().toLowerCase(), 'Status');
+        datatable.on('datatable-on-layout-updated', function() {
+            KTApp.initTooltips();
         });
 
-        $('#kt_datatable_search_status').selectpicker();
     };
 
     return {
         // public functions
         init: function() {
-            demo();
+            notesData();
         },
     };
 }();

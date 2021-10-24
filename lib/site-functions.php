@@ -369,12 +369,16 @@ class Utils
         if($_SESSION['operator']['notification-count'] == 0) {
         echo '
         <script>
-            document.getElementById("kt_user_icon_ring").classList.remove("pulse-ring");
-            document.getElementById("kt_quick_user_toggle").classList.remove("pulse");
-            document.getElementById("kt_quick_user_toggle").classList.remove("pulse-danger");
-            document.getElementById("kt_quick_user_toggle").removeAttribute("data-toggle");
-            document.getElementById("kt_quick_user_toggle").removeAttribute("data-placement");
-            document.getElementById("kt_quick_user_toggle").removeAttribute("title");
+            if(document.getElementById("kt_user_icon_ring")) {
+                document.getElementById("kt_user_icon_ring").classList.remove("pulse-ring");
+            }
+            if(document.getElementById("kt_quick_user_toggle")) {
+                document.getElementById("kt_quick_user_toggle").classList.remove("pulse");
+                document.getElementById("kt_quick_user_toggle").classList.remove("pulse-danger");
+                document.getElementById("kt_quick_user_toggle").removeAttribute("data-toggle");
+                document.getElementById("kt_quick_user_toggle").removeAttribute("data-placement");
+                document.getElementById("kt_quick_user_toggle").removeAttribute("title");
+            }
         </script>
         ';
         }

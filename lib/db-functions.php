@@ -502,7 +502,7 @@ class DB_utils
     {
         try {
             DB::getMDB()->insert('cargo_comments', array(
-                'operator' => $_SESSION['operator']['username'],
+                'operator_id' => $_SESSION['operator']['id'],
                 'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
                 'comment' => $entry->getNote(),
                 'cargo_id' => $entry->getCargoId()

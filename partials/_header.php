@@ -14,7 +14,6 @@
 										<img alt="Logo" src="/assets/media/logos/package.svg" class="h-40px" />
 									</a>
 								</div>
-
 								<!--end::Logo-->
 
 								<!--begin::Header Menu-->
