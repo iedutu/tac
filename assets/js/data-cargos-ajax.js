@@ -34,7 +34,8 @@ var KTDatatableCargoList = function() {
 
             // layout definition
             layout: {
-                scroll: false,
+                // allows horizontal scrolling
+                scroll: true,
                 footer: false,
             },
 
@@ -44,6 +45,11 @@ var KTDatatableCargoList = function() {
 
             // column sorting
             sortable: true,
+
+            // allows horizontal scrolling
+            rows: {
+                autoHide: false,
+            },
 
             pagination: true,
 

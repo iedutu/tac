@@ -34,6 +34,7 @@ let KTDatatableMatchesList = function() {
 
             // layout definition
             layout: {
+                // allows horizontal scrolling
                 scroll: true,
                 footer: false,
             },
@@ -46,6 +47,11 @@ let KTDatatableMatchesList = function() {
             sortable: true,
 
             pagination: true,
+
+            // allows horizontal scrolling
+            rows: {
+                autoHide: false,
+            },
 
             search: {
                 input: $('#kt_datatable_search_query'),

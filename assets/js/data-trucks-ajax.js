@@ -34,7 +34,8 @@ var KTDatatableTruckList = function() {
 
             // layout definition
             layout: {
-                scroll: false,
+                // allows horizontal scrolling
+                scroll: true,
                 footer: false,
             },
 
@@ -42,6 +43,11 @@ var KTDatatableTruckList = function() {
             sortable: true,
 
             pagination: true,
+
+            // allows horizontal scrolling
+            rows: {
+                autoHide: false,
+            },
 
             search: {
                 input: $('#kt_datatable_search_query'),
