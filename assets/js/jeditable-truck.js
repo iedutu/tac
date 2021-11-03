@@ -34,7 +34,7 @@ $(document).ready(function() {
         }
     });
 
-    $('.editable-select').editable('api/updateRecipient.php', {
+    $('.editable-select').editable('api/updateField.php', {
         type           : 'select',
         indicator      : 'Saving ...',
         loadurl        : 'api/truckContractType.php',
@@ -42,7 +42,7 @@ $(document).ready(function() {
         cssclass       : 'form'
     });
 
-    $('.editable-select-3').editable('api/changeRecipient.php', {
+    $('.editable-select-3').editable('api/updateRecipient.php', {
         type           : 'select',
         indicator      : 'Saving ...',
         loadurl        : 'api/selectUsers.php',

@@ -65,7 +65,7 @@ if (isset ( $_POST ['_submitted'] )) {
         $email['header'] = 'A new note for a cargo was added in the system by ' . $_SESSION['operator']['name'];
         $email['body-1'] = 'has introduced a new note to a cargo bound for <strong>' . $cargo->getToCity() . '</strong>' . ': ' . $note->getNote();
         $email['body-2'] = 'The loading date is <strong>' . date(Utils::$PHP_DATE_FORMAT, $cargo->getLoadingDate()) . '</strong>';
-        $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargoInfo&id=' . $cargo->getId();
+        $email['link']['url'] = Mails::$BASE_HREF.'/?page=cargoInfo&id=' . $cargo->getId();
         $email['link']['text'] = 'View the order details';
         $email['bg-color'] = Mails::$BG_NEW_COLOR;
         $email['tx-color'] = Mails::$TX_NEW_COLOR;

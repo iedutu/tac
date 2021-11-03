@@ -63,7 +63,7 @@ if (isset ( $_POST ['id'] )) {
         $email['originator']['name'] = $originator->getName();
         $email['recipient']['e-mail'] = $recipient->getUsername();
         $email['recipient']['name'] = $recipient->getName();
-        $email['link']['url'] = 'https://rohel.iedutu.com/?page=trucks';
+        $email['link']['url'] = Mails::$BASE_HREF.'/?page=trucks';
         $email['link']['text'] = 'View the remaining truck orders';
         $email['bg-color'] = Mails::$BG_CANCELLED_COLOR;
         $email['tx-color'] = Mails::$TX_CANCELLED_COLOR;

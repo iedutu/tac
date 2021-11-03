@@ -52,7 +52,7 @@ if(!empty($_POST['id'])) {
             $email['originator']['name'] = $originator->getName();
             $email['recipient']['e-mail'] = $newRecipient->getUsername();
             $email['recipient']['name'] = $newRecipient->getName();
-            $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargoInfo&id='.$entry->getId();
+            $email['link']['url'] = Mails::$BASE_HREF.'/?page=cargoInfo&id='.$entry->getId();
             $email['link']['text'] = 'View & acknowledge the new order';
             $email['bg-color'] = Mails::$BG_NEW_COLOR;
             $email['tx-color'] = Mails::$TX_NEW_COLOR;
@@ -70,7 +70,7 @@ if(!empty($_POST['id'])) {
             $email['originator']['name'] = $originator->getName();
             $email['recipient']['e-mail'] = $recipient->getUsername();
             $email['recipient']['name'] = $recipient->getName();
-            $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargo';
+            $email['link']['url'] = Mails::$BASE_HREF.'/?page=cargo';
             $email['link']['text'] = 'View the remaining cargos';
             $email['bg-color'] = Mails::$BG_CANCELLED_COLOR;
             $email['tx-color'] = Mails::$TX_CANCELLED_COLOR;
@@ -83,8 +83,6 @@ if(!empty($_POST['id'])) {
         else {
             if($table == 'cargo_truck') {
                 $entry = DB_utils::selectTruck($_SESSION['entry-id']);
-                $originator = DB_utils::selectUserById($entry->getOriginator());
-                $recipient = DB_utils::selectUserById($entry->getRecipient());
 
                 // Add a notification to the receiver of the truck
                 $note = new Notification();
@@ -112,7 +110,7 @@ if(!empty($_POST['id'])) {
                 $email['originator']['name'] = $originator->getName();
                 $email['recipient']['e-mail'] = $newRecipient->getUsername();
                 $email['recipient']['name'] = $newRecipient->getName();
-                $email['link']['url'] = 'https://rohel.iedutu.com/?page=truckInfo&id='.$entry->getId();
+                $email['link']['url'] = Mails::$BASE_HREF.'/?page=truckInfo&id='.$entry->getId();
                 $email['link']['text'] = 'View the detailed truck order';
                 $email['bg-color'] = Mails::$BG_NEW_COLOR;
                 $email['tx-color'] = Mails::$TX_NEW_COLOR;
@@ -129,7 +127,7 @@ if(!empty($_POST['id'])) {
                 $email['originator']['name'] = $originator->getName();
                 $email['recipient']['e-mail'] = $recipient->getUsername();
                 $email['recipient']['name'] = $recipient->getName();
-                $email['link']['url'] = 'https://rohel.iedutu.com/?page=trucks';
+                $email['link']['url'] = Mails::$BASE_HREF.'/?page=trucks';
                 $email['link']['text'] = 'View the remaining truck orders';
                 $email['bg-color'] = Mails::$BG_CANCELLED_COLOR;
                 $email['tx-color'] = Mails::$TX_CANCELLED_COLOR;

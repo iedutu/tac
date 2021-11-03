@@ -70,7 +70,7 @@ if (isset ( $_POST ['_submitted'] )) {
         $email['originator']['name'] = $originator->getName();
         $email['recipient']['e-mail'] = $recipient->getUsername();
         $email['recipient']['name'] = $recipient->getName();
-        $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargoInfo&id='.$cargo->getId();
+        $email['link']['url'] = Mails::$BASE_HREF.'/?page=cargoInfo&id='.$cargo->getId();
         $email['link']['text'] = 'View & acknowledge the new order';
         $email['bg-color'] = Mails::$BG_NEW_COLOR;
         $email['tx-color'] = Mails::$TX_NEW_COLOR;

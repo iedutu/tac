@@ -71,7 +71,7 @@ try {
     $email['originator']['name'] = $originator->getName();
     $email['recipient']['e-mail'] = $recipient->getUsername();
     $email['recipient']['name'] = $recipient->getName();
-    $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargo';
+    $email['link']['url'] = Mails::$BASE_HREF.'/?page=cargo';
     $email['link']['text'] = 'View the remaining cargos';
     $email['bg-color'] = Mails::$BG_CANCELLED_COLOR;
     $email['tx-color'] = Mails::$TX_CANCELLED_COLOR;

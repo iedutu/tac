@@ -51,7 +51,7 @@ try {
     $email['originator']['name'] = $originator->getName();
     $email['recipient']['e-mail'] = $recipient->getUsername();
     $email['recipient']['name'] = $recipient->getName();
-    $email['link']['url'] = 'https://rohel.iedutu.com/?page=truckInfo&id='.$truck->getId();
+    $email['link']['url'] = Mails::$BASE_HREF.'/?page=truckInfo&id='.$truck->getId();
     $email['link']['text'] = 'View the truck order details';
     $email['bg-color'] = Mails::$BG_DELETED_COLOR;
     $email['tx-color'] = Mails::$TX_DELETED_COLOR;

@@ -53,7 +53,7 @@ if(!empty($_POST['id'])) {
                 $email['header'] = 'A cargo was modified by ' . $originator->getName();
                 $email['body-1'] = 'has modified a field ('.$_POST['id'].' => '.$_POST['value'].') on cargo bound to <strong>' . $cargo->getToCity() . '</strong>' . '.';
                 $email['body-2'] = 'The loading date is <strong>' . date(Utils::$PHP_DATE_FORMAT, $cargo->getLoadingDate()) . '</strong>';
-                $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargoInfo&id='.$cargo->getId();
+                $email['link']['url'] = Mails::$BASE_HREF.'/?page=cargoInfo&id='.$cargo->getId();
                 $email['link']['text'] = 'View the cargo details';
 
                 break;
@@ -84,7 +84,7 @@ if(!empty($_POST['id'])) {
                 $email['header'] = 'A truck order was modified by ' . $originator->getName();
                 $email['body-1'] = 'has modified a field ('.$_POST['id'].' => '.$_POST['value'].') on truck order from <strong>' . $truck->getFromCity() . '</strong>' . '.';
                 $email['body-2'] = 'The loading date is <strong>' . date(Utils::$PHP_DATE_FORMAT, $truck->getLoadingDate()) . '</strong>';
-                $email['link']['url'] = 'https://rohel.iedutu.com/?page=truckInfo&id='.$truck->getId();
+                $email['link']['url'] = Mails::$BASE_HREF.'/?page=truckInfo&id='.$truck->getId();
                 $email['link']['text'] = 'View the truck order details';
 
                 break;

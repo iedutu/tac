@@ -64,7 +64,7 @@ if(!empty($_POST['id'])) {
         $email['originator']['name'] = $recipient->getName();
         $email['recipient']['e-mail'] = $originator->getUsername();
         $email['recipient']['name'] = $originator->getName();
-        $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargoInfo&id='.$cargo->getId();
+        $email['link']['url'] = Mails::$BASE_HREF.'/?page=cargoInfo&id='.$cargo->getId();
         $email['link']['text'] = 'View the updated cargo';
         $email['bg-color'] = Mails::$BG_ACKNOWLEDGED_COLOR;
         $email['tx-color'] = Mails::$TX_ACKNOWLEDGED_COLOR;
