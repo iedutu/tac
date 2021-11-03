@@ -26,8 +26,11 @@ if(is_null($truck)) {
  */
 $editable = DB_utils::isEditable($truck->getOriginator(), $truck->getRecipient());
 
-if($truck->getStatus() > 2) {
+if($truck->getStatus() > 1) {
     $editable['originator'] = false;
+}
+
+if($truck->getStatus() > 2) {
     $editable['recipient'] = false;
 }
 
@@ -103,7 +106,7 @@ else {
                             echo '<span class="d-block text-muted pt-2 font-size-sm">If you need to change an item, simply click on its value and press ENTER after changing it.</span></h3>';
                         }
                         else {
-                            echo '<span class="d-block text-muted pt-2 font-size-sm">This entry can no longer be modified, as it is ACCEPTED by the recipient.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></h3>';
+                            echo '<span class="d-block text-muted pt-2 font-size-sm">This entry can no longer be modified, as it is either ACCEPTED by the recipient or marked as loaded.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></h3>';
                         }
                         ?>
                 </div>
