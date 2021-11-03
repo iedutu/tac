@@ -61,7 +61,7 @@ if(!empty($_POST['id'])) {
             unset($email);
 
             // Notify the old originator
-            $email['subject'] = 'cargo cancelled by ' . $originator->getName();
+            $email['subject'] = 'Cargo cancelled by ' . $originator->getName();
             $email['title'] = 'ROHEL | E-mail';
             $email['header'] = 'A cargo was cancelled by ' . $originator->getName();
             $email['body-1'] = 'has cancelled a cargo bound for <strong>' . $entry->getToCity() . '</strong>' . '.';

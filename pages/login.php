@@ -146,7 +146,7 @@ else {
                         <!--begin::Title-->
                         <div class="pb-13 pt-lg-0 pt-5">
                             <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">Welcome</h3>
-                            <span class="text-muted font-weight-bold font-size-h4">Please enter your e-mail aadress and application password below</span>
+                            <span class="text-muted font-weight-bold font-size-h4">Please enter your e-mail address and application password below</span>
                         </div>
                         <!--end::Title-->
 

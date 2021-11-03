@@ -60,9 +60,9 @@ if (isset ( $_POST ['_submitted'] )) {
         DB_utils::addNotification($notification);
 
         // Send a notification e-mail to the recipient
-        $email['subject'] = 'New note added by ' . $originator->getName();
+        $email['subject'] = 'New note added by ' . $_SESSION['operator']['name'];
         $email['title'] = 'ROHEL | E-mail';
-        $email['header'] = 'A new note for a cargo was added in the system by ' . $originator->getName();
+        $email['header'] = 'A new note for a cargo was added in the system by ' . $_SESSION['operator']['name'];
         $email['body-1'] = 'has introduced a new note to a cargo bound for <strong>' . $cargo->getToCity() . '</strong>' . ': ' . $note->getNote();
         $email['body-2'] = 'The loading date is <strong>' . date(Utils::$PHP_DATE_FORMAT, $cargo->getLoadingDate()) . '</strong>';
         $email['link']['url'] = 'https://rohel.iedutu.com/?page=cargoInfo&id=' . $cargo->getId();

@@ -47,7 +47,9 @@ let KTLogin = function () {
 					bootstrap: new FormValidation.plugins.Bootstrap()
 				}
 			}
-		);
+		).on('core.form.valid', function() {
+			document.getElementById('kt_login_signin_submit').setAttribute("disabled", "true");
+		});
 
 		$('#kt_login_signin_submit').on('click', function (e) {
 			e.preventDefault();
@@ -231,5 +233,5 @@ let KTLogin = function () {
 
 // Class Initialization
 jQuery(document).ready(function() {
-    KTLogin.init();
+	KTLogin.init();
 });

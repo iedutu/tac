@@ -25,7 +25,9 @@ let KTFormControls = function () {
 					defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
 				}
 			}
-		);
+		).on('core.form.valid', function() {
+			document.getElementById('kt_new_cargo_note_submit_btn').setAttribute("disabled", "true");
+		});
 	}
 
 	return {

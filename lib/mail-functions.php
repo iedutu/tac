@@ -54,7 +54,7 @@ class Mails
             $mail->addReplyTo($email['originator']['e-mail'], $email['originator']['name']);
 
             ob_start();
-            include_once($_SERVER["DOCUMENT_ROOT"].'/assets/html/'.$template);
+            include($_SERVER["DOCUMENT_ROOT"].'/assets/html/'.$template);
             $body = ob_get_clean();
             $mail->msgHTML($body, dirname(__FILE__), true); // Create message bodies and embed images
             if (self::$ALLOW_MAILS) {
