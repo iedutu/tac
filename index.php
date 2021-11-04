@@ -109,9 +109,9 @@ $_REQUEST['sort']['sort'] = null;
 
 <?php include 'partials/_extras/offcanvas/quick-user.php'; ?>
 
-<?php // include 'partials/_extras/offcanvas/quick-panel.php'; ?>
+<?php include 'partials/_extras/offcanvas/quick-panel.php'; ?>
 
-<!--[html-partial:include:{"file":"partials/_extras/chat.html"}]/-->
+<?php // include 'partials/_extras/chat.php'; ?>
 
 <!--[html-partial:include:{"file":"partials/_extras/scrolltop.html"}]/-->
 

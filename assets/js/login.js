@@ -48,7 +48,7 @@ let KTLogin = function () {
 				}
 			}
 		).on('core.form.valid', function() {
-			document.getElementById('kt_login_signin_submit').setAttribute("disabled", "true");
+			KTApp.block('#kt_login_signin_submit');
 		});
 
 		$('#kt_login_signin_submit').on('click', function (e) {

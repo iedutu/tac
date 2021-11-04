@@ -36,6 +36,10 @@ switch($_SESSION['app']) {
         include 'pages/exportData.php';
         break;
     }
+    case 'help': {
+        include 'pages/displayHelp.php';
+        break;
+    }
     default: {
         break;
     }

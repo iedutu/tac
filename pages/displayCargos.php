@@ -31,7 +31,7 @@
                                                     </g>
 												</svg>
                                                 <!--end::Svg Icon-->
-											</span>New cargo</a>
+											</span>New order</a>
             <!--end::Button-->
         </div>
     </div>

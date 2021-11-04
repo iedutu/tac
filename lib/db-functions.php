@@ -189,7 +189,19 @@ class DB_utils
     public static function selectActiveUsers(): bool
     {
         try {
-            $users = DB::getMDB()->query('SELECT * FROM cargo_users where (id <> %s) and (class < 2) order by name', $_SESSION['operator']['id']);
+            $users = DB::getMDB()->query ( "SELECT
+                                               a.id as 'id', a.name as 'name'
+                                            FROM 
+                                               cargo_users a,
+                                               cargo_offices b,
+                                               cargo_countries c  
+                                            WHERE
+                                               (a.office_id = b.id) and
+                                               (b.country = c.id) and
+                                               (a.id<>%d) and
+                                               (c.id<>%d) and
+                                               (a.class<2)
+                                            ORDER BY a.name", $_SESSION['operator']['id'], $_SESSION['operator']['country-id']);
             foreach ($users as $user) {
                 echo '<option value="'.$user['id'].'">'.$user['name'].'</option>';
             }

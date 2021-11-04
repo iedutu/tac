@@ -393,6 +393,17 @@ class Utils
         //
     }
     }
+
+    public static function isHelp(): bool
+    {
+        if (!empty($_GET['page'])) {
+            if($_GET['page'] == 'help') {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
 
 class ApplicationException extends Exception

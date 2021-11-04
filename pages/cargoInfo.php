@@ -100,7 +100,7 @@ $class_text_default = '';
             <div class="card card-custom gutter-b">
                 <div class="card-header flex-wrap border-0 pt-6 pb-0">
                     <div class="card-title">
-                        <h3 class="card-label">Cargo details
+                        <h3 class="card-label">Order details
                             <?php
                             if($editable['originator']) {
                                 echo '<span class="d-block text-muted pt-2 font-size-sm">If you need to change an item, simply click on its value and press ENTER after changing it.</span></h3>';
