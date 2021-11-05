@@ -147,8 +147,8 @@ if(!empty($_POST['_submitted'])) {
                         $spreadsheet->getActiveSheet()->getStyle('G' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
 
                         $spreadsheet->getActiveSheet()
-                            ->setCellValue('A' . $i, $row ['originator_email'])
-                            ->setCellValue('B' . $i, $row ['recipient_email'])
+                            ->setCellValue('A' . $i, $row ['originator_name'])
+                            ->setCellValue('B' . $i, $row ['recipient_name'])
                             ->setCellValue('C' . $i, $row ['client'])
                             ->setCellValue('D' . $i, $row ['from_city'])
                             ->setCellValue('E' . $i, $row ['to_city'])
@@ -195,15 +195,16 @@ if(!empty($_POST['_submitted'])) {
 
                     // Header format
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:R1')->getAlignment()->setHorizontal('center');
+                        ->getStyle('A1:N1')->getAlignment()->setHorizontal('center');
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:R1')->getFont()->setBold(true);
+                        ->getStyle('A1:N1')->getFont()->setBold(true);
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:R1')->getFont()->getColor()->setRGB(substr(Mails::$TX_FULLY_LOADED_COLOR,1));
+                        ->getStyle('A1:N1')->getFont()->getColor()->setRGB(substr(Mails::$TX_FULLY_LOADED_COLOR,1));
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:R1')->getFill()->setFillType(Fill::FILL_SOLID);
+                        ->getStyle('A1:N1')->getFill()->setFillType(Fill::FILL_SOLID);
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:R1')->getFill()->getStartColor()->setRGB(substr(Mails::$BG_FULLY_LOADED_COLOR,1));
+                        ->getStyle('A1:N1')->getFill()->getStartColor()->setRGB(substr(Mails::$BG_FULLY_LOADED_COLOR,1));
+                    $spreadsheet->getActiveSheet()->setAutoFilter('A1:N1');
 
                     $spreadsheet->getActiveSheet()
                         ->setCellValue('A1', 'From')
@@ -213,18 +214,14 @@ if(!empty($_POST['_submitted'])) {
                         ->setCellValue('E1', 'Unloading date')
                         ->setCellValue('F1', 'Driver details')
                         ->setCellValue('G1', 'Freight')
-                        ->setCellValue('H1', 'Acceptance')
-                        ->setCellValue('I1', 'Accepted by')
-                        ->setCellValue('J1', 'Plate number')
-                        ->setCellValue('K1', 'AMETA')
-                        ->setCellValue('L1', 'Status')
+                        ->setCellValue('H1', 'Plate number')
+                        ->setCellValue('I1', 'AMETA')
+                        ->setCellValue('J1', 'Status')
 
-                        ->setCellValue('M1', 'Truck stop (city)')
-                        ->setCellValue('N1', 'Truck stop (address)')
-                        ->setCellValue('O1', 'CMR')
-                        ->setCellValue('P1', 'Loading meters')
-                        ->setCellValue('Q1', 'Weight')
-                        ->setCellValue('R1', 'Volume');
+                        ->setCellValue('K1', 'Truck stop (city)')
+                        ->setCellValue('L1', 'Loading meters')
+                        ->setCellValue('M1', 'Weight')
+                        ->setCellValue('N1', 'Volume');
 
                     $results = DB::getMDB()->query("
 								SELECT 
@@ -297,7 +294,6 @@ if(!empty($_POST['_submitted'])) {
 
                         $spreadsheet->getActiveSheet()->getStyle('D' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
                         $spreadsheet->getActiveSheet()->getStyle('E' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
-                        $spreadsheet->getActiveSheet()->getStyle('H' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
 
                         $stops = DB::getMDB()->query("
 								SELECT 
@@ -317,18 +313,14 @@ if(!empty($_POST['_submitted'])) {
                                 ->setCellValue('E' . $i, ($row ['unloading_date'] == null) ? 'N/A' : Date::PHPToExcel(strtotime($row ['unloading_date'])))
                                 ->setCellValue('F' . $i, ($row ['details'] == null) ? 'N/A' : $row ['details'])
                                 ->setCellValue('G' . $i, ($row ['freight'] == null) ? 'N/A' : $row ['freight'])
-                                ->setCellValue('H' . $i, ($row ['acceptance'] == null) ? 'Not acknowledged' : Date::PHPToExcel(strtotime($row ['acceptance'])))
-                                ->setCellValue('I' . $i, ($acceptor == null) ? 'Not acknowledged' : $acceptor->getUsername())
-                                ->setCellValue('J' . $i, ($row ['plate_number'] == null) ? 'N/A' : $row ['plate_number'])
-                                ->setCellValue('K' . $i, ($row ['ameta'] == null) ? 'N/A' : $row ['ameta'])
-                                ->setCellValue('L' . $i, $status)
+                                ->setCellValue('H' . $i, ($row ['plate_number'] == null) ? 'N/A' : $row ['plate_number'])
+                                ->setCellValue('I' . $i, ($row ['ameta'] == null) ? 'N/A' : $row ['ameta'])
+                                ->setCellValue('J' . $i, $status)
 
-                                ->setCellValue('M' . $i, $stop['city'])
-                                ->setCellValue('N' . $i, $stop['address'])
-                                ->setCellValue('O' . $i, $stop['cmr'])
-                                ->setCellValue('P' . $i, $stop['loading_meters'])
-                                ->setCellValue('Q' . $i, $stop['weight'])
-                                ->setCellValue('R' . $i, $stop['volume']);
+                                ->setCellValue('K' . $i, $stop['city'])
+                                ->setCellValue('L' . $i, $stop['loading_meters'])
+                                ->setCellValue('M' . $i, $stop['weight'])
+                                ->setCellValue('N' . $i, $stop['volume']);
 
                                 /*
                                 $hyperlink = new Hyperlink();
@@ -366,6 +358,7 @@ if(!empty($_POST['_submitted'])) {
                         ->getStyle('A1:N1')->getFill()->setFillType(Fill::FILL_SOLID);
                     $spreadsheet->getActiveSheet()
                         ->getStyle('A1:N1')->getFill()->getStartColor()->setRGB(substr(Mails::$BG_FULLY_LOADED_COLOR,1));
+                    $spreadsheet->getActiveSheet()->setAutoFilter('A1:N1');
 
                     $spreadsheet->getActiveSheet()
                         ->setCellValue('A1', 'Originator')
@@ -418,31 +411,49 @@ if(!empty($_POST['_submitted'])) {
                     $i = 2;
                     foreach ($results as $row) {
                         $status = '';
-
+                        $bgColor = '#FFFFFF';
+                        $txtColor = '#000000';
                         switch ($row['status']) {
                             case 1:
                             {
                                 $status = 'Available';
+                                $bgColor = Mails::$BG_FULLY_LOADED_COLOR;
+                                $txtColor = Mails::$TX_FULLY_LOADED_COLOR;
                                 break;
                             }
                             case 2:
                             {
                                 $status = 'Needed';
+                                $bgColor = Mails::$BG_NEW_COLOR;
+                                $txtColor = Mails::$TX_NEW_COLOR;
                                 break;
                             }
                             case 3:
                             {
                                 $status = 'Free';
+                                $bgColor = Mails::$BG_NEW_COLOR;
+                                $txtColor = Mails::$TX_NEW_COLOR;
                                 break;
                             }
                             case 4:
                             {
-                                $status = 'Partially loaded';
+                                $status = 'New';
+                                $bgColor = Mails::$BG_NEW_COLOR;
+                                $txtColor = Mails::$TX_NEW_COLOR;
                                 break;
                             }
                             case 5:
                             {
+                                $status = 'Partially loaded';
+                                $bgColor = Mails::$BG_PARTIALLY_LOADED_COLOR;
+                                $txtColor = Mails::$TX_PARTIALLY_LOADED_COLOR;
+                                break;
+                            }
+                            case 6:
+                            {
                                 $status = 'Fully loaded';
+                                $bgColor = Mails::$BG_FULLY_LOADED_COLOR;
+                                $txtColor = Mails::$TX_FULLY_LOADED_COLOR;
                                 break;
                             }
                         }
@@ -450,8 +461,17 @@ if(!empty($_POST['_submitted'])) {
                         $spreadsheet->getActiveSheet()->getStyle('D' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
 
                         $spreadsheet->getActiveSheet()
-                            ->setCellValue('A' . $i, $row ['originator_email'])
-                            ->setCellValue('B' . $i, $row ['recipient_email'])
+                            ->getStyle('C' . $i)->getFont()->setBold(true);
+                        $spreadsheet->getActiveSheet()
+                            ->getStyle('C' . $i)->getFont()->getColor()->setRGB(substr($txtColor,1));
+                        $spreadsheet->getActiveSheet()
+                            ->getStyle('C' . $i)->getFill()->setFillType(Fill::FILL_SOLID);
+                        $spreadsheet->getActiveSheet()
+                            ->getStyle('C' . $i)->getFill()->getStartColor()->setRGB(substr($bgColor,1));
+
+                        $spreadsheet->getActiveSheet()
+                            ->setCellValue('A' . $i, $row ['originator_name'])
+                            ->setCellValue('B' . $i, $row ['recipient_name'])
                             ->setCellValue('C' . $i, $status)
                             ->setCellValue('D' . $i, (empty($row ['availability']) ? 'N/A' : Date::PHPToExcel(strtotime($row ['availability']))))
                             ->setCellValue('E' . $i, $row ['from_city'])

@@ -51,9 +51,6 @@ let KTFormControlsTruckValidation = function () {
 					},
 					weight: {
 						validators: {
-							notEmpty: {
-								message: 'Field cannot be empty.'
-							},
 							numeric: {
 								thousandsSeparator: '',
 								decimalSeparator: '.',
@@ -63,9 +60,6 @@ let KTFormControlsTruckValidation = function () {
 					},
 					volume: {
 						validators: {
-							notEmpty: {
-								message: 'Field cannot be empty.'
-							},
 							numeric: {
 								thousandsSeparator: '',
 								decimalSeparator: '.',

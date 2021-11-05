@@ -752,6 +752,7 @@ class DB_utils
                 'operator' => $match->getOperator(),
                 'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
                 'status' => $match->getStatus(),
+                'details' => $match->getDetails(),
                 'originator_id' => $match->getOriginatorId(),
                 'recipient_id' => $match->getRecipientId(),
                 'from_city' => $match->getFromCity(),

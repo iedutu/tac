@@ -150,19 +150,19 @@ var KTDatatableCargoList = function() {
                         var status = {
                             1: {
                                 'title': 'New',
-                                'class': ' label-light-info'
+                                'class': ' label-info'
                             },
                             2: {
                                 'title': 'Accepted',
-                                'class': ' label-light-success'
+                                'class': ' label-success'
                             },
                             3: {
                                 'title': 'Closed',
-                                'class': ' label-light-warning'
+                                'class': ' label-warning'
                             },
                             4: {
                                 'title': 'Cancelled',
-                                'class': ' label-light-danger'
+                                'class': ' label-danger'
                             },
                             5: {
                                 'title': 'Expired',

@@ -67,7 +67,7 @@ let KTFormControls = function () {
 						}
 					},
 
-					loading_meters: {
+					loading: {
 						validators: {
 							notEmpty: {
 								message: 'Field cannot be empty.'
@@ -82,9 +82,6 @@ let KTFormControls = function () {
 
 					weight: {
 						validators: {
-							notEmpty: {
-								message: 'Field cannot be empty.'
-							},
 							numeric: {
 								thousandsSeparator: '',
 								decimalSeparator: '.',
@@ -95,14 +92,11 @@ let KTFormControls = function () {
 
 					volume: {
 						validators: {
-							notEmpty: {
-								message: 'Field cannot be empty.'
+							numeric: {
+								thousandsSeparator: '',
+								decimalSeparator: '.',
+								message: 'Please enter a valid amount (numerical only: ex. 500.4)'
 							}
-						},
-						numeric: {
-							thousandsSeparator: '',
-							decimalSeparator: '.',
-							message: 'Please enter a valid amount (numerical only: ex. 500.4)'
 						}
 					},
 				},

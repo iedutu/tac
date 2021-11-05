@@ -101,23 +101,10 @@ let KTFormControls = function () {
 						}
 					},
 
-					collies: {
+					client: {
 						validators: {
 							notEmpty: {
 								message: 'Field cannot be empty.'
-							}
-						}
-					},
-
-					freight: {
-						validators: {
-							notEmpty: {
-								message: 'Field cannot be empty.'
-							},
-							numeric: {
-								thousandsSeparator: '',
-								decimalSeparator: '.',
-								message: 'Please enter a valid amount (numerical only: ex. 500.4)'
 							}
 						}
 					},

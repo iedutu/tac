@@ -111,13 +111,13 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-lg-4">
-                            <label class="form-control-label" for="collies">Collies: <span class="text-danger">*</span></label>
+                            <label class="form-control-label" for="collies">Collies:</label>
                             <input type="text" id="collies" name="collies" class="form-control" placeholder="Collies"/>
                             <span class="form-text text-muted">Please enter the number of collies</span>
                         </div>
                         <div class="col-lg-4">
                             <div class="form-group">
-                                <label class="form-control-label" for="freight">Freight: <span class="text-danger">*</span></label>
+                                <label class="form-control-label" for="freight">Freight:</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend"><span class="input-group-text">&euro;</span></div>
                                     <input type="text" id="freight" name="freight" class="form-control" placeholder="Price in Euros"/>
@@ -133,7 +133,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-lg-4">
-                            <label class="form-control-label" for="client">Client:</label>
+                            <label class="form-control-label" for="client">Client: <span class="text-danger">*</span></label>
                             <input type="text" id="client" name="client" class="form-control" placeholder="Client name only"/>
                             <span class="form-text text-muted">Please enter the name of the client</span>
                         </div>
