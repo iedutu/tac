@@ -52,11 +52,11 @@
                             <div class="d-flex align-items-center">
                                 <select class="form-control" id="kt_datatable_search_status">
                                     <option value="">Status</option>
-                                    <option value="1">New</option>
-                                    <option value="2">Accepted</option>
-                                    <option value="3">Closed</option>
-                                    <option value="4">Expired</option>
-                                    <option value="5">Cancelled</option>
+                                    <option value="1">Available</option>
+                                    <option value="2">Free</option>
+                                    <option value="3">New</option>
+                                    <option value="4">Partially loaded</option>
+                                    <option value="5">Fully loaded</option>
                                 </select>
                             </div>
                         </div>

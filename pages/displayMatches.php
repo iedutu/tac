@@ -46,6 +46,9 @@
                                     <option value="1">Available</option>
                                     <option value="2">Needed</option>
                                     <option value="3">Free on market</option>
+                                    <option value="4">New</option>
+                                    <option value="5">Partially loaded</option>
+                                    <option value="6">Fully loaded</option>
                                 </select>
                             </div>
                         </div>

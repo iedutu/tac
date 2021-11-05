@@ -32,7 +32,7 @@ $status_code = '';
 switch($cargo->getStatus()) {
     case 1: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="New cargo"';
-        $status_code = '<span class="label label-lg label-info label-inline mr-2 font-weight-bolder" '.$tooltip.'>New</span>';
+        $status_code = '<span class="label label-lg label-danger label-inline mr-2 font-weight-bolder" '.$tooltip.'>New</span>';
         break;
     }
     case 2: {
@@ -42,17 +42,17 @@ switch($cargo->getStatus()) {
     }
     case 3: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Closed cargo"';
-        $status_code = '<span class="label label-lg label-warning label-inline mr-2" '.$tooltip.'>Closed</span>';
+        $status_code = '<span class="label label-lg label-success label-inline mr-2" '.$tooltip.'>Closed</span>';
         break;
     }
     case 4: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Cancelled cargo"';
-        $status_code = '<span class="label label-lg label-danger label-inline mr-2" '.$tooltip.'>Cancelled</span>';
+        $status_code = '<span class="label label-lg label-light label-inline mr-2" '.$tooltip.'>Cancelled</span>';
         break;
     }
     case 5: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Expired cargo"';
-        $status_code = '<span class="label label-lg label-dark label-inline mr-2" '.$tooltip.'>Expired</span>';
+        $status_code = '<span class="label label-lg label-light label-inline mr-2" '.$tooltip.'>Expired</span>';
         break;
     }
     default: {

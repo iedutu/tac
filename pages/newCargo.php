@@ -31,9 +31,9 @@
                         <div class="col-lg-4">
                             <label class="form-control-label" for="order_type">Order type: <span class="text-danger">*</span></label>
                             <select class="form-control" id="order_type" name="order_type">
-                                <option value="Pending">Pending</option>
-                                <option value="Ongoing">Ongoing</option>
-                                <option value="Provisioned">Provisioned</option>
+                                <option value="Bid">Bid</option>
+                                <option value="Confirmed">Confirmed</option>
+                                <option value="Forecast">Forecast</option>
                             </select>
                             <span class="form-text text-muted">Please select the type of the order</span>
                         </div>

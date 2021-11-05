@@ -135,15 +135,15 @@ var KTDatatableTruckList = function() {
                     var status = {
                         1: {
                             'title': 'Available',
-                            'class': ' label-info'
+                            'class': ' label-secondary'
                         },
                         2: {
                             'title': 'Free',
-                            'class': ' label-danger'
+                            'class': ' label-info'
                         },
                         3: {
                             'title': 'New',
-                            'class': ' label-danger'
+                            'class': ' label-dark'
                         },
                         4: {
                             'title': 'Partial',
@@ -151,11 +151,11 @@ var KTDatatableTruckList = function() {
                         },
                         5: {
                             'title': 'Solved',
-                            'class': ' label-primary'
+                            'class': ' label-success'
                         },
                         6: {
                             'title': 'Cancelled',
-                            'class': ' label-danger'
+                            'class': ' label-light'
                         },
                     };
                     return '<span class="label font-weight-bold label-lg ' + status[row.status].class + ' label-inline">' + status[row.status].title + '</span>';

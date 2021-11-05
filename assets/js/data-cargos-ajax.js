@@ -150,7 +150,7 @@ var KTDatatableCargoList = function() {
                         var status = {
                             1: {
                                 'title': 'New',
-                                'class': ' label-info'
+                                'class': ' label-danger'
                             },
                             2: {
                                 'title': 'Accepted',
@@ -158,15 +158,15 @@ var KTDatatableCargoList = function() {
                             },
                             3: {
                                 'title': 'Closed',
-                                'class': ' label-warning'
+                                'class': ' label-success'
                             },
                             4: {
                                 'title': 'Cancelled',
-                                'class': ' label-danger'
+                                'class': ' label-light'
                             },
                             5: {
                                 'title': 'Expired',
-                                'class': ' label-dark'
+                                'class': ' label-light'
                             },
                         };
                         return '<span class="label font-weight-bold label-lg ' + status[row.status].class + ' label-inline">' + status[row.status].title + '</span>';

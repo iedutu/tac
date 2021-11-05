@@ -23,7 +23,7 @@ if (isset ( $_POST ['id'] )) {
         exit();
     }
 
-    if($truck->getOriginator() != $_SESSION['operator']) {
+    if($truck->getOriginator() != $_SESSION['operator']['id']) {
         error_log('You cannot cancel orders created by others.');
         $_SESSION['alert']['type'] = 'error';
         $_SESSION['alert']['message'] = 'You cannot cancel trucks added by others.';
@@ -82,6 +82,7 @@ if (isset ( $_POST ['id'] )) {
         return 0;
     }
 
+    $_SESSION['alert']['type'] = 'success';
     $_SESSION['alert']['message'] .= 'Cancellation e-mail sent to '.$email['recipient']['name'].' ('.$email['recipient']['e-mail'].')';
 }
 

@@ -38,33 +38,33 @@ $status_code = '';
 
 switch($truck->getStatus()) {
     case 1: {
-        $tooltip = 'data-toggle="tooltip" data-placement="top" title="Available truck"';
-        $status_code = '<span class="label label-lg label-info label-inline mr-2 font-weight-bolder" '.$tooltip.'>Round-trip booked truck</span>';
+        $tooltip = 'data-toggle="tooltip" data-placement="top" title="Round-trip booked truck"';
+        $status_code = '<span class="label label-lg label-secondary label-inline mr-2 font-weight-bolder" '.$tooltip.'>Available truck</span>';
         break;
     }
     case 2: {
-        $tooltip = 'data-toggle="tooltip" data-placement="top" title="Free truck"';
-        $status_code = '<span class="label label-lg label-light label-inline mr-2 font-weight-bolder" '.$tooltip.'>One-way booked truck</span>';
+        $tooltip = 'data-toggle="tooltip" data-placement="top" title="One-way booked truck"';
+        $status_code = '<span class="label label-lg label-info label-inline mr-2 font-weight-bolder" '.$tooltip.'>Free truck</span>';
         break;
     }
     case 3: {
-        $tooltip = 'data-toggle="tooltip" data-placement="top" title="New truck"';
-        $status_code = '<span class="label label-lg label-light label-inline mr-2 font-weight-bolder" '.$tooltip.'>Truck available on the market</span>';
+        $tooltip = 'data-toggle="tooltip" data-placement="top" title="Truck available on the market"';
+        $status_code = '<span class="label label-lg label-dark label-inline mr-2 font-weight-bolder" '.$tooltip.'>New truck</span>';
         break;
     }
     case 4: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Partially loaded truck"';
-        $status_code = '<span class="label label-lg label-success label-inline mr-2 font-weight-bolder" '.$tooltip.'>Partially loaded</span>';
+        $status_code = '<span class="label label-lg label-warning label-inline mr-2 font-weight-bolder" '.$tooltip.'>Partially loaded</span>';
         break;
     }
     case 5: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Fully loaded truck"';
-        $status_code = '<span class="label label-lg label-primary label-inline mr-2" '.$tooltip.'>Fully loaded</span>';
+        $status_code = '<span class="label label-lg label-success label-inline mr-2" '.$tooltip.'>Fully loaded</span>';
         break;
     }
     case 6: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Cancelled truck"';
-        $status_code = '<span class="label label-lg label-danger label-inline mr-2" '.$tooltip.'>Cancelled</span>';
+        $status_code = '<span class="label label-lg label-light label-inline mr-2" '.$tooltip.'>Cancelled</span>';
         break;
     }
     default: {

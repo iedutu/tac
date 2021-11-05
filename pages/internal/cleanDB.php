@@ -1,5 +1,6 @@
 <?php
 
+/*
 include $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
 include $_SERVER["DOCUMENT_ROOT"]."/lib/db-settings.php";
 require_once $_SERVER["DOCUMENT_ROOT"]."/lib/site-functions.php";
@@ -26,3 +27,4 @@ DB::getMDB()->query('ALTER TABLE cargo_truck AUTO_INCREMENT = 1');
 DB::getMDB()->query('ALTER TABLE cargo_comments AUTO_INCREMENT = 1');
 
 echo 'Database clean-up complete!';
+*/

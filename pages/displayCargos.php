@@ -54,8 +54,8 @@
                                     <option value="1">New</option>
                                     <option value="2">Accepted</option>
                                     <option value="3">Closed</option>
-                                    <option value="4">Expired</option>
-                                    <option value="5">Cancelled</option>
+                                    <option value="4">Cancelled</option>
+                                    <option value="5">Expired</option>
                                 </select>
                             </div>
                         </div>

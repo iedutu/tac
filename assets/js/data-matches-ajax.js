@@ -104,12 +104,12 @@ let KTDatatableMatchesList = function() {
                             0: {
                                 'title': 'Error!',
                                 'tooltip': 'This is not supposed to come up.',
-                                'class': ' label-danger'
+                                'class': ' label-light'
                             },
                             1: {
                                 'title': 'Available',
                                 'tooltip': 'Truck booked for ROUND-TRIP',
-                                'class': ' label-success'
+                                'class': ' label-secondary'
                             },
                             2: {
                                 'title': 'Needed',
@@ -124,12 +124,12 @@ let KTDatatableMatchesList = function() {
                             4: {
                                 'title': 'New',
                                 'tooltip': 'Truck from the market',
-                                'class': ' label-warning'
+                                'class': ' label-dark'
                             },
                             5: {
                                 'title': 'Partial',
                                 'tooltip': 'Partially loaded truck',
-                                'class': ' label-success'
+                                'class': ' label-warning'
                             },
                             6: {
                                 'title': 'Solved',
