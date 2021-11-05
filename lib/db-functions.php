@@ -199,9 +199,8 @@ class DB_utils
                                                (a.office_id = b.id) and
                                                (b.country = c.id) and
                                                (a.id<>%d) and
-                                               (c.id<>%d) and
                                                (a.class<2)
-                                            ORDER BY a.name", $_SESSION['operator']['id'], $_SESSION['operator']['country-id']);
+                                            ORDER BY a.name", $_SESSION['operator']['id']);
             foreach ($users as $user) {
                 echo '<option value="'.$user['id'].'">'.$user['name'].'</option>';
             }
@@ -221,7 +220,14 @@ class DB_utils
     public static function countryMatch(int $other): bool
     {
         try {
-            $country = DB::getMDB()->queryOneField('country_id', 'SELECT country_id FROM cargo_users WHERE id = %d', $other);
+            $country = DB::getMDB()->queryOneField('country_id', 'SELECT 
+                                                                    b.country as "country_id"
+                                                                  FROM 
+                                                                    cargo_users a,
+                                                                    cargo_offices b
+                                                                  WHERE 
+                                                                    (a.office_id = b.id) and
+                                                                    a.id = %d', $other);
         }
         catch (MeekroDBException $mdbe) {
             Utils::handleMySQLException($mdbe);
@@ -617,25 +623,6 @@ class DB_utils
     /**
      * @throws ApplicationException
      */
-    public static function cancelTruck(int $id): bool
-    {
-        try {
-            DB::getMDB()->update('cargo_trucks', array(
-                'status' => 4
-            ), "id=%d", $id);
-            DB::getMDB()->commit();
-
-            return true;
-        }
-        catch (MeekroDBException $mdbe) {
-            Utils::handleMySQLException($mdbe);
-            throw new ApplicationException($mdbe->getMessage());
-        }
-    }
-
-    /**
-     * @throws ApplicationException
-     */
     public static function updateTruckStatus(Truck $truck, int $status): bool
     {
         try {
@@ -870,6 +857,44 @@ class DB_utils
         }
     }
 
+    /**
+     * @throws ApplicationException
+     */
+    public static function selectUsernames(int $me)
+    {
+        try {
+            // Different countries only
+            /*
+            return DB::getMDB()->query ( "SELECT
+                                                a.id as 'id', a.username as 'username'
+                                             FROM
+                                                cargo_users a,
+                                                cargo_offices b,
+                                                cargo_countries c
+                                             WHERE
+                                                (a.office_id = b.id) and
+                                                (b.country = c.id) and
+                                                (a.id<>%d) and
+                                                (c.id<>%d) and
+                                                (a.class<2)
+                                             ORDER BY a.name", $_SESSION['operator']['id'], $_SESSION['operator']['country-id']);
+            */
+
+            return DB::getMDB()->query ( "SELECT
+                                        id, username
+                                     FROM 
+                                        cargo_users
+                                     WHERE
+                                        (id<>%d) and
+                                        (class<2)
+                                     ORDER BY name", $me);
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe);
+        }
+    }
+
     public static function selectUserById(int $id): ?User
     {
         try {
@@ -996,7 +1021,7 @@ class DB_utils
             // Clean-up the table
             DB::getMDB()->query('TRUNCATE cargo_match');
 
-            $t_rows = DB::getMDB()->query ('SELECT * FROM cargo_truck WHERE (status < 4) ORDER BY SYS_CREATION_DATE DESC');
+            $t_rows = DB::getMDB()->query ('SELECT * FROM cargo_truck WHERE (status < 6) ORDER BY SYS_CREATION_DATE DESC');
             $i = 0;
             foreach($t_rows as $t_row) {
                 $truck = self::row2truck($t_row);
@@ -1014,6 +1039,7 @@ class DB_utils
                     $match->setVolume($stop->getVolume());
                     $match->setLoadingMeters($stop->getLoadingMeters());
                     $match->setAdr($truck->getAdr());
+                    $match->setDetails($truck->getDetails());
                     $match->setPlateNumber($truck->getPlateNumber());
                     $match->setAmeta($truck->getAmeta());
                     $match->setAvailability($truck->getUnloadingDate());
@@ -1029,29 +1055,31 @@ class DB_utils
 
                     switch($truck->getStatus()) {
                         case 1: {
-                            if ($truck->getContractType() == 'Round-trip') {
-                                $match->setStatus(1);
-                            } else {
-                                if ($truck->getContractType() == 'One-way') {
-                                    $match->setStatus(3);
-                                } else {
-                                    $match->setStatus(0);
-                                }
-                            }
+                            $match->setStatus(1);
 
                             break;
                         }
                         case 2: {
-                            $match->setStatus(4);
+                            $match->setStatus(3);
 
                             break;
                         }
                         case 3: {
-                            $match->setStatus(6);
+                            $match->setStatus(4);
 
                             break;
                         }
                         case 4: {
+                            $match->setStatus(5);
+
+                            break;
+                        }
+                        case 5: {
+                            $match->setStatus(6);
+
+                            break;
+                        }
+                        case 6: {
                             $match->setStatus(0);
 
                             break;
@@ -1096,7 +1124,7 @@ class DB_utils
                     $match->setStatus(2);
                 }
                 else {
-                    $match->setStatus(5);
+                    $match->setStatus(6);
                 }
 
                 DB_utils::insertMatch($match);

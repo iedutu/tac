@@ -134,18 +134,26 @@ var KTDatatableTruckList = function() {
                 template: function(row) {
                     var status = {
                         1: {
-                            'title': 'New',
+                            'title': 'Available',
                             'class': ' label-light-info'
                         },
                         2: {
+                            'title': 'Free',
+                            'class': ' label-light'
+                        },
+                        3: {
+                            'title': 'New',
+                            'class': ' label-light'
+                        },
+                        4: {
                             'title': 'Partial',
                             'class': ' label-light-warning'
                         },
-                        3: {
+                        5: {
                             'title': 'Solved',
                             'class': ' label-light-primary'
                         },
-                        4: {
+                        6: {
                             'title': 'Cancelled',
                             'class': ' label-light-danger'
                         },

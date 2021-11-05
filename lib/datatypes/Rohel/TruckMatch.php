@@ -85,6 +85,10 @@ class TruckMatch extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>int32 recipient_id = 18;</code>
      */
     protected $recipient_id = 0;
+    /**
+     * Generated from protobuf field <code>string details = 19;</code>
+     */
+    protected $details = '';
 
     /**
      * Constructor.
@@ -110,6 +114,7 @@ class TruckMatch extends \Google\Protobuf\Internal\Message
      *     @type string $to_city
      *     @type int $originator_id
      *     @type int $recipient_id
+     *     @type string $details
      * }
      */
     public function __construct($data = NULL) {
@@ -509,6 +514,28 @@ class TruckMatch extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkInt32($var);
         $this->recipient_id = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>string details = 19;</code>
+     * @return string
+     */
+    public function getDetails()
+    {
+        return $this->details;
+    }
+
+    /**
+     * Generated from protobuf field <code>string details = 19;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setDetails($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->details = $var;
 
         return $this;
     }

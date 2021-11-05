@@ -112,6 +112,7 @@ message TruckMatch {
   string to_city = 16;
   int32 originator_id = 17;
   int32 recipient_id = 18;
+  string details = 19;
 }
 
 message TruckUpdates {

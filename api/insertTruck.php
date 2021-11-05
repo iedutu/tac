@@ -17,7 +17,6 @@ if (isset ( $_POST ['_submitted'] )) {
     $truck = new Truck();
     
     try {
-        $truck->setStatus(1);
         $truck->setOriginator($_SESSION['operator']['id']);
         $truck->setRecipient($_POST ['recipient']);
         $truck->setFromCity($_POST ['from_city']);
@@ -27,6 +26,23 @@ if (isset ( $_POST ['_submitted'] )) {
         $truck->setFreight($_POST ['freight']);
         if(!empty($_POST['adr'])) $truck->setAdr($_POST ['adr']);
         $truck->setContractType($_POST ['contract_type']);
+        switch($truck->getContractType()) {
+            case 'Round-trip': {
+                $truck->setStatus(1);
+                break;
+            }
+            case 'One-way': {
+                $truck->setStatus(2);
+                break;
+            }
+            case 'New': {
+                $truck->setStatus(3);
+                break;
+            }
+            default: {
+                $truck->setStatus(0);
+            }
+        }
         $truck->setAmeta($_POST ['ameta']);
         $truck->setPlateNumber($_POST ['plate_number']);
         $truck->setDetails($_POST ['details']);
@@ -40,7 +56,7 @@ if (isset ( $_POST ['_submitted'] )) {
 
             $stop->setVolume($_POST['stops'][$i]['volume']);
             $stop->setWeight($_POST['stops'][$i]['weight']);
-            $stop->setLoadingMeters($_POST['stops'][$i]['loading_meters']);
+            if(!empty($_POST['stops'][$i]['loading'])) $stop->setLoadingMeters($_POST['stops'][$i]['loading']);
             $stop->setCity($_POST['stops'][$i]['to_city']);
             $stop->setAddress($_POST['stops'][$i]['to_address']);
             $stop->setStopId($i);

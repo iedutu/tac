@@ -26,11 +26,11 @@ if(is_null($truck)) {
  */
 $editable = DB_utils::isEditable($truck->getOriginator(), $truck->getRecipient());
 
-if($truck->getStatus() > 1) {
+if($truck->getStatus() > 3) {
     $editable['originator'] = false;
 }
 
-if($truck->getStatus() > 2) {
+if($truck->getStatus() > 4) {
     $editable['recipient'] = false;
 }
 
@@ -38,21 +38,31 @@ $status_code = '';
 
 switch($truck->getStatus()) {
     case 1: {
-        $tooltip = 'data-toggle="tooltip" data-placement="top" title="New truck"';
-        $status_code = '<span class="label label-lg label-info label-inline mr-2 font-weight-bolder" '.$tooltip.'>New</span>';
+        $tooltip = 'data-toggle="tooltip" data-placement="top" title="Available truck"';
+        $status_code = '<span class="label label-lg label-info label-inline mr-2 font-weight-bolder" '.$tooltip.'>Round-trip booked truck</span>';
         break;
     }
     case 2: {
+        $tooltip = 'data-toggle="tooltip" data-placement="top" title="Free truck"';
+        $status_code = '<span class="label label-lg label-light label-inline mr-2 font-weight-bolder" '.$tooltip.'>One-way booked truck</span>';
+        break;
+    }
+    case 3: {
+        $tooltip = 'data-toggle="tooltip" data-placement="top" title="New truck"';
+        $status_code = '<span class="label label-lg label-light label-inline mr-2 font-weight-bolder" '.$tooltip.'>Truck available on the market</span>';
+        break;
+    }
+    case 4: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Partially loaded truck"';
         $status_code = '<span class="label label-lg label-success label-inline mr-2 font-weight-bolder" '.$tooltip.'>Partially loaded</span>';
         break;
     }
-    case 3: {
+    case 5: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Fully loaded truck"';
         $status_code = '<span class="label label-lg label-primary label-inline mr-2" '.$tooltip.'>Fully loaded</span>';
         break;
     }
-    case 4: {
+    case 6: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Cancelled truck"';
         $status_code = '<span class="label label-lg label-danger label-inline mr-2" '.$tooltip.'>Cancelled</span>';
         break;
@@ -384,7 +394,7 @@ else {
                 <div class="col-lg-8">
                     <div class="row">
                                             ';
-                    if($truck->getStatus() == 1) {
+                    if($truck->getStatus() < 4) {
                         echo '
                             <form class="form" id="kt_rohel_solved_form" action="/api/partiallySolveTruck.php" method="post">
                                                     <input type="hidden" name="_submitted" value="true">
@@ -394,13 +404,15 @@ else {
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     ';
                     }
-                    echo '
+                    if($truck->getStatus() < 5) {
+                        echo '
                             <form class="form" id="kt_rohel_solved_form" action="/api/solveTruck.php" method="post">
                                                     <input type="hidden" name="_submitted" value="true">
-                                                    <input type="hidden" name="id" value="'.$truck->getId().'">
+                                                    <input type="hidden" name="id" value="' . $truck->getId() . '">
                                                     <button type="submit" class="btn btn-primary btn-lg" data-toggle="tooltip" title="Click to confirm the truck was fully loaded">Full load</button>
                                                 </form>
                                 ';
+                    }
                     echo '
                     </div>
                 </div>

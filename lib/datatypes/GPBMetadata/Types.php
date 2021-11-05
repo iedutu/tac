@@ -16,7 +16,7 @@ class Types
         }
         $pool->internalAddGeneratedFile(
             '
-ë
+ü
 types.protoRohel"Ã
 Request
 
@@ -125,7 +125,7 @@ truck_type (	
 adr (	
 stop (2.Rohel.TruckStop
 creation_date (
-update_date ("Ö
+update_date ("ç
 
 TruckMatch
 
@@ -148,7 +148,8 @@ order_type (	
 volume (
 to_city (	
 originator_id (
-recipient_id (" 
+recipient_id (
+details (	" 
 TruckUpdates
 
 id (

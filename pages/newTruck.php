@@ -42,6 +42,7 @@
                             <select class="form-control" id="contract_type" name="contract_type">
                                 <option value="Round-trip">Round-trip</option>
                                 <option value="One-way">One-way</option>
+                                <option value="New">New</option>
                             </select>
                             <span class="form-text text-muted">Please select the type of the contract</span>
                         </div>
@@ -82,7 +83,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-lg-4">
-                            <label class="form-control-label" for="ameta">Ameta: <span class="text-danger">*</span></label>
+                            <label class="form-control-label" for="ameta">Ameta:</label>
                             <input type="text" id="ameta" name="ameta" class="form-control" placeholder="Ameta"/>
                             <span class="form-text text-muted">Please enter the ameta code</span>
                         </div>

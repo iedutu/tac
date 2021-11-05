@@ -30,14 +30,6 @@ let KTFormControls = function () {
 						}
 					},
 
-					ameta: {
-						validators: {
-							notEmpty: {
-								message: 'Field cannot be empty.'
-							}
-						}
-					},
-
 					details: {
 						validators: {
 							notEmpty: {

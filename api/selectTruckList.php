@@ -69,7 +69,7 @@ try {
                                             )
                                         )
                                      AND
-                                        ((status = 1) OR (status = 2) OR (status = 3))
+                                        (a.status < 6)
                                      AND
                                      (
                                          (a.originator_id=b.id and b.office_id=d.id)

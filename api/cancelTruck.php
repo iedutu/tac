@@ -33,7 +33,7 @@ if (isset ( $_POST ['id'] )) {
     }
 
     try {
-        DB_utils::cancelTruck($truck->getId());
+        DB_utils::updateTruckStatus($truck, 6);
 
         Utils::insertCargoAuditEntry('cargo_truck', 'status', $_POST['id'], 3);
 

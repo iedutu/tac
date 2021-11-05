@@ -122,17 +122,17 @@ let KTDatatableMatchesList = function() {
                                 'class': ' label-info'
                             },
                             4: {
-                                'title': 'Partial',
-                                'tooltip': 'Partially loaded truck',
+                                'title': 'New',
+                                'tooltip': 'Truck from the market',
                                 'class': ' label-warning'
                             },
                             5: {
-                                'title': 'Solved',
-                                'tooltip': 'Truck assigned to this order',
+                                'title': 'Partial',
+                                'tooltip': 'Partially loaded truck',
                                 'class': ' label-success'
                             },
                             6: {
-                                'title': 'Closed',
+                                'title': 'Solved',
                                 'tooltip': 'Fully loaded truck',
                                 'class': ' label-success'
                             },

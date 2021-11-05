@@ -33,7 +33,7 @@ if (!empty ( $_POST ['id'] )) {
     }
 
     try {
-        DB_utils::updateTruckStatus($truck, 2);
+        DB_utils::updateTruckStatus($truck, 4);
 
         Utils::insertCargoAuditEntry('cargo_truck', 'status', $truck->getId(), 2);
 
