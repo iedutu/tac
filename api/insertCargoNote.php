@@ -8,7 +8,7 @@ use Rohel\CargoNote;
 use Rohel\Notification;
 
 if (! Utils::authorized(Utils::$INSERT)) {
-    error_log("User not authorized to insert data in the database.");
+    Utils::log("User not authorized to insert data in the database.");
     header ( 'Location: /' );
     exit ();
 }

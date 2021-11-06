@@ -40,6 +40,16 @@ switch($_SESSION['app']) {
         echo '<title>ROHEL | Trucks | Details</title>';
         break;
     }
+    case 'reports':
+    {
+        if(empty($_GET['data'])) {
+            echo '<title>ROHEL | Reports</title>';
+        }
+        else {
+            echo '<title>ROHEL | '.ucfirst($_GET['data']).' | Reports</title>';
+        }
+        break;
+    }
     default: {
         echo '<title>ROHEL</title>';
         break;

@@ -32,14 +32,14 @@ if(!empty($_POST['id'])) {
             $note->setEntityKind(1);
             $note->setEntityId($entry->getId());
 
-            error_log('Add notification for new: '.$note->getUserId());
+            Utils::log('Add notification for new: '.$note->getUserId());
             DB_utils::addNotification($note);
 
             // Add a notification to the old recipient of the cargo for cancellation
             $note->setUserId($recipient->getId());
             $note->setKind(4);
 
-            error_log('Add notification for old: '.$note->getUserId());
+            Utils::log('Add notification for old: '.$note->getUserId());
             DB_utils::addNotification($note);
 
             // Notify the new recipient

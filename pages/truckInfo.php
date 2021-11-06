@@ -1,6 +1,6 @@
 <?php
 if(!isset($_GET['id'])) {
-    error_log('No cargo_truck id specified.');
+    Utils::log('No cargo_truck id specified.');
 
     return;
 }
@@ -15,7 +15,7 @@ $_SESSION['originator-id'] = $truck->getOriginator();
 $_SESSION['recipient-id'] = $truck->getRecipient();
 
 if(is_null($truck)) {
-    error_log('No cargo_truck found for id='.$_GET['id']);
+    Utils::log('No cargo_truck found for id='.$_GET['id']);
 
     return;
 }

@@ -111,40 +111,63 @@ if(!empty($_POST['_submitted'])) {
                             $acceptor = null;
                         }
 
+                        $bgColor = '#FFFFFF';
+                        $txtColor = '#000000';
                         switch ($row['status']) {
                             case 1:
                             {
                                 $status = 'New';
+                                $bgColor = Mails::$BG_DANGER_COLOR;
+                                $txtColor = Mails::$TX_DANGER_COLOR;
                                 break;
                             }
                             case 2:
                             {
                                 $status = 'Accepted';
+                                $bgColor = Mails::$BG_SUCCESS_COLOR;
+                                $txtColor = Mails::$TX_SUCCESS_COLOR;
                                 break;
                             }
                             case 3:
                             {
                                 $status = 'Closed';
+                                $bgColor = Mails::$BG_SUCCESS_COLOR;
+                                $txtColor = Mails::$TX_SUCCESS_COLOR;
                                 break;
                             }
                             case 4:
                             {
                                 $status = 'Cancelled';
+                                $bgColor = Mails::$BG_LIGHT_COLOR;
+                                $txtColor = Mails::$TX_LIGHT_COLOR;
                                 break;
                             }
                             case 5:
                             {
                                 $status = 'Expired';
+                                $bgColor = Mails::$BG_LIGHT_COLOR;
+                                $txtColor = Mails::$TX_LIGHT_COLOR;
                                 break;
                             }
                             default:
                             {
                                 $status = 'Error';
+                                $bgColor = Mails::$BG_LIGHT_COLOR;
+                                $txtColor = Mails::$TX_LIGHT_COLOR;
                             }
                         }
 
                         $spreadsheet->getActiveSheet()->getStyle('F' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
                         $spreadsheet->getActiveSheet()->getStyle('G' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
+
+                        $spreadsheet->getActiveSheet()
+                            ->getStyle('S' . $i)->getFont()->setBold(true);
+                        $spreadsheet->getActiveSheet()
+                            ->getStyle('S' . $i)->getFont()->getColor()->setRGB(substr($txtColor,1));
+                        $spreadsheet->getActiveSheet()
+                            ->getStyle('S' . $i)->getFill()->setFillType(Fill::FILL_SOLID);
+                        $spreadsheet->getActiveSheet()
+                            ->getStyle('S' . $i)->getFill()->getStartColor()->setRGB(substr($bgColor,1));
 
                         $spreadsheet->getActiveSheet()
                             ->setCellValue('A' . $i, $row ['originator_name'])
@@ -265,30 +288,56 @@ if(!empty($_POST['_submitted'])) {
                             $acceptor = null;
                         }
 
+                        $bgColor = '#FFFFFF';
+                        $txtColor = '#000000';
                         switch ($row['status']) {
                             case 1:
                             {
                                 $status = 'New';
+                                $bgColor = Mails::$BG_SECONDARY_COLOR;
+                                $txtColor = Mails::$TX_SECONDARY_COLOR;
                                 break;
                             }
                             case 2:
                             {
-                                $status = 'Partially solved';
+                                $status = 'Free';
+                                $bgColor = Mails::$BG_INFO_COLOR;
+                                $txtColor = Mails::$TX_INFO_COLOR;
                                 break;
                             }
                             case 3:
                             {
-                                $status = 'Fully solved';
+                                $status = 'New';
+                                $bgColor = Mails::$BG_DARK_COLOR;
+                                $txtColor = Mails::$TX_DARK_COLOR;
                                 break;
                             }
                             case 4:
                             {
+                                $status = 'Partially solved';
+                                $bgColor = Mails::$BG_WARNING_COLOR;
+                                $txtColor = Mails::$TX_WARNING_COLOR;
+                                break;
+                            }
+                            case 5:
+                            {
+                                $status = 'Fully solved';
+                                $bgColor = Mails::$BG_SUCCESS_COLOR;
+                                $txtColor = Mails::$TX_SUCCESS_COLOR;
+                                break;
+                            }
+                            case 6:
+                            {
                                 $status = 'Cancelled';
+                                $bgColor = Mails::$BG_LIGHT_COLOR;
+                                $txtColor = Mails::$TX_LIGHT_COLOR;
                                 break;
                             }
                             default:
                             {
                                 $status = 'Error';
+                                $bgColor = Mails::$BG_LIGHT_COLOR;
+                                $txtColor = Mails::$TX_LIGHT_COLOR;
                             }
                         }
 
@@ -305,6 +354,15 @@ if(!empty($_POST['_submitted'])) {
 				    		    ORDER BY stop_id", $row['id']);
 
                         foreach($stops as $stop) {
+                            $spreadsheet->getActiveSheet()
+                                ->getStyle('J' . $i)->getFont()->setBold(true);
+                            $spreadsheet->getActiveSheet()
+                                ->getStyle('J' . $i)->getFont()->getColor()->setRGB(substr($txtColor,1));
+                            $spreadsheet->getActiveSheet()
+                                ->getStyle('J' . $i)->getFill()->setFillType(Fill::FILL_SOLID);
+                            $spreadsheet->getActiveSheet()
+                                ->getStyle('J' . $i)->getFill()->getStartColor()->setRGB(substr($bgColor,1));
+
                             $spreadsheet->getActiveSheet()
                                 ->setCellValue('A' . $i, $row ['originator_name'])
                                 ->setCellValue('B' . $i, $row ['recipient_name'])
@@ -417,43 +475,43 @@ if(!empty($_POST['_submitted'])) {
                             case 1:
                             {
                                 $status = 'Available';
-                                $bgColor = Mails::$BG_FULLY_LOADED_COLOR;
-                                $txtColor = Mails::$TX_FULLY_LOADED_COLOR;
+                                $bgColor = Mails::$BG_SECONDARY_COLOR;
+                                $txtColor = Mails::$TX_SECONDARY_COLOR;
                                 break;
                             }
                             case 2:
                             {
                                 $status = 'Needed';
-                                $bgColor = Mails::$BG_NEW_COLOR;
-                                $txtColor = Mails::$TX_NEW_COLOR;
+                                $bgColor = Mails::$BG_DANGER_COLOR;
+                                $txtColor = Mails::$TX_DANGER_COLOR;
                                 break;
                             }
                             case 3:
                             {
                                 $status = 'Free';
-                                $bgColor = Mails::$BG_NEW_COLOR;
-                                $txtColor = Mails::$TX_NEW_COLOR;
+                                $bgColor = Mails::$BG_INFO_COLOR;
+                                $txtColor = Mails::$TX_INFO_COLOR;
                                 break;
                             }
                             case 4:
                             {
                                 $status = 'New';
-                                $bgColor = Mails::$BG_NEW_COLOR;
-                                $txtColor = Mails::$TX_NEW_COLOR;
+                                $bgColor = Mails::$BG_DARK_COLOR;
+                                $txtColor = Mails::$TX_DARK_COLOR;
                                 break;
                             }
                             case 5:
                             {
                                 $status = 'Partially loaded';
-                                $bgColor = Mails::$BG_PARTIALLY_LOADED_COLOR;
-                                $txtColor = Mails::$TX_PARTIALLY_LOADED_COLOR;
+                                $bgColor = Mails::$BG_WARNING_COLOR;
+                                $txtColor = Mails::$TX_WARNING_COLOR;
                                 break;
                             }
                             case 6:
                             {
                                 $status = 'Fully loaded';
-                                $bgColor = Mails::$BG_FULLY_LOADED_COLOR;
-                                $txtColor = Mails::$TX_FULLY_LOADED_COLOR;
+                                $bgColor = Mails::$BG_SUCCESS_COLOR;
+                                $txtColor = Mails::$TX_SUCCESS_COLOR;
                                 break;
                             }
                         }
@@ -504,18 +562,18 @@ if(!empty($_POST['_submitted'])) {
                 }
             }
         } catch (\PhpOffice\PhpSpreadsheet\Writer\Exception $e) {
-            error_log("Excel creation error: " . $e->getMessage());
+            Utils::log("Excel creation error: " . $e->getMessage());
         } catch (\PhpOffice\PhpSpreadsheet\Exception $e) {
-            error_log("Excel general error: " . $e->getMessage());
+            Utils::log("Excel general error: " . $e->getMessage());
         } catch (MeekroDBException $mdbe) {
-            error_log("Database error: " . $mdbe->getMessage());
+            Utils::log("Database error: " . $mdbe->getMessage());
             $_SESSION['alert']['type'] = 'error';
             $_SESSION['alert']['message'] = 'Database error (' . $mdbe->getCode() . ':' . $mdbe->getMessage() . '). Please contact your system administrator.';
 
             header('Location: /');
             exit ();
         } catch (Exception $e) {
-            error_log("Database error: " . $e->getMessage());
+            Utils::log("Database error: " . $e->getMessage());
             $_SESSION['alert']['type'] = 'error';
             $_SESSION['alert']['message'] = 'Database error (' . $e->getCode() . ':' . $e->getMessage() . '). Please contact your system administrator.';
 

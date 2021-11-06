@@ -48,7 +48,7 @@ if (!empty( $_POST ['_signin'] )) { // Regular sign-in
 
                 return;
             } else {
-                error_log('Wrong password. Got ' . $password . ', expected ' . $user->getPassword());
+                Utils::log('Wrong password. Got ' . $password . ', expected ' . $user->getPassword());
                 $_SESSION['alert']['type'] = 'error';
                 $_SESSION['alert']['width'] = 12;
                 $_SESSION['alert']['message'] = 'Wrong username/password.';
@@ -255,7 +255,7 @@ else {
                         <!--begin::Form group-->
                         <div class="form-group d-flex flex-wrap pb-lg-0">
                             <button
-                                    data-sitekey="6Lecq-scAAAAALlVasOeAFEPjyAuzrzY-pXNEQrn"
+                                    data-sitekey="6LccLxodAAAAADINHhCRabhbAn5NpfqtsF63pLZk"
                                     data-action='submit'
                                     type="button"
                                     id="kt_login_forgot_submit"

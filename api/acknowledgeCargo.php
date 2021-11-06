@@ -29,9 +29,9 @@ if(!empty($_POST['id'])) {
 
         Utils::highlightPageItem('cargo_request', 'accepted_by', $cargo->getId());
         Utils::highlightPageItem('cargo_request', 'acceptance', $cargo->getId());
-        error_log('------- before --------');
+        Utils::log('------- before --------');
         Utils::highlightPageItem('cargo_request', 'plate_number', $cargo->getId());
-        error_log('------- after --------');
+        Utils::log('------- after --------');
 
         Utils::insertCargoAuditEntry('cargo_request', 'acceptance', $cargo->getId(), date("Y-m-d H:i:s"));
         Utils::insertCargoAuditEntry('cargo_request', 'accepted_by', $cargo->getId(), $cargo->getAcceptedBy());

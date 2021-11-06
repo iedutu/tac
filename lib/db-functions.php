@@ -262,7 +262,7 @@ class DB_utils
             $row = DB::getMDB()->queryOneRow("select * from cargo_request where id=%d", $id);
 
             if (is_null($row)) {
-                error_log("No cargo_request was found for id=".$id);
+                Utils::log("No cargo_request was found for id=".$id);
 
                 return null;
             }
@@ -388,7 +388,7 @@ class DB_utils
                                                   where 
                                                      id=%d", $id);
             if (is_null($row)) {
-                error_log('No cargo_truck was found for id='.$id.' in selectTruck()');
+                Utils::log('No cargo_truck was found for id='.$id.' in selectTruck()');
 
                 return null;
             }
@@ -403,7 +403,7 @@ class DB_utils
                                                      truck_id=%d
                                                   order by stop_id", $id);
             if (is_null($results)) {
-                error_log('No cargo_truck_stops was found for truck_id='.$id.' in selectTruck(). At least one is required.');
+                Utils::log('No cargo_truck_stops was found for truck_id='.$id.' in selectTruck(). At least one is required.');
 
                 return null;
             }
@@ -658,7 +658,7 @@ class DB_utils
                 }
                 default:
                 {
-                    error_log('In-place editing failed. Requested to change a filed without being notified of which page we are on.');
+                    Utils::log('In-place editing failed. Requested to change a filed without being notified of which page we are on.');
                     return null;
                 }
             }
@@ -719,7 +719,7 @@ class DB_utils
                 }
                 default:
                 {
-                    error_log('In-place editing failed. Requested to change a filed without being notified of which page we are on.');
+                    Utils::log('In-place editing failed. Requested to change a filed without being notified of which page we are on.');
                     return null;
                 }
             }
@@ -843,7 +843,7 @@ class DB_utils
                                                      and
                                                      (a.username=%s)", $username);
             if (is_null($row)) {
-                error_log("No cargo_users was found for username=".$username);
+                Utils::log("No cargo_users was found for username=".$username);
 
                 return null;
             }
@@ -911,7 +911,7 @@ class DB_utils
                                                      and
                                                      (a.id=%d)", $id);
             if (is_null($row)) {
-                error_log("No cargo_users was found for id=".$id);
+                Utils::log("No cargo_users was found for id=".$id);
 
                 return null;
             }
@@ -973,7 +973,7 @@ class DB_utils
         try {
             $row = DB::getMDB()->queryOneRow("select * from cargo_notifications where id=%d", $id);
             if (is_null($row)) {
- //             error_log("No cargo_notification was found for id=".$id);
+ //             Utils::log("No cargo_notification was found for id=".$id);
 
                 return null;
             }

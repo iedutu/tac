@@ -16,7 +16,7 @@ if (!empty ( $_POST ['id'] )) {
     }
 
     if($truck->getStatus() == 2) {
-        error_log('Truck already solved/loaded. Please contact the recipient directly.');
+        Utils::log('Truck already solved/loaded. Please contact the recipient directly.');
         $_SESSION['alert']['type'] = 'error';
         $_SESSION['alert']['message'] = 'Truck already solved/closed. Please contact the recipient directly.';
 

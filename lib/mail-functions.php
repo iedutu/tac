@@ -19,6 +19,23 @@ class Mails
     public static bool $ALLOW_MAILS = true;
     public static string $BASE_HREF = 'http://rohel.iedutu.com';
 
+    public static string $BG_INFO_COLOR = '#8950FC';
+    public static string $TX_INFO_COLOR = '#ffffff';
+    public static string $BG_SUCCESS_COLOR = '#1BC5BD';
+    public static string $TX_SUCCESS_COLOR = '#ffffff';
+    public static string $BG_WARNING_COLOR = '#FFA800';
+    public static string $TX_WARNING_COLOR = '#ffffff';
+    public static string $BG_DANGER_COLOR = '#F64E60';
+    public static string $TX_DANGER_COLOR = '#ffffff';
+    public static string $BG_DARK_COLOR = '#181C32';
+    public static string $TX_DARK_COLOR = '#ffffff';
+    public static string $BG_PRIMARY_COLOR = '#0BB783';
+    public static string $TX_PRIMARY_COLOR = '#ffffff';
+    public static string $BG_SECONDARY_COLOR = '#E4E6EF';
+    public static string $TX_SECONDARY_COLOR = '#3F4254';
+    public static string $BG_LIGHT_COLOR = '#F3F6F9';
+    public static string $TX_LIGHT_COLOR = '#7E8299';
+
     public static string $BG_NEW_COLOR = '#8950FC';
     public static string $BG_PARTIALLY_LOADED_COLOR = '#8950FC';
     public static string $BG_FULLY_LOADED_COLOR = '#1BC5BD';
@@ -50,7 +67,7 @@ class Mails
 
             $mail->Subject = $email['subject'];
             $mail->addAddress($email['recipient']['e-mail'], $email['recipient']['name']);
-            $mail->setFrom('webapp@rohel.ro', 'Team Rohel');
+            $mail->setFrom('webmaster@cat.rohel.ro ', 'Team Rohel');
             $mail->addReplyTo($email['originator']['e-mail'], $email['originator']['name']);
 
             ob_start();
@@ -59,10 +76,10 @@ class Mails
             $mail->msgHTML($body, dirname(__FILE__), true); // Create message bodies and embed images
             if (self::$ALLOW_MAILS) {
                 if($mail->send()) {
-                    error_log('E-mail sent to: '.$email['recipient']['e-mail']);
+                    Utils::log('E-mail sent to: '.$email['recipient']['e-mail']);
                 }
                 else {
-                    error_log('Unable to send mail.');
+                    Utils::log('Unable to send mail.');
                 }
             }
         } catch (\PHPMailer\PHPMailer\Exception $me) {

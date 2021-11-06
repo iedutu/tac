@@ -8,7 +8,7 @@ use Rohel\Notification;
 use Rohel\Request;
 
 if (! Utils::authorized(Utils::$INSERT)) {
-    error_log("User not authorized to insert data in the database.");
+    Utils::log("User not authorized to insert data in the database.");
     header ( 'Location: /' );
     exit ();
 }
@@ -34,7 +34,7 @@ if (isset ( $_POST ['_submitted'] )) {
         $cargo->setLoadingMeters($_POST ['loading']);
         $cargo->setVolume($_POST ['volume']);
         $cargo->setInstructions($_POST ['instructions']);
-        $cargo->setFreight($_POST ['freight']);
+        if(!empty($_POST['freight'])) $cargo->setFreight($_POST ['freight']);
         if(!empty($_POST['adr'])) $cargo->setAdr($_POST ['adr']);
         $cargo->setOrderType($_POST ['order_type']);
         $cargo->setDimensions($_POST ['dimensions']);

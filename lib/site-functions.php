@@ -8,7 +8,7 @@ use Rohel\TruckUpdates;
 
 class Utils
 {
-    public static bool $DEBUG = true;
+    public static bool $DEBUG = false;
     public static int $CARGO_PERIOD = 5;
     public static int $REPORTS_PERIOD = 180;
     public static int $QUERY = 1;
@@ -24,6 +24,12 @@ class Utils
     public static string $CANCELLED = 'CANCELLED';
     public static $WEBMASTER_EMAIL = 'webapp@rohel.ro';
     public static $WEBMASTER_NAME = 'Team Rohel';
+
+    public static function log(string $message) {
+        if(Utils::$DEBUG) {
+            error_log($message);
+        }
+    }
 
     public static function clean_up()
     {
@@ -48,23 +54,23 @@ class Utils
 
     public static function handleMySQLException(MeekroDBException $mdbe)
     {
-        error_log("Database error: " . $mdbe->getMessage());
-        error_log("Database error query: " . $mdbe->getQuery());
-        error_log("Database error code: " . $mdbe->getCode());
+        self::log("Database error: " . $mdbe->getMessage());
+        self::log("Database error query: " . $mdbe->getQuery());
+        self::log("Database error code: " . $mdbe->getCode());
     }
 
     public static function handleException(Exception $e)
     {
-        error_log("General error: " . $e->getMessage());
-        error_log("Error code: " . $e->getCode());
-        error_log("Error trace: " . $e->getTraceAsString());
+        self::log("General error: " . $e->getMessage());
+        self::log("Error code: " . $e->getCode());
+        self::log("Error trace: " . $e->getTraceAsString());
     }
 
     public static function handleMailException(\PHPMailer\PHPMailer\Exception $e)
     {
-        error_log("Mailing error: " . $e->errorMessage());
-        error_log("Error code: " . $e->getCode());
-        error_log("Error trace: " . $e->getTraceAsString());
+        self::log("Mailing error: " . $e->errorMessage());
+        self::log("Error code: " . $e->getCode());
+        self::log("Error trace: " . $e->getTraceAsString());
     }
 
     public static function resetPassword(string $username): bool
@@ -73,8 +79,8 @@ class Utils
             $recipient = DB_utils::selectUser($username);
             if(empty($recipient)) return false;
             $password = self::randomString(self::$PASSWORD_LENGTH);
-            error_log('New password: '.$password);
-            error_log('Old password: '.hash('sha256', 'pavel'));
+            self::log('New password: '.$password);
+            self::log('Old password: '.hash('sha256', 'pavel'));
 
             if (DB_utils::changeUserPassword($username, hash('sha256', $password))) {
                 $email['subject'] = 'ROHEL | New application password ';
@@ -280,7 +286,7 @@ class Utils
                         $a = Audit::readCargo($id, 'originator');
                     }
                     else {
-                        error_log('Cannot determine to whom I shall write the audit file to.');
+                        self::log('Cannot determine to whom I shall write the audit file to.');
                         return;
                     }
                 }
@@ -314,7 +320,7 @@ class Utils
                     case 'accepted_by':     { $a->setAcceptedBy(true); break;}
                     case 'dimensions':      { $a->setDimensions(true); break;}
                     case 'package':         { $a->setPackage(true); break;}
-                    default:                { error_log('Wrong data row received in Utils::highlightPageItem() => '.$row); break;}
+                    default:                { self::log('Wrong data row received in Utils::highlightPageItem() => '.$row); break;}
                 }
                 Audit::writeCargo($a);
 
@@ -346,14 +352,14 @@ class Utils
                     case 'truck_type':      { $a->setTruckType(true); break;}
                     case 'contract_type':   { $a->setContractType(true); break;}
                     case 'adr':             { $a->setAdr(true); break;}
-                    default:                {error_log('Wrong data row received: '.$row); break;}
+                    default:                {self::log('Wrong data row received: '.$row); break;}
                 }
                 Audit::writeTruck($a);
 
                 break;
             }
             default: {
-                error_log('Wrong table received: '.$table);
+                self::log('Wrong table received: '.$table);
 
                 break;
             }

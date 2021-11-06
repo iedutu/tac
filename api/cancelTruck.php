@@ -15,7 +15,7 @@ if (isset ( $_POST ['id'] )) {
     }
 
     if($truck->getStatus() == 2) {
-        error_log('Truck already solved/fully loaded and cannot be cancelled. Please contact the recipient directly.');
+        Utils::log('Truck already solved/fully loaded and cannot be cancelled. Please contact the recipient directly.');
         $_SESSION['alert']['type'] = 'error';
         $_SESSION['alert']['message'] = 'Truck already solved/fully loaded and cannot be cancelled. Please contact the recipient directly.';
 
@@ -24,7 +24,7 @@ if (isset ( $_POST ['id'] )) {
     }
 
     if($truck->getOriginator() != $_SESSION['operator']['id']) {
-        error_log('You cannot cancel orders created by others.');
+        Utils::log('You cannot cancel orders created by others.');
         $_SESSION['alert']['type'] = 'error';
         $_SESSION['alert']['message'] = 'You cannot cancel trucks added by others.';
 

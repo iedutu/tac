@@ -90,7 +90,7 @@ if(!empty($_POST['id'])) {
                 break;
             }
             default: {
-                error_log('Unknown page set-up when trying for a generic update.');
+                Utils::log('Unknown page set-up when trying for a generic update.');
                 return false;
             }
         }

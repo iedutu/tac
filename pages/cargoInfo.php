@@ -1,13 +1,13 @@
 <?php
 if(!isset($_GET['id'])) {
-    error_log('No cargo_request id specified.');
+    Utils::log('No cargo_request id specified.');
 
     return;
 }
 
 $cargo = DB_utils::selectRequest(intval($_GET['id']));
 if(is_null($cargo)) {
-    error_log('No cargo_request found for id='.$_GET['id']);
+    Utils::log('No cargo_request found for id='.$_GET['id']);
 
     return;
 }
@@ -117,7 +117,7 @@ $class_text_default = '';
                     </div>
                     <div class="card-toolbar d-print-none">
                         <!--begin::Button-->
-                        <button type="button" class="btn btn-light-primary font-weight-bolder" aria-expanded="false" onclick="javascript:window.print()">
+                        <button type="button" class="btn btn-light-primary font-weight-bolder" aria-expanded="false" onclick="window.print()">
 												<span class="svg-icon svg-icon-md">
 													<!--begin::Svg Icon | path:assets/media/svg/icons/Design/PenAndRuller.svg-->
 													<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -398,7 +398,14 @@ $class_text_default = '';
                                     <tr>
                                         <td class="text-right">Freight</td>
                                         <td>
-                                            <p style="display: inline" id="freight" class="<?=$audit->getFreight()?$class_text_new:$class_text_default?>">&euro; <?=$cargo->getFreight()?></p>
+                                            <?php
+                                            if($editable['originator']) {
+                                                echo '&euro; <b style="display: inline" id="freight" class="editable-text '.($audit->getFreight()?$class_text_new:$class_text_default).'">'.number_format($cargo->getFreight(), 2).'</b>';
+                                            }
+                                            else {
+                                                echo '&euro; <p style="display: inline" id="freight" class="'.($audit->getFreight()?$class_text_new:$class_text_default).'">'.number_format($cargo->getFreight(), 2).'</p>';
+                                            }
+                                            ?>
                                         </td>
                                     </tr>
                                     <tr>
@@ -500,14 +507,14 @@ $class_text_default = '';
                     if($editable['recipient']) {
                         ?>
                         <div class="card-footer d-print-none">
-                            <form class="form" id="kt_rohel_accept_form" action="/api/acceptCargo.php" method="post">
+                            <form class="form" id="kt_rohel_accept_form" action="/api/acknowledgeCargo.php" method="post">
                                 <input type="hidden" name="_submitted" value="true">
                                 <input type="hidden" name="id" value="<?=$cargo->getId()?>">
                                 <div class="row">
                                     <div class="col-lg-8">
                                         <?php
                                         // NEW cargo only can be cancelled
-                                        if($cargo->getStatus() == 0) {
+                                        if($cargo->getStatus() == 1) {
                                             echo '<button type="submit" class="btn btn-primary btn-lg" data-toggle="tooltip" title="Click to acknowledge the request!">Acknowledge request</button>';
                                         }
                                         ?>
