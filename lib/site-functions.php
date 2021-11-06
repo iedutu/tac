@@ -17,8 +17,8 @@ class Utils
     public static string $PHP_DATE_FORMAT = 'd-m-Y';
     public static string $SQL_DATE_FORMAT = '%d-%m-%Y';
     public static int $PASSWORD_LENGTH = 6;
-    public static string $BASE_URL = 'http://rohel.iedutu.com/';
-
+    public static string $BASE_URL = 'https://cat.rohel.ro/';
+    public static string $TIMEZONE = 'Europe/Bucharest';
     public static int $REPORTS = 11;
     public static int $OPERATIONAL = 12;
     public static string $CANCELLED = 'CANCELLED';

@@ -17,17 +17,15 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use Rohel\User;
 
-date_default_timezone_set('UTC');
-
 if(!empty($_POST['_submitted'])) {
     $start_date = $_POST['rohel_reports_start'];
     $end_date = $_POST['rohel_reports_end'];
 
     if (Utils::authorized(Utils::$REPORTS)) {
         $_path = $_SERVER ['HTTP_HOST'] . 'new/'; // TODO - fix
-        date_default_timezone_set('Europe/Bucharest');
 
         $spreadsheet = new Spreadsheet ();
+
         try {
             switch ($_POST['_page']) {
                 case 'cargo':
@@ -169,14 +167,16 @@ if(!empty($_POST['_submitted'])) {
                         $spreadsheet->getActiveSheet()
                             ->getStyle('S' . $i)->getFill()->getStartColor()->setRGB(substr($bgColor,1));
 
+                        Date::setDefaultTimezone('Europe/Bucharest');
+
                         $spreadsheet->getActiveSheet()
                             ->setCellValue('A' . $i, $row ['originator_name'])
                             ->setCellValue('B' . $i, $row ['recipient_name'])
                             ->setCellValue('C' . $i, $row ['client'])
                             ->setCellValue('D' . $i, $row ['from_city'])
                             ->setCellValue('E' . $i, $row ['to_city'])
-                            ->setCellValue('F' . $i, (empty($row ['loading_date']) ? 'N/A' : Date::PHPToExcel(strtotime($row ['loading_date']))))
-                            ->setCellValue('G' . $i, (empty($row ['unloading_date']) ? 'N/A' : Date::PHPToExcel(strtotime($row ['unloading_date']))))
+                            ->setCellValue('F' . $i, (empty($row ['loading_date']) ? 'N/A' : Date::PHPToExcel(new DateTime($row ['loading_date'], new DateTimeZone(Utils::$TIMEZONE)))))
+                            ->setCellValue('G' . $i, (empty($row ['unloading_date']) ? 'N/A' : Date::PHPToExcel(new DateTime($row ['unloading_date'], new DateTimeZone(Utils::$TIMEZONE)))))
                             ->setCellValue('H' . $i, (empty($row ['description']) ? 'N/A' : $row ['description']))
                             ->setCellValue('I' . $i, (empty($row ['collies']) ? 'N/A' : $row ['collies']))
                             ->setCellValue('J' . $i, $row ['weight'])
@@ -293,7 +293,7 @@ if(!empty($_POST['_submitted'])) {
                         switch ($row['status']) {
                             case 1:
                             {
-                                $status = 'New';
+                                $status = 'Available';
                                 $bgColor = Mails::$BG_SECONDARY_COLOR;
                                 $txtColor = Mails::$TX_SECONDARY_COLOR;
                                 break;
@@ -341,9 +341,6 @@ if(!empty($_POST['_submitted'])) {
                             }
                         }
 
-                        $spreadsheet->getActiveSheet()->getStyle('D' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
-                        $spreadsheet->getActiveSheet()->getStyle('E' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
-
                         $stops = DB::getMDB()->query("
 								SELECT 
        								*
@@ -354,6 +351,9 @@ if(!empty($_POST['_submitted'])) {
 				    		    ORDER BY stop_id", $row['id']);
 
                         foreach($stops as $stop) {
+                            $spreadsheet->getActiveSheet()->getStyle('D' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
+                            $spreadsheet->getActiveSheet()->getStyle('E' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
+
                             $spreadsheet->getActiveSheet()
                                 ->getStyle('J' . $i)->getFont()->setBold(true);
                             $spreadsheet->getActiveSheet()
@@ -367,8 +367,8 @@ if(!empty($_POST['_submitted'])) {
                                 ->setCellValue('A' . $i, $row ['originator_name'])
                                 ->setCellValue('B' . $i, $row ['recipient_name'])
                                 ->setCellValue('C' . $i, $row ['from_city'])
-                                ->setCellValue('D' . $i, ($row ['loading_date'] == null) ? 'N/A' : Date::PHPToExcel(strtotime($row ['loading_date'])))
-                                ->setCellValue('E' . $i, ($row ['unloading_date'] == null) ? 'N/A' : Date::PHPToExcel(strtotime($row ['unloading_date'])))
+                                ->setCellValue('D' . $i, (empty($row ['loading_date']) ? 'N/A' : Date::PHPToExcel(new DateTime($row ['loading_date'], new DateTimeZone(Utils::$TIMEZONE)))))
+                                ->setCellValue('E' . $i, (empty($row ['unloading_date']) ? 'N/A' : Date::PHPToExcel(new DateTime($row ['unloading_date'], new DateTimeZone(Utils::$TIMEZONE)))))
                                 ->setCellValue('F' . $i, ($row ['details'] == null) ? 'N/A' : $row ['details'])
                                 ->setCellValue('G' . $i, ($row ['freight'] == null) ? 'N/A' : $row ['freight'])
                                 ->setCellValue('H' . $i, ($row ['plate_number'] == null) ? 'N/A' : $row ['plate_number'])
@@ -380,14 +380,15 @@ if(!empty($_POST['_submitted'])) {
                                 ->setCellValue('M' . $i, $stop['weight'])
                                 ->setCellValue('N' . $i, $stop['volume']);
 
-                                /*
-                                $hyperlink = new Hyperlink();
-                                $hyperlink->setUrl(Utils::$BASE_URL . '?page=truckInfo&id=' . $row['id']);
-                                $spreadsheet->getActiveSheet()->setHyperlink('Y' . $i, $hyperlink);
-                                unset($hyperlink);
-                                */
+                            /*
+                            $hyperlink = new Hyperlink();
+                            $hyperlink->setUrl(Utils::$BASE_URL . '?page=truckInfo&id=' . $row['id']);
+                            $spreadsheet->getActiveSheet()->setHyperlink('Y' . $i, $hyperlink);
+                            unset($hyperlink);
+                            */
+
+                            $i++;
                         }
-                        $i++;
                     }
 
                     $spreadsheet->getActiveSheet()->setTitle('Truck report');
@@ -531,7 +532,7 @@ if(!empty($_POST['_submitted'])) {
                             ->setCellValue('A' . $i, $row ['originator_name'])
                             ->setCellValue('B' . $i, $row ['recipient_name'])
                             ->setCellValue('C' . $i, $status)
-                            ->setCellValue('D' . $i, (empty($row ['availability']) ? 'N/A' : Date::PHPToExcel(strtotime($row ['availability']))))
+                            ->setCellValue('D' . $i, (empty($row ['availability']) ? 'N/A' : Date::PHPToExcel(new DateTime($row ['availability'], new DateTimeZone(Utils::$TIMEZONE)))))
                             ->setCellValue('E' . $i, $row ['from_city'])
                             ->setCellValue('F' . $i, $row ['to_city'])
                             ->setCellValue('G' . $i, $row ['order_type'])
