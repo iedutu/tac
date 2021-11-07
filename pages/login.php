@@ -173,7 +173,7 @@ else {
                         <!--begin::Action-->
                         <div class="pb-lg-0 pb-5">
                             <button
-                                    data-sitekey="6Lecq-scAAAAALlVasOeAFEPjyAuzrzY-pXNEQrn"
+                                    data-sitekey="6LcJhhwdAAAAANuI9vrDD9clsIdHtEwYxdjYSrwC"
                                     data-action='submit'
                                     type="button"
                                     id="kt_login_signin_submit"
@@ -255,7 +255,7 @@ else {
                         <!--begin::Form group-->
                         <div class="form-group d-flex flex-wrap pb-lg-0">
                             <button
-                                    data-sitekey="6LccLxodAAAAADINHhCRabhbAn5NpfqtsF63pLZk"
+                                    data-sitekey="6LccLxodAAAAAGlQMXfgvzb-oN8fJIpM4RdbfggT"
                                     data-action='submit'
                                     type="button"
                                     id="kt_login_forgot_submit"
