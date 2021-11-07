@@ -68,16 +68,16 @@ if (!empty( $_POST ['_signin'] )) { // Regular sign-in
     }
 }
 else {
-    if (!empty( $_POST ['_forgot_password'] )) { // Regular sign-in
-        if(Utils::resetPassword($_POST ['email'])) {
+    if (!empty( $_POST ['_forgot_password'] )) { // Forgot password
+        if(Utils::addResetKey($_POST ['email'])) {
             $_SESSION['alert']['type']='success';
             $_SESSION['alert']['width']=12;
-            $_SESSION['alert']['message']='Your password was reset. Please check your inbox for details.';
+            $_SESSION['alert']['message']='Your change request was processed. Please check your inbox for further details.';
         }
         else {
             $_SESSION['alert']['type']='error';
             $_SESSION['alert']['width']=12;
-            $_SESSION['alert']['message']='Unable to reset your password.';
+            $_SESSION['alert']['message']='An error occurred while trying to reset your password.';
         }
     }
 }

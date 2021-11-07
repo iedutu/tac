@@ -154,7 +154,28 @@ class DB_utils
     {
         try {
             DB::getMDB()->update('cargo_users', array(
-                'password' => $password
+                'password' => $password,
+                'reset_key' => null
+            ), "(username=%s) and (NOW() < (DATE_ADD(SYS_UPDATE_DATE, INTERVAL 2 HOUR)))", $username);
+            $result = (DB::getMDB()->affectedRows() == 1);
+            DB::getMDB()->commit();
+
+            return $result;
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe->getMessage());
+        }
+    }
+
+    /**
+     * @throws ApplicationException
+     */
+    public static function addResetKey(string $username, string $reset_key): bool
+    {
+        try {
+            DB::getMDB()->update('cargo_users', array(
+                'reset_key' => $reset_key
             ), "username=%s", $username);
             DB::getMDB()->commit();
 
@@ -912,6 +933,44 @@ class DB_utils
                                                      (a.id=%d)", $id);
             if (is_null($row)) {
                 Utils::log("No cargo_users was found for id=".$id);
+
+                return null;
+            }
+
+            return self::row2user($row);
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
+
+            return null;
+        }
+        catch (Exception $e) {
+            Utils::handleException($e);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'Database error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+
+            return null;
+        }
+    }
+
+    public static function selectUserByResetKey(string $reset_key): ?User
+    {
+        try {
+            $row = DB::getMDB()->queryOneRow("select a.*, b.name as 'office_name', c.name as 'country_name', c.id as 'country_id' 
+                                                  from 
+                                                     cargo_users a,
+                                                     cargo_offices b,
+                                                     cargo_countries c  
+                                                  where
+                                                     (a.office_id = b.id)
+                                                     and
+                                                     (b.country = c.id)
+                                                     and
+                                                     (a.reset_key=%s)", $reset_key);
+            if (is_null($row)) {
+                Utils::log("No cargo_users was found for reset_key=".$reset_key);
 
                 return null;
             }

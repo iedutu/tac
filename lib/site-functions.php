@@ -8,7 +8,7 @@ use Rohel\TruckUpdates;
 
 class Utils
 {
-    public static bool $DEBUG = false;
+    public static bool $DEBUG = true;
     public static int $CARGO_PERIOD = 5;
     public static int $REPORTS_PERIOD = 180;
     public static int $QUERY = 1;
@@ -27,7 +27,7 @@ class Utils
 
     public static function log(string $message) {
         if(Utils::$DEBUG) {
-            error_log($message);
+            // error_log($message);
         }
     }
 
@@ -73,16 +73,52 @@ class Utils
         self::log("Error trace: " . $e->getTraceAsString());
     }
 
-    public static function resetPassword(string $username): bool
+    public static function addResetKey(string $username): bool
     {
         try {
             $recipient = DB_utils::selectUser($username);
             if(empty($recipient)) return false;
-            $password = self::randomString(self::$PASSWORD_LENGTH);
-            self::log('New password: '.$password);
-            self::log('Old password: '.hash('sha256', 'pavel'));
 
-            if (DB_utils::changeUserPassword($username, hash('sha256', $password))) {
+            $reset_key = hash('sha256', self::randomString(self::$PASSWORD_LENGTH));
+
+            if (DB_utils::addResetKey($username, $reset_key)) {
+                $email['subject'] = 'ROHEL | New application password ';
+                $email['title'] = 'ROHEL | E-mail';
+                $email['header'] = 'New application password requested';
+                $email['body-1'] = 'Hi ' . $recipient->getName() . '!';
+                $email['body-2'] = 'Someone requested a new password for your account. If you are not aware of this, simply disregard this message.<br><br> If you want to change your password, please confirm by using the link below and a new password will be generated for you and you will receive it in a new e-mail.';
+                $email['recipient']['e-mail'] = $recipient->getUsername();
+                $email['recipient']['name'] = $recipient->getName();
+                $email['originator']['e-mail'] = Utils::$WEBMASTER_EMAIL;
+                $email['originator']['name'] = Utils::$WEBMASTER_NAME;
+                $email['link']['url'] = self::$BASE_URL.'api/resetPassword.php?key='.$reset_key;
+                $email['link']['text'] = 'Confirm here your request for a new password';
+                $email['bg-color'] = Mails::$BG_ACKNOWLEDGED_COLOR;
+                $email['tx-color'] = Mails::$TX_ACKNOWLEDGED_COLOR;
+
+                Mails::emailNotification($email, 'template-2.php');
+                return true;
+            }
+        }
+        catch(ApplicationException $ae) {
+            return false;
+        }
+        catch(Exception $e) {
+            self::handleException($e);
+            return false;
+        }
+
+        return false;
+    }
+
+    public static function resetPassword(string $reset_key): bool
+    {
+        try {
+            $recipient = DB_utils::selectUserByResetKey($reset_key);
+            if(empty($recipient)) return false;
+            $password = self::randomString(self::$PASSWORD_LENGTH);
+
+            if (DB_utils::changeUserPassword($recipient->getUsername(), hash('sha256', $password))) {
                 $email['subject'] = 'ROHEL | New application password ';
                 $email['title'] = 'ROHEL | E-mail';
                 $email['header'] = 'New application password generated';
