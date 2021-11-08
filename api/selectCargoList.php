@@ -79,7 +79,7 @@ try {
                         )
 					    order by ".$field." ".$sort, Utils::$SQL_DATE_FORMAT, Utils::$CARGO_PERIOD, $_SESSION['operator']['country-id']);
 
-    // Utils::log(DB::getMDB()->lastQuery());
+    // AppLogger::getLogger()->debug(DB::getMDB()->lastQuery());
 } catch (MeekroDBException $mdbe) {
     Utils::handleMySQLException($mdbe);
     $_SESSION['alert']['type'] = 'error';

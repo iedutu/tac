@@ -16,7 +16,7 @@ if (isset ( $_POST ['id'] )) {
     }
 
     if($truck->getStatus() == 3) {
-        Utils::log('Truck already solved/loaded. Please contact the recipient directly.');
+        AppLogger::getLogger()->info('Truck already solved/loaded. Please contact the recipient directly.');
         $_SESSION['alert']['type'] = 'error';
         $_SESSION['alert']['message'] = 'Truck already solved/closed. Please contact the recipient directly.';
 

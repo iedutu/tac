@@ -1,21 +1,22 @@
 <?php
 if(empty($_GET['id'])) {
-    Utils::log('No cargo_truck id specified.');
+    AppLogger::getLogger()->error('No cargo_truck id specified.');
 
     return;
 }
 
-$truck = DB_utils::selectTruck(intval($_GET['id']));
+if(empty($truck = DB_utils::selectTruck(intval($_GET['id'])))) {
+    AppLogger::getLogger()->info('Unknown truck', ['id' => $_GET['id']]);
+
+    return;
+}
 
 // Clear notifications
-AppLogger::getLogger()->debug('Trying for clearing');
 if(!empty($_GET['source'])) {
     if($_GET['source'] == 'notifications') {
         try {
-            AppLogger::getLogger()->debug('Before clearing');
             DB_utils::clearNotifications($_SESSION['operator']['id'], 2, $truck->getId());
             DB_utils::clearNotifications($_SESSION['operator']['id'], 3, $truck->getId());
-            AppLogger::getLogger()->debug('After clearing');
         } catch (ApplicationException $e) {
             AppLogger::getLogger()->error($e->getMessage());
             AppLogger::getLogger()->error($e->getTraceAsString());
@@ -30,12 +31,6 @@ $_SESSION['entry-id'] = $_GET['id'];
 $_SESSION['entry-kind'] = 2;
 $_SESSION['originator-id'] = $truck->getOriginator();
 $_SESSION['recipient-id'] = $truck->getRecipient();
-
-if(is_null($truck)) {
-    Utils::log('No cargo_truck found for id='.$_GET['id']);
-
-    return;
-}
 
 /*
  * $editable['originator']

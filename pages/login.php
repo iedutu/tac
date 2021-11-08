@@ -48,7 +48,7 @@ if (!empty( $_POST ['_signin'] )) { // Regular sign-in
 
                 return;
             } else {
-                Utils::log('Wrong password. Got ' . $password . ', expected ' . $user->getPassword());
+                AppLogger::getLogger()->debug('Wrong password. Got ' . $password . ', expected ' . $user->getPassword());
                 $_SESSION['alert']['type'] = 'error';
                 $_SESSION['alert']['width'] = 12;
                 $_SESSION['alert']['message'] = 'Wrong username/password.';

@@ -45,7 +45,7 @@ class Audit {
 
             file_put_contents($filename, $data);
         } catch (Exception $e) {
-            Utils::log("Generic write error: " . $e->getMessage());
+            AppLogger::getLogger()->error("Generic write error: " . $e->getMessage());
 
             return false;
         }
@@ -61,12 +61,12 @@ class Audit {
             $a = new RequestUpdates();
 
             if (!is_file($filename)) {
-//                Utils::log("File not found: " . $filename . ". Returning an empty object.");
+//                AppLogger::getLogger()->error("File not found: " . $filename . ". Returning an empty object.");
                 return $a;
             }
 
             $data = file_get_contents($filename);
-//            Utils::log("Data read: " . $data);
+//            AppLogger::getLogger()->error("Data read: " . $data);
 
             if (Utils::$DEBUG) {
                 $a->mergeFromJsonString($data);
@@ -74,7 +74,7 @@ class Audit {
                 $a->mergeFromString($data);
             }
         } catch (Exception $e) {
-            Utils::log("Generic read error: " . $e->getMessage());
+            AppLogger::getLogger()->error("Generic read error: " . $e->getMessage());
 
             return null;
         }
@@ -89,10 +89,7 @@ class Audit {
         $filename = $_SERVER["DOCUMENT_ROOT"] . '/notifications/cargo_request_' . $for_whom.'_'.$id . '.bin';
 
         try {
-            if (!is_file($filename)) {
-//                Utils::log("File not found: " . $filename . ". Ignoring the call.");
-            }
-            else {
+            if (is_file($filename)) {
                 unlink($filename);
             }
         } catch (Exception $e) {
@@ -132,10 +129,10 @@ class Audit {
                 $data = $a->serializeToString();
             }
 
-//            Utils::log("Data to be written: " . $data);
+//            AppLogger::getLogger()->error("Data to be written: " . $data);
             file_put_contents($filename, $data);
         } catch (Exception $e) {
-            Utils::log("Generic write error: " . $e->getMessage());
+            AppLogger::getLogger()->error("Generic write error: " . $e->getMessage());
 
             return false;
         }
@@ -151,12 +148,12 @@ class Audit {
 
         try {
             if (!is_file($filename)) {
-//                Utils::log("File not found: " . $filename . ". Returning an empty object.");
+//                AppLogger::getLogger()->error("File not found: " . $filename . ". Returning an empty object.");
                 return $a;
             }
 
             $data = file_get_contents($filename);
-//            Utils::log("Data read: " . $data);
+//            AppLogger::getLogger()->error("Data read: " . $data);
 
             if (Utils::$DEBUG) {
                 $a->mergeFromJsonString($data);
@@ -164,7 +161,7 @@ class Audit {
                 $a->mergeFromString($data);
             }
         } catch (Exception $e) {
-            Utils::log("Generic read error: " . $e->getMessage());
+            AppLogger::getLogger()->error("Generic read error: " . $e->getMessage());
 
             return null;
         }
@@ -180,10 +177,7 @@ class Audit {
         $filename = $_SERVER["DOCUMENT_ROOT"] . '/notifications/cargo_truck_' . $for_whom.'_'.$id . '.bin';
 
         try {
-            if (!is_file($filename)) {
-//                Utils::log("File not found: " . $filename . ". Ignoring the call.");
-            }
-            else {
+            if (is_file($filename)) {
                 unlink($filename);
             }
         } catch (Exception $e) {

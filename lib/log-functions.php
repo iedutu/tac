@@ -5,15 +5,15 @@ use Monolog\Handler\StreamHandler;
 
 class AppLogger
 {
-    private Logger $logger;
-    private static string $path = '/home/sites/cat.rohel.ro/log/httpd';
+    private static Logger $logger;
+
     public static function getLogger(): Logger
     {
-        if(empty($logger)) {
-            $logger = new Logger('cat.rohel.ro');
-            $logger->pushHandler(new StreamHandler(self::$path.'/app_'.date(Utils::$PHP_DATE_FORMAT).'.log', Logger::WARNING));
+        if(empty(self::$logger)) {
+            self::$logger = new Logger('cat.rohel.ro');
+            self::$logger->pushHandler(new StreamHandler($_SERVER['DOCUMENT_ROOT'].'/../log/app_'.date(Utils::$PHP_DATE_FORMAT).'.log', Logger::DEBUG));
         }
 
-        return $logger;
+        return self::$logger;
     }
 }

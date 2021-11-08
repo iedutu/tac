@@ -25,7 +25,7 @@ try {
                             (a.cargo_id=%d) AND (a.operator_id=b.id)
 					   ORDER BY a.SYS_CREATION_DATE desc", Utils::$SQL_DATE_FORMAT, $_SESSION['entry-id']);
 
-    // Utils::log(DB::getMDB()->lastQuery());
+    // AppLogger::getLogger()->debug(DB::getMDB()->lastQuery());
 } catch (MeekroDBException $mdbe) {
     Utils::handleMySQLException($mdbe);
     $_SESSION['alert']['type'] = 'error';

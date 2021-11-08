@@ -76,10 +76,10 @@ class Mails
             $mail->msgHTML($body, dirname(__FILE__), true); // Create message bodies and embed images
             if (self::$ALLOW_MAILS) {
                 if($mail->send()) {
-                    Utils::log('E-mail sent to: '.$email['recipient']['e-mail']);
+                    AppLogger::getLogger()->debug('E-mail sent to: '.$email['recipient']['e-mail']);
                 }
                 else {
-                    Utils::log('Unable to send mail.');
+                    AppLogger::getLogger()->error('Unable to send mail.');
                 }
             }
         } catch (\PHPMailer\PHPMailer\Exception $me) {

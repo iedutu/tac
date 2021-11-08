@@ -1,13 +1,13 @@
 <?php
 if(!isset($_GET['id'])) {
-    Utils::log('No cargo_request id specified.');
+    AppLogger::getLogger()->error('No cargo_request id specified.');
 
     return;
 }
 
 $cargo = DB_utils::selectRequest(intval($_GET['id']));
-if(is_null($cargo)) {
-    Utils::log('No cargo_request found for id='.$_GET['id']);
+if(empty($cargo)) {
+    AppLogger::getLogger()->info('Unknown cargo', ['id' => $_GET['id']]);
 
     return;
 }

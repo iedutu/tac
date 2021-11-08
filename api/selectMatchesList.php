@@ -16,23 +16,23 @@ $field = 'item_date';
 
 if(empty($_SESSION['previous_area'])) {
     $_REQUEST['sort']['sort'] = 'desc';
-    $_REQUEST['sort']['field'] = 'item_date';
+    $_REQUEST['sort']['field'] = 'a.item_date';
 
     $_SESSION['previous_area'] = 'matches';
 
     $sort  = ! empty($_REQUEST['sort']['sort']) ? $_REQUEST['sort']['sort'] : 'desc';
-    $field = ! empty($_REQUEST['sort']['field']) ? $_REQUEST['sort']['field'] : 'item_date';
+    $field = ! empty($_REQUEST['sort']['field']) ? $_REQUEST['sort']['field'] : 'a.item_date';
 }
 else {
     if(($_SESSION['previous_area'] == 'cargo') || ($_SESSION['previous_area'] == 'truck')){
         $_REQUEST['sort']['sort'] = 'desc';
-        $_REQUEST['sort']['field'] = 'item_date';
+        $_REQUEST['sort']['field'] = 'a.item_date';
 
         $_SESSION['previous_area'] = 'matches';
     }
     else {
         $sort  = ! empty($_REQUEST['sort']['sort']) ? $_REQUEST['sort']['sort'] : 'desc';
-        $field = ! empty($_REQUEST['sort']['field']) ? $_REQUEST['sort']['field'] : 'item_date';
+        $field = ! empty($_REQUEST['sort']['field']) ? $_REQUEST['sort']['field'] : 'a.item_date';
     }
 }
 
@@ -87,7 +87,7 @@ try {
                         )
 					    order by ".$field." ".$sort, Utils::$SQL_DATE_FORMAT, Utils::$SQL_DATE_FORMAT);
 
-    // Utils::log(DB::getMDB()->lastQuery());
+    // AppLogger::getLogger()->debug(DB::getMDB()->lastQuery());
 } catch (MeekroDBException $mdbe) {
     Utils::handleMySQLException($mdbe);
     $_SESSION['alert']['type'] = 'error';

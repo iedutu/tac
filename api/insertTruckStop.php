@@ -8,7 +8,7 @@ use Rohel\Notification;
 use Rohel\TruckStop;
 
 if (! Utils::authorized(Utils::$INSERT)) {
-    Utils::log("User not authorized to insert data in the database.");
+    AppLogger::getLogger()->info("User not authorized to insert data in the database.");
 	header ( 'Location: /' );
 	exit ();
 }

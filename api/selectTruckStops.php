@@ -97,5 +97,5 @@ $result = [
     'data' => $data,
 ];
 
-// Utils::log(json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+// AppLogger::getLogger()->debug(json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 echo json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
