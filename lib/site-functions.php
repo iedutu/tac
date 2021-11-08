@@ -25,12 +25,6 @@ class Utils
     public static $WEBMASTER_EMAIL = 'webmaster@cat.rohel.ro';
     public static $WEBMASTER_NAME = 'Team ROHEL';
 
-    public static function log(string $message) {
-        if(Utils::$DEBUG) {
-            AppLogger::getLogger()->debug($message);
-        }
-    }
-
     public static function clean_up()
     {
         unset($_SESSION['entry-id']);
@@ -54,23 +48,23 @@ class Utils
 
     public static function handleMySQLException(MeekroDBException $mdbe)
     {
-        self::log("Database error: " . $mdbe->getMessage());
-        self::log("Database error query: " . $mdbe->getQuery());
-        self::log("Database error code: " . $mdbe->getCode());
+        AppLogger::getLogger()->error("Database error: " . $mdbe->getMessage());
+        AppLogger::getLogger()->error("Database error query: " . $mdbe->getQuery());
+        AppLogger::getLogger()->error("Database error code: " . $mdbe->getCode());
     }
 
     public static function handleException(Exception $e)
     {
-        self::log("General error: " . $e->getMessage());
-        self::log("Error code: " . $e->getCode());
-        self::log("Error trace: " . $e->getTraceAsString());
+        AppLogger::getLogger()->error("General error: " . $e->getMessage());
+        AppLogger::getLogger()->error("Error code: " . $e->getCode());
+        AppLogger::getLogger()->error("Error trace: " . $e->getTraceAsString());
     }
 
     public static function handleMailException(\PHPMailer\PHPMailer\Exception $e)
     {
-        self::log("Mailing error: " . $e->errorMessage());
-        self::log("Error code: " . $e->getCode());
-        self::log("Error trace: " . $e->getTraceAsString());
+        AppLogger::getLogger()->error("Mailing error: " . $e->errorMessage());
+        AppLogger::getLogger()->error("Error code: " . $e->getCode());
+        AppLogger::getLogger()->error("Error trace: " . $e->getTraceAsString());
     }
 
     public static function addResetKey(string $username): bool
@@ -322,7 +316,7 @@ class Utils
                         $a = Audit::readCargo($id, 'originator');
                     }
                     else {
-                        self::log('Cannot determine to whom I shall write the audit file to.');
+                        AppLogger::getLogger()->error('Cannot determine to whom I shall write the audit file to.');
                         return;
                     }
                 }
@@ -356,7 +350,7 @@ class Utils
                     case 'accepted_by':     { $a->setAcceptedBy(true); break;}
                     case 'dimensions':      { $a->setDimensions(true); break;}
                     case 'package':         { $a->setPackage(true); break;}
-                    default:                { self::log('Wrong data row received in Utils::highlightPageItem() => '.$row); break;}
+                    default:                { AppLogger::getLogger()->error('Wrong data row received in Utils::highlightPageItem() => '.$row); break;}
                 }
                 Audit::writeCargo($a);
 
@@ -388,14 +382,14 @@ class Utils
                     case 'truck_type':      { $a->setTruckType(true); break;}
                     case 'contract_type':   { $a->setContractType(true); break;}
                     case 'adr':             { $a->setAdr(true); break;}
-                    default:                {self::log('Wrong data row received: '.$row); break;}
+                    default:                {AppLogger::getLogger()->error('Wrong data row received: '.$row); break;}
                 }
                 Audit::writeTruck($a);
 
                 break;
             }
             default: {
-                self::log('Wrong table received: '.$table);
+                AppLogger::getLogger()->error('Wrong table received: '.$table);
 
                 break;
             }

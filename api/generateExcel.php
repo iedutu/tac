@@ -563,18 +563,18 @@ if(!empty($_POST['_submitted'])) {
                 }
             }
         } catch (\PhpOffice\PhpSpreadsheet\Writer\Exception $e) {
-            Utils::log("Excel creation error: " . $e->getMessage());
+            AppLogger::getLogger()->error("Excel creation error: " . $e->getMessage());
         } catch (\PhpOffice\PhpSpreadsheet\Exception $e) {
-            Utils::log("Excel general error: " . $e->getMessage());
+            AppLogger::getLogger()->error("Excel general error: " . $e->getMessage());
         } catch (MeekroDBException $mdbe) {
-            Utils::log("Database error: " . $mdbe->getMessage());
+            AppLogger::getLogger()->error("Database error: " . $mdbe->getMessage());
             $_SESSION['alert']['type'] = 'error';
             $_SESSION['alert']['message'] = 'Database error (' . $mdbe->getCode() . ':' . $mdbe->getMessage() . '). Please contact your system administrator.';
 
             header('Location: /');
             exit ();
         } catch (Exception $e) {
-            Utils::log("Database error: " . $e->getMessage());
+            AppLogger::getLogger()->error("Database error: " . $e->getMessage());
             $_SESSION['alert']['type'] = 'error';
             $_SESSION['alert']['message'] = 'Database error (' . $e->getCode() . ':' . $e->getMessage() . '). Please contact your system administrator.';
 
