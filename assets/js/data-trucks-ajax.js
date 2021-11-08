@@ -115,18 +115,22 @@ var KTDatatableTruckList = function() {
                 field: 'loading_date',
                 title: 'Loading date',
                 type: 'date',
+                width: 75,
                 format: 'DD-MM-YYYY',
             }, {
                 field: 'unloading_date',
                 title: 'Unloading date',
                 type: 'date',
+                width: 85,
                 format: 'DD-MM-YYYY',
             }, {
                 field: 'plate_number',
                 title: 'License plate',
+                width: 150,
             }, {
                 field: 'ameta',
                 title: 'Ameta',
+                width: 75,
             }, {
                 field: 'status',
                 title: 'Status',

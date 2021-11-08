@@ -12,6 +12,19 @@ if(empty($cargo)) {
     return;
 }
 
+// Clear notifications
+if(!empty($_GET['source'])) {
+    if($_GET['source'] == 'notifications') {
+        try {
+            DB_utils::clearNotifications($_SESSION['operator']['id'], 1, $cargo->getId());
+            DB_utils::clearNotifications($_SESSION['operator']['id'], 4, $cargo->getId());
+        } catch (ApplicationException $e) {
+            AppLogger::getLogger()->error($e->getMessage());
+            AppLogger::getLogger()->error($e->getTraceAsString());
+        }
+    }
+}
+
 // Required for the fetching of notifications, dynamic updates
 $_SESSION['entry-id'] = $_GET['id'];
 $_SESSION['entry-kind'] = 1;
