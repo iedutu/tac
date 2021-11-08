@@ -25,13 +25,11 @@ if(!empty($_POST['id'])) {
 
     try {
         $cargo->setAcceptedBy($_SESSION ['operator']['id']);
-        DB_utils::acknowledgeCargo($cargo, $_POST ['id'], $_POST ['value']);
+        DB_utils::acknowledgeCargo($cargo, $_POST ['id'], empty($_POST ['value'])?null:$_POST ['value']);
 
         Utils::highlightPageItem('cargo_request', 'accepted_by', $cargo->getId());
         Utils::highlightPageItem('cargo_request', 'acceptance', $cargo->getId());
-        Utils::log('------- before --------');
-        Utils::highlightPageItem('cargo_request', 'plate_number', $cargo->getId());
-        Utils::log('------- after --------');
+        if(!empty($_POST['value'])) Utils::highlightPageItem('cargo_request', 'plate_number', $cargo->getId());
 
         Utils::insertCargoAuditEntry('cargo_request', 'acceptance', $cargo->getId(), date("Y-m-d H:i:s"));
         Utils::insertCargoAuditEntry('cargo_request', 'accepted_by', $cargo->getId(), $cargo->getAcceptedBy());
@@ -79,7 +77,9 @@ if(!empty($_POST['id'])) {
         return null;
     }
 
-    echo $_POST['value'];
+    if(!empty($_POST ['value'])) {
+        echo $_POST['value'];
+    }
 }
 else {
     header('Location: /index.php?page=cargo');

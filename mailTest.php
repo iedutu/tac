@@ -1,5 +1,6 @@
 <?php
 session_start ();
+return null;
 
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
@@ -8,7 +9,7 @@ try {
     $email['title'] = 'ROHEL | E-mail';
     $email['header'] = ' You have a new truck order from Cristian';
     $email['body-1'] = 'has introduced a new truck order for your consideration.';
-    $email['body-2'] = 'The unloading date is <strong>25/5/2021</strong>';
+    $email['body-2'] = 'The unloading date is <strong>26/5/2021</strong>';
     $email['originator']['e-mail'] = 'ioana.pavel@rohel.ro';
     $email['originator']['name'] = 'Ioana';
     $email['recipient']['e-mail'] = 'cristian.ungureanu@gmail.com';
@@ -20,7 +21,7 @@ try {
 
     Mails::$ALLOW_MAILS = true;
     Mails::emailNotification($email);
-    echo 'Done!';
+    echo 'Done !';
 } catch (ApplicationException $ae) {
     return 0;
 } catch (Exception $e) {

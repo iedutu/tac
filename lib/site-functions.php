@@ -22,12 +22,12 @@ class Utils
     public static int $REPORTS = 11;
     public static int $OPERATIONAL = 12;
     public static string $CANCELLED = 'CANCELLED';
-    public static $WEBMASTER_EMAIL = 'webapp@rohel.ro';
-    public static $WEBMASTER_NAME = 'Team Rohel';
+    public static $WEBMASTER_EMAIL = 'webmaster@cat.rohel.ro';
+    public static $WEBMASTER_NAME = 'Team ROHEL';
 
     public static function log(string $message) {
         if(Utils::$DEBUG) {
-            // error_log($message);
+            AppLogger::getLogger()->debug($message);
         }
     }
 

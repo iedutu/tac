@@ -1,11 +1,28 @@
 <?php
-if(!isset($_GET['id'])) {
+if(empty($_GET['id'])) {
     Utils::log('No cargo_truck id specified.');
 
     return;
 }
 
 $truck = DB_utils::selectTruck(intval($_GET['id']));
+
+// Clear notifications
+AppLogger::getLogger()->debug('Trying for clearing');
+if(!empty($_GET['source'])) {
+    if($_GET['source'] == 'notifications') {
+        try {
+            AppLogger::getLogger()->debug('Before clearing');
+            DB_utils::clearNotifications($_SESSION['operator']['id'], 2, $truck->getId());
+            DB_utils::clearNotifications($_SESSION['operator']['id'], 3, $truck->getId());
+            AppLogger::getLogger()->debug('After clearing');
+        } catch (ApplicationException $e) {
+            AppLogger::getLogger()->error($e->getMessage());
+            AppLogger::getLogger()->error($e->getTraceAsString());
+        }
+    }
+}
+
 unset($_SESSION['current_truck']);
 
 // Required for the fetching of notifications, dynamic updates

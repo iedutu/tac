@@ -578,15 +578,27 @@ class DB_utils
     /**
      * @throws ApplicationException
      */
-    public static function acknowledgeCargo(Request $cargo, string $field, string $value): bool
+    public static function acknowledgeCargo(Request $cargo, string $field, ?string $value): bool
     {
+        AppLogger::getLogger()->info('Cargo to be acknowledged: '.$cargo->serializeToJsonString());
+        AppLogger::getLogger()->info('Fields to change: id=('.$field.'), value=('.$value.')');
+
         try {
-            DB::getMDB()->update('cargo_request', array(
-                'acceptance' => date("Y-m-d H:i:s"),
-                'accepted_by' => $cargo->getAcceptedBy(),
-                $field => $value,
-                'status' => 2
-            ), "id=%d", $cargo->getId());
+            if(empty($value)) {
+                DB::getMDB()->update('cargo_request', array(
+                    'acceptance' => date("Y-m-d H:i:s"),
+                    'accepted_by' => $cargo->getAcceptedBy(),
+                    'status' => 2
+                ), "id=%d", $cargo->getId());
+            }
+            else {
+                DB::getMDB()->update('cargo_request', array(
+                    'acceptance' => date("Y-m-d H:i:s"),
+                    'accepted_by' => $cargo->getAcceptedBy(),
+                    $field => $value,
+                    'status' => 2
+                ), "id=%d", $cargo->getId());
+            }
             DB::getMDB()->commit();
 
             return true;
@@ -1070,140 +1082,6 @@ class DB_utils
         }
     }
 
-    public static function generateMatches() {
-        if(self::readValue('changes') == '0') {
-            return;
-        }
-
-        try {
-            // Select all NEW and ACCEPTED trucks
-
-            // Clean-up the table
-            DB::getMDB()->query('TRUNCATE cargo_match');
-
-            $t_rows = DB::getMDB()->query ('SELECT * FROM cargo_truck WHERE (status < 6) ORDER BY SYS_CREATION_DATE DESC');
-            $i = 0;
-            foreach($t_rows as $t_row) {
-                $truck = self::row2truck($t_row);
-
-                $s_rows = DB::getMDB()->query ('SELECT * FROM cargo_truck_stops WHERE truck_id=%d ORDER BY stop_id', $truck->getId());
-                $j = 0;
-                foreach($s_rows as $s_row) {
-                    $stop = self::row2stop($s_row);
-
-                    // Create the match
-                    $match = new TruckMatch();
-                    $originator = DB_utils::selectUserById($truck->getOriginator());
-
-                    $match->setWeight($stop->getWeight());
-                    $match->setVolume($stop->getVolume());
-                    $match->setLoadingMeters($stop->getLoadingMeters());
-                    $match->setAdr($truck->getAdr());
-                    $match->setDetails($truck->getDetails());
-                    $match->setPlateNumber($truck->getPlateNumber());
-                    $match->setAmeta($truck->getAmeta());
-                    $match->setAvailability($truck->getUnloadingDate());
-                    $match->setFromCity($stop->getCity());
-                    $match->setToCity($originator->getCountryName());
-                    $match->setItemDate($truck->getCreationDate());
-                    $match->setItemId($truck->getId());
-                    $match->setOrderType('N/A');
-                    $match->setItemKind('truckInfo');
-                    $match->setOperator($_SESSION['operator']['username']);
-                    $match->setOriginatorId($truck->getOriginator());
-                    $match->setRecipientId($truck->getRecipient());
-
-                    switch($truck->getStatus()) {
-                        case 1: {
-                            $match->setStatus(1);
-
-                            break;
-                        }
-                        case 2: {
-                            $match->setStatus(3);
-
-                            break;
-                        }
-                        case 3: {
-                            $match->setStatus(4);
-
-                            break;
-                        }
-                        case 4: {
-                            $match->setStatus(5);
-
-                            break;
-                        }
-                        case 5: {
-                            $match->setStatus(6);
-
-                            break;
-                        }
-                        case 6: {
-                            $match->setStatus(0);
-
-                            break;
-                        }
-                    }
-
-                    DB_utils::insertMatch($match);
-                    unset($match);
-                }
-
-                unset($truck);
-            }
-
-            // Select all NEW and ACCEPTED cargo
-            $c_rows = DB::getMDB()->query ('SELECT * FROM cargo_request WHERE (status = 1) OR (status = 2) ORDER BY SYS_CREATION_DATE DESC');
-            $i = 0;
-            foreach($c_rows as $c_row) {
-                $cargo = self::row2request($c_row);
-
-                // Create the match
-                $match = new TruckMatch();
-
-                $match->setWeight($cargo->getWeight());
-                $match->setVolume($cargo->getVolume());
-                $match->setLoadingMeters($cargo->getLoadingMeters());
-                $match->setAdr($cargo->getAdr());
-                $match->setOrderType($cargo->getOrderType());
-                $match->setPlateNumber($cargo->getPlateNumber());
-                $match->setAmeta($cargo->getAmeta());
-                $match->setAvailability($cargo->getLoadingDate());
-                $match->setFromCity($cargo->getFromCity());
-                $match->setToCity($cargo->getToCity());
-                $match->setItemDate($cargo->getCreationDate());
-                $match->setItemId($cargo->getId());
-                $match->setOrderType($cargo->getOrderType());
-                $match->setItemKind('cargoInfo');
-                $match->setOperator($_SESSION['operator']['username']);
-                $match->setOriginatorId($cargo->getOriginator());
-                $match->setRecipientId($cargo->getRecipient());
-
-                if(empty($cargo->getPlateNumber())) {
-                    $match->setStatus(2);
-                }
-                else {
-                    $match->setStatus(6);
-                }
-
-                DB_utils::insertMatch($match);
-                unset($match);
-                unset($cargo);
-            }
-        }
-        catch (MeekroDBException $mdbe) {
-            Utils::handleMySQLException($mdbe);
-            return null;
-        }
-        catch (Exception $e) {
-            Utils::handleException($e);
-            return null;
-        }
-
-        self::writeValue('changes', '0');
-    }
-
     public static function handleNotifications(): bool
     {
         try {
@@ -1255,7 +1133,7 @@ class DB_utils
                                 { // Cargo
                                     $title = 'New cargo request';
                                     $text = 'A new cargo request was added by ' . $notification->getFrom();
-                                    $url = '/?page=cargoInfo&id=' . $notification->getEntityId();
+                                    $url = '/?source=notifications&page=cargoInfo&id=' . $notification->getEntityId();
 
                                     break;
                                 }
@@ -1263,7 +1141,7 @@ class DB_utils
                                 { // Truck
                                     $title = 'New available truck';
                                     $text = 'A new available truck was added by ' . $notification->getFrom();
-                                    $url = '/page=truckInfo&id=' . $notification->getEntityId();
+                                    $url = '/?source=notifications&page=truckInfo&id=' . $notification->getEntityId();
 
                                     break;
                                 }
@@ -1271,7 +1149,7 @@ class DB_utils
                                 { // Truck stop
                                     $title = 'New truck stop added';
                                     $text = 'A new truck stop was added for an existing truck by ' . $notification->getFrom();
-                                    $url = '/page=truckInfo&id=' . $notification->getEntityId();
+                                    $url = '/?source=notifications&page=truckInfo&id=' . $notification->getEntityId();
 
                                     break;
                                 }
@@ -1279,7 +1157,7 @@ class DB_utils
                                 { // Cargo comment
                                     $title = 'New cargo comment added';
                                     $text = 'A new comment was added for an existing cargo by ' . $notification->getFrom();
-                                    $url = '/?page=cargoInfo&id=' . $notification->getEntityId();
+                                    $url = '/?source=notifications&page=cargoInfo&id=' . $notification->getEntityId();
 
                                     break;
                                 }
@@ -1299,7 +1177,7 @@ class DB_utils
                                 { // Cargo
                                     $title = 'Changed cargo';
                                     $text = 'An existing cargo request was modified by  ' . $notification->getFrom();
-                                    $url = '/?page=cargoInfo&id=' . $notification->getEntityId();
+                                    $url = '/?source=notifications&page=cargoInfo&id=' . $notification->getEntityId();
 
                                     break;
                                 }
@@ -1307,7 +1185,7 @@ class DB_utils
                                 { // Truck
                                     $title = 'Changed available truck';
                                     $text = 'An existing available truck was modified by  ' . $notification->getFrom();
-                                    $url = '/?page=cargoInfo&id=' . $notification->getEntityId();
+                                    $url = '/?source=notifications&page=truckInfo&id=' . $notification->getEntityId();
 
                                     break;
                                 }
@@ -1327,7 +1205,7 @@ class DB_utils
                                 { // Cargo
                                     $title = 'Approved cargo';
                                     $text = 'Your cargo request was approved by  ' . $notification->getFrom();
-                                    $url = '/?page=cargoInfo&id=' . $notification->getEntityId();
+                                    $url = '/?source=notifications&page=cargoInfo&id=' . $notification->getEntityId();
 
                                     break;
                                 }
@@ -1347,7 +1225,7 @@ class DB_utils
                                 { // Cargo
                                     $title = 'Cancelled cargo request';
                                     $text = 'A cargo request was removed by ' . $notification->getFrom();
-                                    $url = '/?page=cargoInfo&id='.$notification->getEntityId();
+                                    $url = '/?source=notifications&page=cargoInfo&id='.$notification->getEntityId();
 
                                     break;
                                 }
@@ -1355,7 +1233,7 @@ class DB_utils
                                 { // Truck
                                     $title = 'Cancelled truck';
                                     $text = 'A truck entry was removed by ' . $notification->getFrom();
-                                    $url = '/page=truckInfo&id='.$notification->getEntityId();
+                                    $url = '/?source=notifications&page=truckInfo&id='.$notification->getEntityId();
 
                                     break;
                                 }
@@ -1363,7 +1241,7 @@ class DB_utils
                                 { // Truck stop
                                     $title = 'Removed truck stop';
                                     $text = 'A scheduled stop for an existing truck was removed by ' . $notification->getFrom();
-                                    $url = '/page=truckInfo&id=' . $notification->getEntityId();
+                                    $url = '/?source=notifications&page=truckInfo&id=' . $notification->getEntityId();
 
                                     break;
                                 }
@@ -1533,6 +1411,140 @@ class DB_utils
             Utils::handleMySQLException($mdbe);
             throw new ApplicationException($mdbe->getMessage());
         }
+    }
+
+    public static function generateMatches() {
+        if(self::readValue('changes') == '0') {
+            return;
+        }
+
+        try {
+            // Select all NEW and ACCEPTED trucks
+
+            // Clean-up the table
+            DB::getMDB()->query('TRUNCATE cargo_match');
+
+            $t_rows = DB::getMDB()->query ('SELECT * FROM cargo_truck WHERE (status < 6) ORDER BY SYS_CREATION_DATE DESC');
+            $i = 0;
+            foreach($t_rows as $t_row) {
+                $truck = self::row2truck($t_row);
+
+                $s_rows = DB::getMDB()->query ('SELECT * FROM cargo_truck_stops WHERE truck_id=%d ORDER BY stop_id', $truck->getId());
+                $j = 0;
+                foreach($s_rows as $s_row) {
+                    $stop = self::row2stop($s_row);
+
+                    // Create the match
+                    $match = new TruckMatch();
+                    $originator = DB_utils::selectUserById($truck->getOriginator());
+
+                    $match->setWeight($stop->getWeight());
+                    $match->setVolume($stop->getVolume());
+                    $match->setLoadingMeters($stop->getLoadingMeters());
+                    $match->setAdr($truck->getAdr());
+                    $match->setDetails($truck->getDetails());
+                    $match->setPlateNumber($truck->getPlateNumber());
+                    $match->setAmeta($truck->getAmeta());
+                    $match->setAvailability($truck->getUnloadingDate());
+                    $match->setFromCity($stop->getCity());
+                    $match->setToCity($originator->getCountryName());
+                    $match->setItemDate($truck->getCreationDate());
+                    $match->setItemId($truck->getId());
+                    $match->setOrderType('N/A');
+                    $match->setItemKind('truckInfo');
+                    $match->setOperator($_SESSION['operator']['username']);
+                    $match->setOriginatorId($truck->getOriginator());
+                    $match->setRecipientId($truck->getRecipient());
+
+                    switch($truck->getStatus()) {
+                        case 1: {
+                            $match->setStatus(1);
+
+                            break;
+                        }
+                        case 2: {
+                            $match->setStatus(3);
+
+                            break;
+                        }
+                        case 3: {
+                            $match->setStatus(4);
+
+                            break;
+                        }
+                        case 4: {
+                            $match->setStatus(5);
+
+                            break;
+                        }
+                        case 5: {
+                            $match->setStatus(6);
+
+                            break;
+                        }
+                        case 6: {
+                            $match->setStatus(0);
+
+                            break;
+                        }
+                    }
+
+                    DB_utils::insertMatch($match);
+                    unset($match);
+                }
+
+                unset($truck);
+            }
+
+            // Select all NEW and ACCEPTED cargo
+            $c_rows = DB::getMDB()->query ('SELECT * FROM cargo_request WHERE (status = 1) OR (status = 2) ORDER BY SYS_CREATION_DATE DESC');
+            $i = 0;
+            foreach($c_rows as $c_row) {
+                $cargo = self::row2request($c_row);
+
+                // Create the match
+                $match = new TruckMatch();
+
+                $match->setWeight($cargo->getWeight());
+                $match->setVolume($cargo->getVolume());
+                $match->setLoadingMeters($cargo->getLoadingMeters());
+                $match->setAdr($cargo->getAdr());
+                $match->setOrderType($cargo->getOrderType());
+                $match->setPlateNumber($cargo->getPlateNumber());
+                $match->setAmeta($cargo->getAmeta());
+                $match->setAvailability($cargo->getLoadingDate());
+                $match->setFromCity($cargo->getFromCity());
+                $match->setToCity($cargo->getToCity());
+                $match->setItemDate($cargo->getCreationDate());
+                $match->setItemId($cargo->getId());
+                $match->setOrderType($cargo->getOrderType());
+                $match->setItemKind('cargoInfo');
+                $match->setOperator($_SESSION['operator']['username']);
+                $match->setOriginatorId($cargo->getOriginator());
+                $match->setRecipientId($cargo->getRecipient());
+
+                if(empty($cargo->getPlateNumber())) {
+                    $match->setStatus(2);
+                }
+                else {
+                    $match->setStatus(6);
+                }
+
+                DB_utils::insertMatch($match);
+                unset($match);
+                unset($cargo);
+            }
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            return null;
+        }
+        catch (Exception $e) {
+            Utils::handleException($e);
+            return null;
+        }
+
+        self::writeValue('changes', '0');
     }
 
     /**

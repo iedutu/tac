@@ -54,8 +54,8 @@ if (isset ( $_POST ['_submitted'] )) {
         for($i=0;$i<sizeof($_POST['stops']);$i++) {
             $stop = new TruckStop();
 
-            $stop->setVolume($_POST['stops'][$i]['volume']);
-            $stop->setWeight($_POST['stops'][$i]['weight']);
+            if(!empty($_POST['stops'][$i]['volume'])) $stop->setVolume($_POST['stops'][$i]['volume']);
+            if(!empty($_POST['stops'][$i]['weight'])) $stop->setWeight($_POST['stops'][$i]['weight']);
             if(!empty($_POST['stops'][$i]['loading'])) $stop->setLoadingMeters($_POST['stops'][$i]['loading']);
             $stop->setCity($_POST['stops'][$i]['to_city']);
             $stop->setAddress($_POST['stops'][$i]['to_address']);
