@@ -22,8 +22,6 @@ class Utils
     public static int $REPORTS = 11;
     public static int $OPERATIONAL = 12;
     public static string $CANCELLED = 'CANCELLED';
-    public static string $WEBMASTER_EMAIL = 'webapp@rohel.ro';
-    public static string $WEBMASTER_NAME = 'Team ROHEL';
     public static int $SOLVED_TRUCK_DAYS = 2;
 
     public static function clean_up()
@@ -84,8 +82,8 @@ class Utils
                 $email['body-2'] = 'Someone requested a new password for your account. If you are not aware of this, simply disregard this message.<br><br> If you want to change your password, please confirm by using the link below and a new password will be generated for you and you will receive it in a new e-mail.';
                 $email['recipient']['e-mail'] = $recipient->getUsername();
                 $email['recipient']['name'] = $recipient->getName();
-                $email['originator']['e-mail'] = Utils::$WEBMASTER_EMAIL;
-                $email['originator']['name'] = Utils::$WEBMASTER_NAME;
+                $email['originator']['e-mail'] = Mails::$WEBMASTER_EMAIL;
+                $email['originator']['name'] = Mails::$WEBMASTER_NAME;
                 $email['link']['url'] = self::$BASE_URL.'api/resetPassword.php?key='.$reset_key;
                 $email['link']['text'] = 'Confirm here your request for a new password';
                 $email['bg-color'] = Mails::$BG_ACKNOWLEDGED_COLOR;

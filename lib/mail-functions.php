@@ -52,6 +52,9 @@ class Mails
     public static string $TX_DELETED_COLOR = '#ffffff';
     public static string $TX_UPDATED_COLOR = '#3F4254';
 
+    public static string $WEBMASTER_EMAIL = 'webapp@rohel.ro';
+    public static string $WEBMASTER_NAME = 'Team ROHEL';
+
     public static function clean_up()
     {
         unset($_SESSION['email-recipient']);
@@ -67,7 +70,7 @@ class Mails
 
             $mail->Subject = $email['subject'];
             $mail->addAddress($email['recipient']['e-mail'], $email['recipient']['name']);
-            $mail->setFrom('webmaster@cat.rohel.ro ', 'Team Rohel');
+            $mail->setFrom(self::$WEBMASTER_EMAIL, self::$WEBMASTER_NAME);
             $mail->addReplyTo($email['originator']['e-mail'], $email['originator']['name']);
 
             ob_start();
