@@ -112,35 +112,35 @@ if(!empty($_POST['_submitted'])) {
                         $bgColor = '#FFFFFF';
                         $txtColor = '#000000';
                         switch ($row['status']) {
-                            case 1:
+                            case AppStatuses::$CARGO_NEW:
                             {
                                 $status = 'New';
                                 $bgColor = Mails::$BG_DANGER_COLOR;
                                 $txtColor = Mails::$TX_DANGER_COLOR;
                                 break;
                             }
-                            case 2:
+                            case AppStatuses::$CARGO_ACCEPTED:
                             {
                                 $status = 'Accepted';
                                 $bgColor = Mails::$BG_SUCCESS_COLOR;
                                 $txtColor = Mails::$TX_SUCCESS_COLOR;
                                 break;
                             }
-                            case 3:
+                            case AppStatuses::$CARGO_CLOSED:
                             {
                                 $status = 'Closed';
                                 $bgColor = Mails::$BG_SUCCESS_COLOR;
                                 $txtColor = Mails::$TX_SUCCESS_COLOR;
                                 break;
                             }
-                            case 4:
+                            case AppStatuses::$CARGO_CANCELLED:
                             {
                                 $status = 'Cancelled';
                                 $bgColor = Mails::$BG_LIGHT_COLOR;
                                 $txtColor = Mails::$TX_LIGHT_COLOR;
                                 break;
                             }
-                            case 5:
+                            case AppStatuses::$CARGO_EXPIRED:
                             {
                                 $status = 'Expired';
                                 $bgColor = Mails::$BG_LIGHT_COLOR;
@@ -291,42 +291,42 @@ if(!empty($_POST['_submitted'])) {
                         $bgColor = '#FFFFFF';
                         $txtColor = '#000000';
                         switch ($row['status']) {
-                            case 1:
+                            case AppStatuses::$TRUCK_AVAILABLE:
                             {
                                 $status = 'Available';
                                 $bgColor = Mails::$BG_SECONDARY_COLOR;
                                 $txtColor = Mails::$TX_SECONDARY_COLOR;
                                 break;
                             }
-                            case 2:
+                            case AppStatuses::$TRUCK_FREE:
                             {
                                 $status = 'Free';
                                 $bgColor = Mails::$BG_INFO_COLOR;
                                 $txtColor = Mails::$TX_INFO_COLOR;
                                 break;
                             }
-                            case 3:
+                            case AppStatuses::$TRUCK_NEW:
                             {
                                 $status = 'New';
                                 $bgColor = Mails::$BG_DARK_COLOR;
                                 $txtColor = Mails::$TX_DARK_COLOR;
                                 break;
                             }
-                            case 4:
+                            case AppStatuses::$TRUCK_PARTIALLY_SOLVED:
                             {
                                 $status = 'Partially solved';
                                 $bgColor = Mails::$BG_WARNING_COLOR;
                                 $txtColor = Mails::$TX_WARNING_COLOR;
                                 break;
                             }
-                            case 5:
+                            case AppStatuses::$TRUCK_FULLY_SOLVED:
                             {
                                 $status = 'Fully solved';
                                 $bgColor = Mails::$BG_SUCCESS_COLOR;
                                 $txtColor = Mails::$TX_SUCCESS_COLOR;
                                 break;
                             }
-                            case 6:
+                            case AppStatuses::$TRUCK_CANCELLED:
                             {
                                 $status = 'Cancelled';
                                 $bgColor = Mails::$BG_LIGHT_COLOR;
@@ -473,46 +473,53 @@ if(!empty($_POST['_submitted'])) {
                         $bgColor = '#FFFFFF';
                         $txtColor = '#000000';
                         switch ($row['status']) {
-                            case 1:
+                            case AppStatuses::$MATCH_AVAILABLE:
                             {
                                 $status = 'Available';
                                 $bgColor = Mails::$BG_SECONDARY_COLOR;
                                 $txtColor = Mails::$TX_SECONDARY_COLOR;
                                 break;
                             }
-                            case 2:
+                            case AppStatuses::$MATCH_NEEDED:
                             {
                                 $status = 'Needed';
                                 $bgColor = Mails::$BG_DANGER_COLOR;
                                 $txtColor = Mails::$TX_DANGER_COLOR;
                                 break;
                             }
-                            case 3:
+                            case AppStatuses::$MATCH_FREE:
                             {
                                 $status = 'Free';
                                 $bgColor = Mails::$BG_INFO_COLOR;
                                 $txtColor = Mails::$TX_INFO_COLOR;
                                 break;
                             }
-                            case 4:
+                            case AppStatuses::$MATCH_NEW:
                             {
                                 $status = 'New';
                                 $bgColor = Mails::$BG_DARK_COLOR;
                                 $txtColor = Mails::$TX_DARK_COLOR;
                                 break;
                             }
-                            case 5:
+                            case AppStatuses::$MATCH_PARTIAL:
                             {
                                 $status = 'Partially loaded';
                                 $bgColor = Mails::$BG_WARNING_COLOR;
                                 $txtColor = Mails::$TX_WARNING_COLOR;
                                 break;
                             }
-                            case 6:
+                            case AppStatuses::$MATCH_SOLVED:
                             {
                                 $status = 'Fully loaded';
                                 $bgColor = Mails::$BG_SUCCESS_COLOR;
                                 $txtColor = Mails::$TX_SUCCESS_COLOR;
+                                break;
+                            }
+                            default:
+                            {
+                                $status = 'Error';
+                                $bgColor = Mails::$BG_LIGHT_COLOR;
+                                $txtColor = Mails::$TX_LIGHT_COLOR;
                                 break;
                             }
                         }

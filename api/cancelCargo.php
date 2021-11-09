@@ -20,7 +20,7 @@ try {
         exit();
     }
 
-    if ($cargo->getStatus() >= 2) {
+    if ($cargo->getStatus() >= AppStatuses::$CARGO_ACCEPTED) {
         $_SESSION['alert']['type'] = 'error';
         $_SESSION['alert']['message'] = 'Cargo already acknowledged/cancelled and cannot be cancelled. Please contact the recipient directly.';
 
@@ -37,7 +37,7 @@ try {
     }
 
     DB_utils::cancelCargo($cargo->getId());
-    Utils::insertCargoAuditEntry('cargo_request', 'status', $cargo->getId(), 4);
+    Utils::insertCargoAuditEntry('cargo_request', 'status', $cargo->getId(), AppStatuses::$CARGO_CANCELLED);
 
     // Set the trigger for the generation of the Match page
     DB_utils::writeValue('changes', '1');
@@ -46,8 +46,8 @@ try {
     $note = new Notification();
     $note->setUserId($cargo->getRecipient());
     $note->setOriginatorId($_SESSION['operator']['id']);
-    $note->setKind(4);
-    $note->setEntityKind(1);
+    $note->setKind(AppStatuses::$NOTIFICATION_KIND_CANCELLED);
+    $note->setEntityKind(AppStatuses::$NOTIFICATION_ENTITY_KIND_CARGO);
     $note->setEntityId($cargo->getId());
 
     DB_utils::addNotification($note);

@@ -133,6 +133,10 @@ class Request extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>string package = 30;</code>
      */
     protected $package = '';
+    /**
+     * Generated from protobuf field <code>int32 status_changed_by = 31;</code>
+     */
+    protected $status_changed_by = 0;
 
     /**
      * Constructor.
@@ -170,6 +174,7 @@ class Request extends \Google\Protobuf\Internal\Message
      *     @type int|string $update_date
      *     @type string $dimensions
      *     @type string $package
+     *     @type int $status_changed_by
      * }
      */
     public function __construct($data = NULL) {
@@ -833,6 +838,28 @@ class Request extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkString($var, True);
         $this->package = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>int32 status_changed_by = 31;</code>
+     * @return int
+     */
+    public function getStatusChangedBy()
+    {
+        return $this->status_changed_by;
+    }
+
+    /**
+     * Generated from protobuf field <code>int32 status_changed_by = 31;</code>
+     * @param int $var
+     * @return $this
+     */
+    public function setStatusChangedBy($var)
+    {
+        GPBUtil::checkInt32($var);
+        $this->status_changed_by = $var;
 
         return $this;
     }

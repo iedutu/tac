@@ -32,8 +32,8 @@ try {
     $note = new Notification();
     $note->setUserId($truck->getRecipient());
     $note->setOriginatorId($_SESSION['operator']['id']);
-    $note->setKind(4);
-    $note->setEntityKind(3);
+    $note->setKind(AppStatuses::$NOTIFICATION_KIND_CANCELLED);
+    $note->setEntityKind(AppStatuses::$NOTIFICATION_ENTITY_KIND_TRUCK_STOP);
     $note->setEntityId($truck->getId());
 
     DB_utils::addNotification($note);

@@ -28,7 +28,7 @@ unset($_SESSION['current_truck']);
 
 // Required for the fetching of notifications, dynamic updates
 $_SESSION['entry-id'] = $_GET['id'];
-$_SESSION['entry-kind'] = 2;
+$_SESSION['entry-kind'] = AppStatuses::$APP_TRUCK;
 $_SESSION['originator-id'] = $truck->getOriginator();
 $_SESSION['recipient-id'] = $truck->getRecipient();
 
@@ -38,43 +38,43 @@ $_SESSION['recipient-id'] = $truck->getRecipient();
  */
 $editable = DB_utils::isEditable($truck->getOriginator(), $truck->getRecipient());
 
-if($truck->getStatus() > 3) {
+if($truck->getStatus() > AppStatuses::$TRUCK_NEW) {
     $editable['originator'] = false;
 }
 
-if($truck->getStatus() > 4) {
+if($truck->getStatus() > AppStatuses::$TRUCK_PARTIALLY_SOLVED) {
     $editable['recipient'] = false;
 }
 
 $status_code = '';
 
 switch($truck->getStatus()) {
-    case 1: {
+    case AppStatuses::$TRUCK_AVAILABLE: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Round-trip booked truck"';
         $status_code = '<span class="label label-lg label-secondary label-inline mr-2 font-weight-bolder" '.$tooltip.'>Available truck</span>';
         break;
     }
-    case 2: {
+    case AppStatuses::$TRUCK_FREE: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="One-way booked truck"';
         $status_code = '<span class="label label-lg label-info label-inline mr-2 font-weight-bolder" '.$tooltip.'>Free truck</span>';
         break;
     }
-    case 3: {
+    case AppStatuses::$TRUCK_NEW: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Truck available on the market"';
         $status_code = '<span class="label label-lg label-dark label-inline mr-2 font-weight-bolder" '.$tooltip.'>New truck</span>';
         break;
     }
-    case 4: {
+    case AppStatuses::$TRUCK_PARTIALLY_SOLVED: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Partially loaded truck"';
         $status_code = '<span class="label label-lg label-warning label-inline mr-2 font-weight-bolder" '.$tooltip.'>Partially loaded</span>';
         break;
     }
-    case 5: {
+    case AppStatuses::$TRUCK_FULLY_SOLVED: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Fully loaded truck"';
         $status_code = '<span class="label label-lg label-success label-inline mr-2" '.$tooltip.'>Fully loaded</span>';
         break;
     }
-    case 6: {
+    case AppStatuses::$TRUCK_CANCELLED: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Cancelled truck"';
         $status_code = '<span class="label label-lg label-light label-inline mr-2" '.$tooltip.'>Cancelled</span>';
         break;
@@ -134,7 +134,7 @@ else {
                 </div>
                 <div class="card-toolbar d-print-none">
                     <!--begin::Button-->
-                    <button type="button" class="btn btn-light-primary font-weight-bolder" aria-expanded="false" onclick="javascript:window.print()">
+                    <button type="button" class="btn btn-light-primary font-weight-bolder" aria-expanded="false" onclick="window.print()">
 												<span class="svg-icon svg-icon-md">
 													<!--begin::Svg Icon | path:assets/media/svg/icons/Design/PenAndRuller.svg-->
 													<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">

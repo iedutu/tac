@@ -51,11 +51,11 @@
                             <div class="d-flex align-items-center">
                                 <select class="form-control" id="kt_datatable_search_status">
                                     <option value="">Status</option>
-                                    <option value="1">New</option>
-                                    <option value="2">Accepted</option>
-                                    <option value="3">Closed</option>
-                                    <option value="4">Cancelled</option>
-                                    <option value="5">Expired</option>
+                                    <option value="<?=AppStatuses::$CARGO_NEW?>">New</option>
+                                    <option value="<?=AppStatuses::$CARGO_ACCEPTED?>">Accepted</option>
+                                    <option value="<?=AppStatuses::$CARGO_CLOSED?>">Closed</option>
+                                    <option value="<?=AppStatuses::$CARGO_CANCELLED?>">Cancelled</option>
+                                    <option value="<?=AppStatuses::$CARGO_EXPIRED?>">Expired</option>
                                 </select>
                             </div>
                         </div>

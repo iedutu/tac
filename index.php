@@ -1,4 +1,5 @@
 <?php
+
 session_start ();
 
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
@@ -52,12 +53,6 @@ else {
     else {
         Utils::clean_up();
         $_SESSION['app'] = 'cargo';
-    }
-
-    if (Utils::authorized(null, Utils::$QUERY)) {
-        if (empty($_SESSION["update_done"])) {
-            Utils::cargoUpdateStatuses();
-        }
     }
 }
 

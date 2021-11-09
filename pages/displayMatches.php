@@ -43,12 +43,12 @@
                                 <!-- <label class="mr-3 mb-0 d-none d-md-block">Type:</label> -->
                                 <select class="form-control" id="kt_datatable_search_status">
                                     <option value="">Type</option>
-                                    <option value="1">Available</option>
-                                    <option value="2">Needed</option>
-                                    <option value="3">Free on market</option>
-                                    <option value="4">New</option>
-                                    <option value="5">Partially loaded</option>
-                                    <option value="6">Fully loaded</option>
+                                    <option value="<?=AppStatuses::$MATCH_AVAILABLE?>">Available</option>
+                                    <option value="<?=AppStatuses::$MATCH_NEEDED?>">Needed</option>
+                                    <option value="<?=AppStatuses::$MATCH_FREE?>">Free on market</option>
+                                    <option value="<?=AppStatuses::$MATCH_NEW?>">New</option>
+                                    <option value="<?=AppStatuses::$MATCH_PARTIAL?>">Partially loaded</option>
+                                    <option value="<?=AppStatuses::$MATCH_SOLVED?>">Fully loaded</option>
                                 </select>
                             </div>
                         </div>

@@ -14,7 +14,7 @@ if (isset ( $_POST ['id'] )) {
         exit();
     }
 
-    if($truck->getStatus() == 2) {
+    if($truck->getStatus() >= AppStatuses::$TRUCK_PARTIALLY_SOLVED) {
         AppLogger::getLogger()->info('Truck already solved/fully loaded and cannot be cancelled. Please contact the recipient directly.');
         $_SESSION['alert']['type'] = 'error';
         $_SESSION['alert']['message'] = 'Truck already solved/fully loaded and cannot be cancelled. Please contact the recipient directly.';
@@ -33,7 +33,7 @@ if (isset ( $_POST ['id'] )) {
     }
 
     try {
-        DB_utils::updateTruckStatus($truck, 6);
+        DB_utils::updateTruckStatus($truck, AppStatuses::$TRUCK_CANCELLED);
 
         Utils::insertCargoAuditEntry('cargo_truck', 'status', $_POST['id'], 3);
 
@@ -44,8 +44,8 @@ if (isset ( $_POST ['id'] )) {
         $note = new Notification();
         $note->setUserId($truck->getRecipient());
         $note->setOriginatorId($_SESSION['operator']['id']);
-        $note->setKind(4);
-        $note->setEntityKind(2);
+        $note->setKind(AppStatuses::$NOTIFICATION_KIND_CANCELLED);
+        $note->setEntityKind(AppStatuses::$NOTIFICATION_ENTITY_KIND_TRUCK);
         $note->setEntityId($truck->getId());
 
         DB_utils::addNotification($note);

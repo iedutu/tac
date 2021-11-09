@@ -14,7 +14,7 @@ if(isset($_GET['debug'])) {
 
 if($_SESSION['debug']) {
     DB::debugMode();
-    DB::$logfile = $_SERVER["DOCUMENT_ROOT"].'/log/database_log';
+    DB::$logfile = $_SERVER['DOCUMENT_ROOT'].'/../log/db_'.date(Utils::$PHP_DATE_FORMAT).'.log';
 
     error_reporting ( E_ALL );
 	ini_set ( 'display_errors', TRUE );

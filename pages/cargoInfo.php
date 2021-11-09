@@ -27,7 +27,7 @@ if(!empty($_GET['source'])) {
 
 // Required for the fetching of notifications, dynamic updates
 $_SESSION['entry-id'] = $_GET['id'];
-$_SESSION['entry-kind'] = 1;
+$_SESSION['entry-kind'] = AppStatuses::$APP_CARGO;
 $_SESSION['originator-id'] = $cargo->getOriginator();
 $_SESSION['recipient-id'] = $cargo->getRecipient();
 
@@ -43,27 +43,27 @@ if($cargo->getStatus() > 1) {
 $status_code = '';
 
 switch($cargo->getStatus()) {
-    case 1: {
+    case AppStatuses::$CARGO_NEW: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="New cargo"';
         $status_code = '<span class="label label-lg label-danger label-inline mr-2 font-weight-bolder" '.$tooltip.'>New</span>';
         break;
     }
-    case 2: {
+    case AppStatuses::$CARGO_ACCEPTED: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Accepted cargo"';
         $status_code = '<span class="label label-lg label-success label-inline mr-2 font-weight-bolder" '.$tooltip.'>Accepted</span>';
         break;
     }
-    case 3: {
+    case AppStatuses::$CARGO_CLOSED: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Closed cargo"';
         $status_code = '<span class="label label-lg label-success label-inline mr-2" '.$tooltip.'>Closed</span>';
         break;
     }
-    case 4: {
+    case AppStatuses::$CARGO_CANCELLED: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Cancelled cargo"';
         $status_code = '<span class="label label-lg label-light label-inline mr-2" '.$tooltip.'>Cancelled</span>';
         break;
     }
-    case 5: {
+    case AppStatuses::$CARGO_EXPIRED: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Expired cargo"';
         $status_code = '<span class="label label-lg label-light label-inline mr-2" '.$tooltip.'>Expired</span>';
         break;

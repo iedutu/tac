@@ -79,8 +79,8 @@ if (isset ( $_POST ['_submitted'] )) {
         $note = new Notification();
         $note->setUserId($truck->getRecipient());
         $note->setOriginatorId($_SESSION['operator']['id']);
-        $note->setKind(1);
-        $note->setEntityKind(2);
+        $note->setKind(AppStatuses::$NOTIFICATION_KIND_NEW);
+        $note->setEntityKind(AppStatuses::$NOTIFICATION_ENTITY_KIND_TRUCK);
         $note->setEntityId($truck->getId());
 
         DB_utils::addNotification($note);

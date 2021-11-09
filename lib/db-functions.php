@@ -88,6 +88,7 @@ class DB_utils
         if(!empty($row['SYS_UPDATE_DATE'])) $truck->setUpdateDate(strtotime($row['SYS_UPDATE_DATE']));
         if(!empty($row['acceptance'])) $truck->setAcceptance(strtotime($row['acceptance']));
         if(!empty($row['accepted_by'])) $truck->setAcceptedBy($row['accepted_by']);
+
         $truck->setAdr($row['adr']);
         $truck->setAmeta($row['ameta']);
         if(!empty($row['availability'])) $truck->setAvailability(strtotime($row['availability']));
@@ -101,6 +102,7 @@ class DB_utils
         $truck->setId($row['id']);
         if(!empty($row['loading_date'])) $truck->setLoadingDate(strtotime($row['loading_date']));
         $truck->setOperator($row['operator']);
+        $truck->setStatusChangedBy($row['status_changed_by']);
         $truck->setOriginator($row['originator_id']);
         $truck->setPlateNumber($row['plate_number']);
         $truck->setStatus($row['status']);
@@ -313,6 +315,7 @@ class DB_utils
         try {
             DB::getMDB()->insert('cargo_request', array(
                 'originator_id' => $_SESSION['operator']['id'],
+                'status_changed_by' => $_SESSION['operator']['id'],
                 'operator' => $_SESSION['operator']['username'],
                 'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
                 'status' => $entry->getStatus(),
@@ -464,6 +467,7 @@ class DB_utils
         try {
             DB::getMDB()->insert('cargo_truck', array(
                 'originator_id' => $_SESSION['operator']['id'],
+                'status_changed_by' => $_SESSION['operator']['id'],
                 'operator' => $_SESSION['operator']['username'],
                 'SYS_CREATION_DATE' => date('Y-m-d H:i:s'),
                 'status' => $entry->getStatus(),
@@ -559,7 +563,8 @@ class DB_utils
     {
         try {
             DB::getMDB()->update('cargo_request', array(
-                'status' => 4
+                'status_changed_by' => $_SESSION['operator']['id'],
+                'status' => AppStatuses::$CARGO_CANCELLED
             ), "id=%d", $id);
             DB::getMDB()->commit();
 
@@ -584,15 +589,17 @@ class DB_utils
                 DB::getMDB()->update('cargo_request', array(
                     'acceptance' => date("Y-m-d H:i:s"),
                     'accepted_by' => $cargo->getAcceptedBy(),
-                    'status' => 2
+                    'status_changed_by' => $cargo->getAcceptedBy(),
+                    'status' => AppStatuses::$CARGO_ACCEPTED
                 ), "id=%d", $cargo->getId());
             }
             else {
                 DB::getMDB()->update('cargo_request', array(
                     'acceptance' => date("Y-m-d H:i:s"),
                     'accepted_by' => $cargo->getAcceptedBy(),
+                    'status_changed_by' => $cargo->getAcceptedBy(),
                     $field => $value,
-                    'status' => 2
+                    'status' => AppStatuses::$CARGO_ACCEPTED
                 ), "id=%d", $cargo->getId());
             }
             DB::getMDB()->commit();
@@ -656,6 +663,7 @@ class DB_utils
     {
         try {
             DB::getMDB()->update ( 'cargo_truck', array (
+                'status_changed_by' => $_SESSION['operator']['id'],
                 'status' => $status
             ), "id=%d", $truck->getId());
             DB::getMDB()->commit();
@@ -1422,7 +1430,7 @@ class DB_utils
             DB::getMDB()->query('TRUNCATE cargo_match');
 
             // Select all NEW and ACCEPTED trucks
-            $t_rows = DB::getMDB()->query ('SELECT * FROM cargo_truck WHERE (status < 6) ORDER BY SYS_CREATION_DATE DESC');
+            $t_rows = DB::getMDB()->query ('SELECT * FROM cargo_truck WHERE (status < '.AppStatuses::$TRUCK_CANCELLED.') ORDER BY SYS_CREATION_DATE DESC');
             $i = 0;
             foreach($t_rows as $t_row) {
                 $truck = self::row2truck($t_row);
@@ -1455,32 +1463,32 @@ class DB_utils
                     $match->setRecipientId($truck->getRecipient());
 
                     switch($truck->getStatus()) {
-                        case 1: {
-                            $match->setStatus(1);
+                        case AppStatuses::$TRUCK_AVAILABLE: {
+                            $match->setStatus(AppStatuses::$MATCH_AVAILABLE);
 
                             break;
                         }
-                        case 2: {
-                            $match->setStatus(3);
+                        case AppStatuses::$TRUCK_FREE: {
+                            $match->setStatus(AppStatuses::$MATCH_FREE);
 
                             break;
                         }
-                        case 3: {
-                            $match->setStatus(4);
+                        case AppStatuses::$TRUCK_NEW: {
+                            $match->setStatus(AppStatuses::$MATCH_NEW);
 
                             break;
                         }
-                        case 4: {
-                            $match->setStatus(5);
+                        case AppStatuses::$TRUCK_PARTIALLY_SOLVED: {
+                            $match->setStatus(AppStatuses::$MATCH_PARTIAL);
 
                             break;
                         }
-                        case 5: {
-                            $match->setStatus(6);
+                        case AppStatuses::$TRUCK_FULLY_SOLVED: {
+                            $match->setStatus(AppStatuses::$MATCH_SOLVED);
 
                             break;
                         }
-                        case 6: {
+                        case AppStatuses::$TRUCK_CANCELLED: {
                             $match->setStatus(0);
 
                             break;
@@ -1495,7 +1503,7 @@ class DB_utils
             }
 
             // Select all NEW and ACCEPTED cargo
-            $c_rows = DB::getMDB()->query ('SELECT * FROM cargo_request WHERE (status = 1) OR (status = 2) ORDER BY SYS_CREATION_DATE DESC');
+            $c_rows = DB::getMDB()->query ('SELECT * FROM cargo_request WHERE (status = '.AppStatuses::$CARGO_NEW.') OR (status = '.AppStatuses::$CARGO_ACCEPTED.') ORDER BY SYS_CREATION_DATE DESC');
             $i = 0;
             foreach($c_rows as $c_row) {
                 $cargo = self::row2request($c_row);
@@ -1522,10 +1530,10 @@ class DB_utils
                 $match->setRecipientId($cargo->getRecipient());
 
                 if(empty($cargo->getPlateNumber())) {
-                    $match->setStatus(2);
+                    $match->setStatus(AppStatuses::$MATCH_NEEDED);
                 }
                 else {
-                    $match->setStatus(6);
+                    $match->setStatus(AppStatuses::$MATCH_SOLVED);
                 }
 
                 DB_utils::insertMatch($match);

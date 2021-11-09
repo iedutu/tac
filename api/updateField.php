@@ -37,13 +37,13 @@ if(!empty($_POST['id'])) {
 
                 // When the recipient is changed
                 if($_POST['id'] == 'recipient') {
-                    $note->setKind(1);
+                    $note->setKind(AppStatuses::$NOTIFICATION_KIND_NEW);
                 }
                 else {
-                    $note->setKind(2);
+                    $note->setKind(AppStatuses::$NOTIFICATION_KIND_CHANGED);
                 }
 
-                $note->setEntityKind(1);
+                $note->setEntityKind(AppStatuses::$NOTIFICATION_ENTITY_KIND_CARGO);
                 $note->setEntityId($cargo->getId());
 
                 DB_utils::addNotification($note);
@@ -68,13 +68,13 @@ if(!empty($_POST['id'])) {
 
                 // When the recipient is changed
                 if($_POST['id'] == 'recipient') {
-                    $note->setKind(1);
+                    $note->setKind(AppStatuses::$NOTIFICATION_KIND_NEW);
                 }
                 else {
-                    $note->setKind(2);
+                    $note->setKind(AppStatuses::$NOTIFICATION_KIND_CHANGED);
                 }
 
-                $note->setEntityKind(2);
+                $note->setEntityKind(AppStatuses::$NOTIFICATION_ENTITY_KIND_TRUCK);
                 $note->setEntityId($truck->getId());
 
                 DB_utils::addNotification($note);

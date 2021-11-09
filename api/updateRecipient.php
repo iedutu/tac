@@ -28,15 +28,15 @@ if(!empty($_POST['id'])) {
             $note = new Notification();
             $note->setUserId($newRecipient->getId());
             $note->setOriginatorId($originator->getId());
-            $note->setKind(1);
-            $note->setEntityKind(1);
+            $note->setKind(AppStatuses::$NOTIFICATION_KIND_NEW);
+            $note->setEntityKind(AppStatuses::$NOTIFICATION_ENTITY_KIND_CARGO);
             $note->setEntityId($entry->getId());
 
             DB_utils::addNotification($note);
 
             // Add a notification to the old recipient of the cargo for cancellation
             $note->setUserId($recipient->getId());
-            $note->setKind(4);
+            $note->setKind(AppStatuses::$NOTIFICATION_KIND_CANCELLED);
 
             DB_utils::addNotification($note);
 
@@ -86,15 +86,15 @@ if(!empty($_POST['id'])) {
                 $note = new Notification();
                 $note->setUserId($newRecipient->getId());
                 $note->setOriginatorId($originator->getId());
-                $note->setKind(1);
-                $note->setEntityKind(2);
+                $note->setKind(AppStatuses::$NOTIFICATION_KIND_NEW);
+                $note->setEntityKind(AppStatuses::$NOTIFICATION_ENTITY_KIND_TRUCK);
                 $note->setEntityId($entry->getId());
 
                 DB_utils::addNotification($note);
 
                 // Add a notification to the old recipient of the truck for cancellation
                 $note->setUserId($recipient->getId());
-                $note->setKind(4);
+                $note->setKind(AppStatuses::$NOTIFICATION_KIND_CANCELLED);
 
                 DB_utils::addNotification($note);
 

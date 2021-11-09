@@ -33,6 +33,7 @@ message Request {
   uint64 update_date = 28;
   string dimensions = 29;
   string package = 30;
+  int32 status_changed_by = 31;
 }
 
 message RequestUpdates {
@@ -84,13 +85,14 @@ message Truck {
   float freight = 15;
   string plate_number = 16;
   string ameta = 17;
+  uint64 update_date = 18;
   string cargo_type = 19;
   string truck_type = 20;
   string contract_type = 21;
   string adr = 22;
   repeated TruckStop stop = 23;
   uint64 creation_date = 24;
-  uint64 update_date = 18;
+  int32 status_changed_by = 25;
 }
 
 message TruckMatch {

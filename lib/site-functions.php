@@ -187,28 +187,6 @@ class Utils
         return false;
     }
 
-    public static function cargoUpdateStatuses() {
-        $today = date("Y-m-d");
-        $last_date = DB::getMDB()->queryOneField("cargo_last_update", "SELECT cargo_last_update FROM configuration");
-
-        if(($last_date == null) || Utils::isPast($last_date)) {
-            DB::getMDB()->update ( 'cargo_request', array (
-                'status' => 2
-            ), "((status = 1) AND (SYSDATE() >= (acceptance + INTERVAL %d DAY)))", Utils::$CARGO_PERIOD );
-
-            DB::getMDB()->update ( 'cargo_truck', array (
-                'status' => 2
-            ), "((status = 1) AND (SYSDATE() >= (acceptance + INTERVAL %d DAY)))", Utils::$CARGO_PERIOD );
-
-            DB::getMDB()->update ( "configuration", array (
-                "cargo_last_update" => $today
-            ), "1=1");
-
-            $_SESSION["update_done"] = 1;
-            DB::getMDB()->commit ();
-        }
-    }
-
     public static function isPast($time) {
         return (strtotime($time) < time());
     }
@@ -460,4 +438,40 @@ class ApplicationException extends Exception
     public function customFunction() {
         echo "A custom function for this type of exception\n";
     }
+}
+
+class AppStatuses {
+    public static int $APP_CARGO        = 1;
+    public static int $APP_TRUCK        = 2;
+    public static int $APP_MATCHES      = 3;
+
+    public static int $CARGO_NEW        = 1;
+    public static int $CARGO_ACCEPTED   = 2;
+    public static int $CARGO_CLOSED     = 3;
+    public static int $CARGO_CANCELLED  = 4;
+    public static int $CARGO_EXPIRED    = 5;
+
+    public static int $TRUCK_AVAILABLE          = 1;
+    public static int $TRUCK_FREE               = 2;
+    public static int $TRUCK_NEW                = 3;
+    public static int $TRUCK_PARTIALLY_SOLVED   = 4;
+    public static int $TRUCK_FULLY_SOLVED       = 5;
+    public static int $TRUCK_CANCELLED          = 6;
+
+    public static int $MATCH_AVAILABLE  = 1;
+    public static int $MATCH_NEEDED     = 2;
+    public static int $MATCH_FREE       = 3;
+    public static int $MATCH_NEW        = 4;
+    public static int $MATCH_PARTIAL    = 5;
+    public static int $MATCH_SOLVED     = 6;
+
+    public static int $NOTIFICATION_KIND_NEW        = 1;
+    public static int $NOTIFICATION_KIND_CHANGED    = 2;
+    public static int $NOTIFICATION_KIND_APPROVED   = 3;
+    public static int $NOTIFICATION_KIND_CANCELLED  = 4;
+
+    public static int $NOTIFICATION_ENTITY_KIND_CARGO       = 1;
+    public static int $NOTIFICATION_ENTITY_KIND_TRUCK       = 2;
+    public static int $NOTIFICATION_ENTITY_KIND_TRUCK_STOP  = 3;
+    public static int $NOTIFICATION_ENTITY_KIND_CARGO_NOTE  = 4;
 }

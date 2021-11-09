@@ -53,8 +53,8 @@ if (isset ( $_POST ['_submitted'] )) {
             }
         }
         $notification->setOriginatorId($_SESSION['operator']['id']);
-        $notification->setKind(1);
-        $notification->setEntityKind(4);
+        $notification->setKind(AppStatuses::$NOTIFICATION_KIND_NEW);
+        $notification->setEntityKind(AppStatuses::$NOTIFICATION_ENTITY_KIND_CARGO_NOTE);
         $notification->setEntityId($cargo->getId());
 
         DB_utils::addNotification($notification);

@@ -82,6 +82,10 @@ class Truck extends \Google\Protobuf\Internal\Message
      */
     protected $ameta = '';
     /**
+     * Generated from protobuf field <code>uint64 update_date = 18;</code>
+     */
+    protected $update_date = 0;
+    /**
      * Generated from protobuf field <code>string cargo_type = 19;</code>
      */
     protected $cargo_type = '';
@@ -106,9 +110,9 @@ class Truck extends \Google\Protobuf\Internal\Message
      */
     protected $creation_date = 0;
     /**
-     * Generated from protobuf field <code>uint64 update_date = 18;</code>
+     * Generated from protobuf field <code>int32 status_changed_by = 25;</code>
      */
-    protected $update_date = 0;
+    protected $status_changed_by = 0;
 
     /**
      * Constructor.
@@ -133,13 +137,14 @@ class Truck extends \Google\Protobuf\Internal\Message
      *     @type float $freight
      *     @type string $plate_number
      *     @type string $ameta
+     *     @type int|string $update_date
      *     @type string $cargo_type
      *     @type string $truck_type
      *     @type string $contract_type
      *     @type string $adr
      *     @type \Rohel\TruckStop[]|\Google\Protobuf\Internal\RepeatedField $stop
      *     @type int|string $creation_date
-     *     @type int|string $update_date
+     *     @type int $status_changed_by
      * }
      */
     public function __construct($data = NULL) {
@@ -522,6 +527,28 @@ class Truck extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     * Generated from protobuf field <code>uint64 update_date = 18;</code>
+     * @return int|string
+     */
+    public function getUpdateDate()
+    {
+        return $this->update_date;
+    }
+
+    /**
+     * Generated from protobuf field <code>uint64 update_date = 18;</code>
+     * @param int|string $var
+     * @return $this
+     */
+    public function setUpdateDate($var)
+    {
+        GPBUtil::checkUint64($var);
+        $this->update_date = $var;
+
+        return $this;
+    }
+
+    /**
      * Generated from protobuf field <code>string cargo_type = 19;</code>
      * @return string
      */
@@ -654,23 +681,23 @@ class Truck extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>uint64 update_date = 18;</code>
-     * @return int|string
+     * Generated from protobuf field <code>int32 status_changed_by = 25;</code>
+     * @return int
      */
-    public function getUpdateDate()
+    public function getStatusChangedBy()
     {
-        return $this->update_date;
+        return $this->status_changed_by;
     }
 
     /**
-     * Generated from protobuf field <code>uint64 update_date = 18;</code>
-     * @param int|string $var
+     * Generated from protobuf field <code>int32 status_changed_by = 25;</code>
+     * @param int $var
      * @return $this
      */
-    public function setUpdateDate($var)
+    public function setStatusChangedBy($var)
     {
-        GPBUtil::checkUint64($var);
-        $this->update_date = $var;
+        GPBUtil::checkInt32($var);
+        $this->status_changed_by = $var;
 
         return $this;
     }

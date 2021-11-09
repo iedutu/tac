@@ -53,7 +53,7 @@ if(!empty($_POST['id'])) {
         $originator = DB_utils::selectUserById($cargo->getOriginator());
         $recipient = DB_utils::selectUserById($cargo->getRecipient());
 
-        $email['subject'] = 'cargo acknowledged by ' . $acceptor->getName();
+        $email['subject'] = 'Cargo acknowledged by ' . $acceptor->getName();
         $email['title'] = 'ROHEL | E-mail';
         $email['header'] = 'A cargo was acknowldged by ' . $acceptor->getName();
         $email['body-1'] = 'has acknowledged a cargo bound for <strong>' . $cargo->getToCity() . '</strong>' . '.';
