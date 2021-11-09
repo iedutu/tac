@@ -281,6 +281,19 @@ $class_text_default = '';
                                             ?>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td class="text-right">Collies</td>
+                                        <td>
+                                            <?php
+                                            if($editable['originator']) {
+                                                echo '<b style="display: inline" id="collies" class="editable-text '.($audit->getCollies()?$class_text_new:$class_text_default).'">'.$cargo->getCollies().'</b>';
+                                            }
+                                            else {
+                                                echo '<p style="display: inline" id="collies" class="'.($audit->getCollies()?$class_text_new:$class_text_default).'">'.$cargo->getCollies().'</p>';
+                                            }
+                                            ?>
+                                        </td>
+                                    </tr>
                                     </tbody>
                                 </table>
                             </td>
