@@ -88,6 +88,8 @@ else {
 
 $originator = DB_utils::selectUserById($cargo->getOriginator());
 $recipient = DB_utils::selectUserById($cargo->getRecipient());
+$statusChangedBy = DB_utils::selectUserById($cargo->getStatusChangedBy());
+
 if(empty($cargo->getAcceptedBy())) {
     $acceptor = null;
 }
@@ -190,22 +192,15 @@ $class_text_default = '';
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="text-right">Accepted by</td>
-                                        <td id="kt_cargo_accepted_by">
-                                            <p style="display: inline" id="recipient" class="<?=($audit->getAcceptedBy()?$class_text_new:$class_text_default)?>"><?=empty($cargo->getAcceptedBy())?'N/A':$acceptor->getName()?></p>
+                                        <td class="text-right">Status last updated by</td>
+                                        <td>
+                                            <?=empty($statusChangedBy)?'N/A':$statusChangedBy->getName()?>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="text-right">Client</td>
-                                        <td>
-                                            <?php
-                                            if($editable['originator']) {
-                                                echo '<b style="display: inline" id="client" class="editable-text '.($audit->getClient()?$class_text_new:$class_text_default).'">'.$cargo->getClient().'</b>';
-                                            }
-                                            else {
-                                                echo '<p style="display: inline" id="client" class="'.($audit->getClient()?$class_text_new:$class_text_default).'">'.$cargo->getClient().'</p>';
-                                            }
-                                            ?>
+                                        <td class="text-right">Accepted by</td>
+                                        <td id="kt_cargo_accepted_by">
+                                            <p style="display: inline" id="recipient" class="<?=($audit->getAcceptedBy()?$class_text_new:$class_text_default)?>"><?=empty($cargo->getAcceptedBy())?'N/A':$acceptor->getName()?></p>
                                         </td>
                                     </tr>
                                     <tr>
@@ -340,6 +335,19 @@ $class_text_default = '';
                                             }
                                             else {
                                                 echo '<p style="display: inline" id="order_type" class="'.($audit->getOrderType()?$class_text_new:$class_text_default).'">'.$cargo->getOrderType().'</p>';
+                                            }
+                                            ?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right">Client</td>
+                                        <td>
+                                            <?php
+                                            if($editable['originator']) {
+                                                echo '<b style="display: inline" id="client" class="editable-text '.($audit->getClient()?$class_text_new:$class_text_default).'">'.$cargo->getClient().'</b>';
+                                            }
+                                            else {
+                                                echo '<p style="display: inline" id="client" class="'.($audit->getClient()?$class_text_new:$class_text_default).'">'.$cargo->getClient().'</p>';
                                             }
                                             ?>
                                         </td>

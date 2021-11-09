@@ -66,6 +66,7 @@ class DB_utils
         $request->setDimensions($row['dimensions']);
         $request->setPackage($row['package']);
         $request->setOperator($row['operator']);
+        $request->setStatusChangedBy($row['status_changed_by']);
         $request->setOrderType($row['order_type']);
         $request->setOriginator($row['originator_id']);
         $request->setPlateNumber($row['plate_number']);
@@ -563,6 +564,7 @@ class DB_utils
     {
         try {
             DB::getMDB()->update('cargo_request', array(
+                'operator' => $_SESSION['operator']['username'],
                 'status_changed_by' => $_SESSION['operator']['id'],
                 'status' => AppStatuses::$CARGO_CANCELLED
             ), "id=%d", $id);
@@ -587,6 +589,7 @@ class DB_utils
         try {
             if(empty($value)) {
                 DB::getMDB()->update('cargo_request', array(
+                    'operator' => $_SESSION['operator']['username'],
                     'acceptance' => date("Y-m-d H:i:s"),
                     'accepted_by' => $cargo->getAcceptedBy(),
                     'status_changed_by' => $cargo->getAcceptedBy(),
@@ -595,6 +598,7 @@ class DB_utils
             }
             else {
                 DB::getMDB()->update('cargo_request', array(
+                    'operator' => $_SESSION['operator']['username'],
                     'acceptance' => date("Y-m-d H:i:s"),
                     'accepted_by' => $cargo->getAcceptedBy(),
                     'status_changed_by' => $cargo->getAcceptedBy(),
@@ -663,6 +667,7 @@ class DB_utils
     {
         try {
             DB::getMDB()->update ( 'cargo_truck', array (
+                'operator' => $_SESSION['operator']['username'],
                 'status_changed_by' => $_SESSION['operator']['id'],
                 'status' => $status
             ), "id=%d", $truck->getId());

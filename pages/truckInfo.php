@@ -99,6 +99,7 @@ else {
 
 $originator = DB_utils::selectUserById($truck->getOriginator());
 $recipient = DB_utils::selectUserById($truck->getRecipient());
+$statusChangedBy = DB_utils::selectUserById($truck->getStatusChangedBy());
 
 // Read the changes which happened so far
 $audit = Audit::readTruck($truck->getId());
@@ -190,6 +191,12 @@ else {
                                 <td class="text-right">Status</td>
                                 <td>
                                     <?=$status_code?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Status last updated by</td>
+                                <td>
+                                    <?=empty($statusChangedBy)?'N/A':$statusChangedBy->getName()?>
                                 </td>
                             </tr>
                             <tr>

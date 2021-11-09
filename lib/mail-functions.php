@@ -17,7 +17,7 @@ class Mails
 
     public static bool $DEBUG = true;
     public static bool $ALLOW_MAILS = true;
-    public static string $BASE_HREF = 'http://rohel.iedutu.com';
+    public static string $BASE_HREF = 'https://cat.rohel.ro';
 
     public static string $BG_INFO_COLOR = '#8950FC';
     public static string $TX_INFO_COLOR = '#ffffff';
