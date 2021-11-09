@@ -35,7 +35,7 @@ if (isset ( $_POST ['id'] )) {
     try {
         DB_utils::updateTruckStatus($truck, AppStatuses::$TRUCK_CANCELLED);
 
-        Utils::insertCargoAuditEntry('cargo_truck', 'status', $_POST['id'], 3);
+        Utils::insertCargoAuditEntry('cargo_truck', 'status', $_POST['id'], AppStatuses::$TRUCK_CANCELLED);
 
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');

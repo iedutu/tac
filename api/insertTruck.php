@@ -28,15 +28,15 @@ if (isset ( $_POST ['_submitted'] )) {
         $truck->setContractType($_POST ['contract_type']);
         switch($truck->getContractType()) {
             case 'Round-trip': {
-                $truck->setStatus(1);
+                $truck->setStatus(AppStatuses::$TRUCK_AVAILABLE);
                 break;
             }
             case 'One-way': {
-                $truck->setStatus(2);
+                $truck->setStatus(AppStatuses::$TRUCK_FREE);
                 break;
             }
             case 'New': {
-                $truck->setStatus(3);
+                $truck->setStatus(AppStatuses::$TRUCK_NEW);
                 break;
             }
             default: {
@@ -70,7 +70,7 @@ if (isset ( $_POST ['_submitted'] )) {
 
         $truck->setStop($stops);
 
-        Utils::insertCargoAuditEntry('cargo_truck', 'NEW-ENTRY', null, $truck->getRecipient());
+        Utils::insertCargoAuditEntry('cargo_truck', 'NEW-ENTRY', null, $truck->getId());
 
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');

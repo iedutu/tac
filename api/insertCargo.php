@@ -17,7 +17,7 @@ if (isset ( $_POST ['_submitted'] )) {
     $cargo = new Request();
 
     try {
-        $cargo->setStatus(1);
+        $cargo->setStatus(AppStatuses::$CARGO_NEW);
         $cargo->setClient($_POST ['client']);
         $cargo->setOriginator($_SESSION['operator']['id']);
         $cargo->setRecipient($_POST ['recipient']);
@@ -42,7 +42,7 @@ if (isset ( $_POST ['_submitted'] )) {
 
         $cargo->setId(DB_utils::insertRequest($cargo));
         // Keep a record of what happened
-        Utils::insertCargoAuditEntry('cargo_request', 'NEW-ENTRY', null, $_POST ['recipient']);
+        Utils::insertCargoAuditEntry('cargo_request', 'NEW-ENTRY', null, $cargo->getId());
 
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');

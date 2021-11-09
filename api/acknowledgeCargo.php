@@ -15,7 +15,7 @@ if(!empty($_POST['id'])) {
         exit();
     }
 
-    if ($cargo->getStatus() >= 2) {
+    if ($cargo->getStatus() >= AppStatuses::$CARGO_ACCEPTED) {
         $_SESSION['alert']['type'] = 'error';
         $_SESSION['alert']['message'] = 'Cargo already acknowledged or cancelled.';
 
@@ -33,7 +33,7 @@ if(!empty($_POST['id'])) {
 
         Utils::insertCargoAuditEntry('cargo_request', 'acceptance', $cargo->getId(), date("Y-m-d H:i:s"));
         Utils::insertCargoAuditEntry('cargo_request', 'accepted_by', $cargo->getId(), $cargo->getAcceptedBy());
-        Utils::insertCargoAuditEntry('cargo_request', 'status', $cargo->getId(), 2);
+        Utils::insertCargoAuditEntry('cargo_request', 'status', $cargo->getId(), AppStatuses::$CARGO_ACCEPTED);
 
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');

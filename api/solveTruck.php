@@ -15,7 +15,7 @@ if (isset ( $_POST ['id'] )) {
         exit();
     }
 
-    if($truck->getStatus() == 3) {
+    if($truck->getStatus() > AppStatuses::$TRUCK_PARTIALLY_SOLVED) {
         AppLogger::getLogger()->info('Truck already solved/loaded. Please contact the recipient directly.');
         $_SESSION['alert']['type'] = 'error';
         $_SESSION['alert']['message'] = 'Truck already solved/closed. Please contact the recipient directly.';
@@ -33,9 +33,9 @@ if (isset ( $_POST ['id'] )) {
     }
 
     try {
-        DB_utils::updateTruckStatus($truck, 5);
+        DB_utils::updateTruckStatus($truck, AppStatuses::$TRUCK_FULLY_SOLVED);
 
-        Utils::insertCargoAuditEntry('cargo_truck', 'status', $truck->getId(), 3);
+        Utils::insertCargoAuditEntry('cargo_truck', 'status', $truck->getId(), AppStatuses::$TRUCK_FULLY_SOLVED);
 
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');
