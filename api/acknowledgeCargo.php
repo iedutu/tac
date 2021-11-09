@@ -58,8 +58,8 @@ if(!empty($_POST['id'])) {
         $email['header'] = 'A cargo was acknowldged by ' . $acceptor->getName();
         $email['body-1'] = 'has acknowledged a cargo bound for <strong>' . $cargo->getToCity() . '</strong>' . '.';
         $email['body-2'] = 'The loading date is <strong>' . date(Utils::$PHP_DATE_FORMAT, $cargo->getLoadingDate()) . '</strong>';
-        $email['originator']['e-mail'] = $recipient->getUsername();
-        $email['originator']['name'] = $recipient->getName();
+        $email['originator']['e-mail'] = $acceptor->getUsername();
+        $email['originator']['name'] = $acceptor->getName();
         $email['recipient']['e-mail'] = $originator->getUsername();
         $email['recipient']['name'] = $originator->getName();
         $email['link']['url'] = Mails::$BASE_HREF.'/?page=cargoInfo&id='.$cargo->getId();

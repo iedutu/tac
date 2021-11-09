@@ -54,15 +54,15 @@ if (isset ( $_POST ['id'] )) {
         $originator = DB_utils::selectUserById($truck->getOriginator());
         $recipient = DB_utils::selectUserById($truck->getRecipient());
 
-        $email['subject'] = 'Truck order marked as fully loaded by ' . $originator->getName();
+        $email['subject'] = 'Truck order marked as fully loaded by ' . $recipient->getName();
         $email['title'] = 'ROHEL | E-mail';
-        $email['header'] = 'A truck order was marked as fully loaded by ' . $originator->getName();
+        $email['header'] = 'A truck order was marked as fully loaded by ' . $recipient->getName();
         $email['body-1'] = 'has marked as fully loaded a truck order from <strong>' . $truck->getFromCity() . '</strong>' . '.';
         $email['body-2'] = 'The loading date is <strong>' . date(Utils::$PHP_DATE_FORMAT, $truck->getLoadingDate()) . '</strong>';
-        $email['originator']['e-mail'] = $originator->getUsername();
-        $email['originator']['name'] = $originator->getName();
-        $email['recipient']['e-mail'] = $recipient->getUsername();
-        $email['recipient']['name'] = $recipient->getName();
+        $email['originator']['e-mail'] = $recipient->getUsername();
+        $email['originator']['name'] = $recipient->getName();
+        $email['recipient']['e-mail'] = $originator->getUsername();
+        $email['recipient']['name'] = $originator->getName();
         $email['link']['url'] = Mails::$BASE_HREF.'/?page=truckInfo&id=' . $truck->getId();
         $email['link']['text'] = 'View the truck order details';
         $email['bg-color'] = Mails::$BG_FULLY_LOADED_COLOR;
@@ -88,7 +88,7 @@ if (isset ( $_POST ['id'] )) {
 
     $_SESSION['alert']['type'] = 'success';
     $_SESSION['alert']['message'] = 'Truck '.$truck->getPlateNumber().' with ameta '.$truck->getAmeta().' was marked as fully loaded.';
-    $_SESSION['alert']['message'] .= ' Notification e-mail sent to '.$recipient->getName().' and '.$originator->getName();
+    $_SESSION['alert']['message'] .= ' Notification e-mail sent to '.$recipient->getName().'.';
 
     header ( 'Location: /index.php?page=truckInfo&id='.$truck->getId() );
     exit();
