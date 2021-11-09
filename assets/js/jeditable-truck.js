@@ -34,12 +34,30 @@ $(document).ready(function() {
         }
     });
 
-    $('.editable-select').editable('api/updateField.php', {
+    $('.editable-select').editable('api/updateContractType.php', {
         type           : 'select',
         indicator      : 'Saving ...',
         loadurl        : 'api/truckContractType.php',
         inputcssclass : 'form-control',
-        cssclass       : 'form'
+        cssclass       : 'form',
+        callback : function(result, settings, submitdata) {
+            if (result != null) {
+                console.log(submitdata);
+                if(submitdata.value === 'Round-trip') {
+                    document.getElementById('kt_truck_status_code').innerHTML = '<span class="label label-lg label-secondary label-inline mr-2 font-weight-bolder" data-toggle="tooltip" data-placement="top" title="Round-trip booked truck">Available truck</span>';
+                }
+                else {
+                    if(submitdata.value === 'One-way') {
+                        document.getElementById('kt_truck_status_code').innerHTML = '<span class="label label-lg label-info label-inline mr-2 font-weight-bolder" data-toggle="tooltip" data-placement="top" title="One-way booked truck">Free truck</span>';
+                    }
+                    else {
+                        if(submitdata.value === 'New') {
+                            document.getElementById('kt_truck_status_code').innerHTML = '<span class="label label-lg label-dark label-inline mr-2 font-weight-bolder" data-toggle="tooltip" data-placement="top" title="Truck available on the market">New truck</span>';
+                        }
+                    }
+                }
+            }
+        }
     });
 
     $('.editable-select-3').editable('api/updateRecipient.php', {

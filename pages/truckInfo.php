@@ -189,7 +189,7 @@ else {
                             </tr>
                             <tr>
                                 <td class="text-right">Status</td>
-                                <td>
+                                <td id="kt_truck_status_code">
                                     <?=$status_code?>
                                 </td>
                             </tr>
