@@ -583,9 +583,6 @@ class DB_utils
      */
     public static function acknowledgeCargo(Request $cargo, string $field, ?string $value): bool
     {
-        AppLogger::getLogger()->info('Cargo to be acknowledged: '.$cargo->serializeToJsonString());
-        AppLogger::getLogger()->info('Fields to change: id=('.$field.'), value=('.$value.')');
-
         try {
             if(empty($value)) {
                 DB::getMDB()->update('cargo_request', array(

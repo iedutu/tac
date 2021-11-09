@@ -75,10 +75,7 @@ class Mails
             $body = ob_get_clean();
             $mail->msgHTML($body, dirname(__FILE__), true); // Create message bodies and embed images
             if (self::$ALLOW_MAILS) {
-                if($mail->send()) {
-                    AppLogger::getLogger()->debug('E-mail sent to: '.$email['recipient']['e-mail']);
-                }
-                else {
+                if(!$mail->send()) {
                     AppLogger::getLogger()->error('Unable to send mail.');
                 }
             }

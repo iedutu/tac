@@ -96,7 +96,7 @@ if(!empty($_POST['_submitted'])) {
                         (
                              (a.SYS_CREATION_DATE >= STR_TO_DATE(%s, '%%d-%%m-%%Y')) and (a.SYS_CREATION_DATE < (STR_TO_DATE(%s, '%%d-%%m-%%Y') + INTERVAL 1 DAY))
                         )     
-						order by a.SYS_CREATION_DATE", $start_date, $end_date);
+						order by a.SYS_CREATION_DATE desc", $start_date, $end_date);
 
                     $i = 2;
                     foreach ($results as $row) {
@@ -275,7 +275,7 @@ if(!empty($_POST['_submitted'])) {
 								(
                                     (a.SYS_CREATION_DATE >= STR_TO_DATE(%s, '%%d-%%m-%%Y')) and (a.SYS_CREATION_DATE < (STR_TO_DATE(%s, '%%d-%%m-%%Y') + INTERVAL 1 DAY))
                                 )     
-				    		    order by a.SYS_CREATION_DATE", $start_date, $end_date);
+				    		    order by a.SYS_CREATION_DATE desc", $start_date, $end_date);
 
                     $i = 2;
                     foreach ($results as $row) {
@@ -465,7 +465,7 @@ if(!empty($_POST['_submitted'])) {
 								(
                                     (a.SYS_CREATION_DATE >= STR_TO_DATE(%s, '%%d-%%m-%%Y')) and (a.SYS_CREATION_DATE < (STR_TO_DATE(%s, '%%d-%%m-%%Y') + INTERVAL 1 DAY))
                                 )     
-				    		    order by a.SYS_CREATION_DATE", $start_date, $end_date);
+				    		    order by a.item_date desc", $start_date, $end_date);
 
                     $i = 2;
                     foreach ($results as $row) {
