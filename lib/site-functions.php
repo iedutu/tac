@@ -22,8 +22,9 @@ class Utils
     public static int $REPORTS = 11;
     public static int $OPERATIONAL = 12;
     public static string $CANCELLED = 'CANCELLED';
-    public static $WEBMASTER_EMAIL = 'webmaster@cat.rohel.ro';
-    public static $WEBMASTER_NAME = 'Team ROHEL';
+    public static string $WEBMASTER_EMAIL = 'webapp@rohel.ro';
+    public static string $WEBMASTER_NAME = 'Team ROHEL';
+    public static int $SOLVED_TRUCK_DAYS = 2;
 
     public static function clean_up()
     {

@@ -1432,7 +1432,25 @@ class DB_utils
             DB::getMDB()->query('TRUNCATE cargo_match');
 
             // Select all NEW and ACCEPTED trucks
-            $t_rows = DB::getMDB()->query ('SELECT * FROM cargo_truck WHERE (status < '.AppStatuses::$TRUCK_CANCELLED.') ORDER BY SYS_CREATION_DATE DESC');
+            $t_rows = DB::getMDB()->query ('SELECT 
+                                                * 
+                                            FROM 
+                                                cargo_truck 
+                                            WHERE 
+                                            (
+                                                (status < %d)
+                                                OR 
+                                                (
+                                                    (status = %d)
+                                                    AND
+                                                    (NOW() < DATE_ADD(SYS_UPDATE_DATE, INTERVAL %d DAY))
+                                                )
+                                            )
+                                            ORDER BY SYS_CREATION_DATE DESC',
+                                                AppStatuses::$TRUCK_FULLY_SOLVED,
+                                                AppStatuses::$TRUCK_FULLY_SOLVED,
+                                                Utils::$SOLVED_TRUCK_DAYS,
+                                          );
             $i = 0;
             foreach($t_rows as $t_row) {
                 $truck = self::row2truck($t_row);

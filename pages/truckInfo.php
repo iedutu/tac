@@ -61,7 +61,7 @@ switch($truck->getStatus()) {
     }
     case AppStatuses::$TRUCK_NEW: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Truck available on the market"';
-        $status_code = '<span class="label label-lg label-dark label-inline mr-2 font-weight-bolder" '.$tooltip.'>New truck</span>';
+        $status_code = '<span class="label label-lg label-dark label-inline mr-2 font-weight-bolder" '.$tooltip.'>Free on market</span>';
         break;
     }
     case AppStatuses::$TRUCK_PARTIALLY_SOLVED: {

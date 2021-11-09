@@ -51,8 +51,8 @@ $(document).ready(function() {
                         document.getElementById('kt_truck_status_code').innerHTML = '<span class="label label-lg label-info label-inline mr-2 font-weight-bolder" data-toggle="tooltip" data-placement="top" title="One-way booked truck">Free truck</span>';
                     }
                     else {
-                        if(submitdata.value === 'New') {
-                            document.getElementById('kt_truck_status_code').innerHTML = '<span class="label label-lg label-dark label-inline mr-2 font-weight-bolder" data-toggle="tooltip" data-placement="top" title="Truck available on the market">New truck</span>';
+                        if(submitdata.value === 'Free-on-market') {
+                            document.getElementById('kt_truck_status_code').innerHTML = '<span class="label label-lg label-dark label-inline mr-2 font-weight-bolder" data-toggle="tooltip" data-placement="top" title="Truck available on the market">Free on market</span>';
                         }
                     }
                 }

@@ -35,7 +35,7 @@ if (isset ( $_POST ['_submitted'] )) {
                 $truck->setStatus(AppStatuses::$TRUCK_FREE);
                 break;
             }
-            case 'New': {
+            case 'Free-on-market': {
                 $truck->setStatus(AppStatuses::$TRUCK_NEW);
                 break;
             }

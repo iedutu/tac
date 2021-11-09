@@ -19,7 +19,7 @@ if(!empty($_POST['id'])) {
                 $status = AppStatuses::$TRUCK_FREE;
                 break;
             }
-            case 'New': {
+            case 'Free-on-market': {
                 $status = AppStatuses::$TRUCK_NEW;
                 break;
             }

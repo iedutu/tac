@@ -270,12 +270,27 @@ if(!empty($_POST['_submitted'])) {
                                     (a.recipient_id=b.id and b.office_id=d.id and d.country=f.id)
                                     AND
                                     (a.originator_id=c.id and c.office_id=e.id and e.country=g.id)
+								    AND
+                                    (
+                                        (a.status < %d)
+                                        OR 
+                                        (
+                                            (a.status = %d)
+                                            AND
+                                            (NOW() < DATE_ADD(a.SYS_UPDATE_DATE, INTERVAL %d DAY))
+                                        )
+                                    )
 								)
 								AND
 								(
                                     (a.SYS_CREATION_DATE >= STR_TO_DATE(%s, '%%d-%%m-%%Y')) and (a.SYS_CREATION_DATE < (STR_TO_DATE(%s, '%%d-%%m-%%Y') + INTERVAL 1 DAY))
                                 )     
-				    		    order by a.SYS_CREATION_DATE desc", $start_date, $end_date);
+				    		    order by a.SYS_CREATION_DATE desc",
+                                    AppStatuses::$TRUCK_FULLY_SOLVED,
+                                    AppStatuses::$TRUCK_FULLY_SOLVED,
+                                    Utils::$SOLVED_TRUCK_DAYS,
+                                    $start_date,
+                                    $end_date);
 
                     $i = 2;
                     foreach ($results as $row) {

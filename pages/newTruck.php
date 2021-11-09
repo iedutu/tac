@@ -42,7 +42,7 @@
                             <select class="form-control" id="contract_type" name="contract_type">
                                 <option value="Round-trip">Round-trip</option>
                                 <option value="One-way">One-way</option>
-                                <option value="New">New</option>
+                                <option value="Free-on-market">Free-on-market</option>
                             </select>
                             <span class="form-text text-muted">Please select the type of the contract</span>
                         </div>

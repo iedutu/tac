@@ -68,19 +68,31 @@ try {
                                                          )
                                             )
                                         )
-                                     AND
-                                        (a.status < 6)
-                                     AND
-                                     (
-                                         (a.originator_id=b.id and b.office_id=d.id)
-                                         AND
-                                         (a.recipient_id=c.id and c.office_id=e.id)
-                                     )
-                                     order by ".$field." ".$sort,
-                                            Utils::$SQL_DATE_FORMAT,
-                                            Utils::$SQL_DATE_FORMAT,
-                                            Utils::$SQL_DATE_FORMAT,
-                                            Utils::$CARGO_PERIOD);
+                                        AND
+                                        (
+                                            (a.status < %d)
+                                            OR 
+                                            (
+                                                (a.status = %d)
+                                                AND
+                                                (NOW() < DATE_ADD(a.SYS_UPDATE_DATE, INTERVAL %d DAY))
+                                            )
+                                        )
+                                        AND
+                                        (
+                                            (a.originator_id=b.id and b.office_id=d.id)
+                                            AND
+                                            (a.recipient_id=c.id and c.office_id=e.id)
+                                        )
+                                        order by ".$field." ".$sort,
+                                                Utils::$SQL_DATE_FORMAT,
+                                                Utils::$SQL_DATE_FORMAT,
+                                                Utils::$SQL_DATE_FORMAT,
+                                                Utils::$CARGO_PERIOD,
+                                                AppStatuses::$TRUCK_FULLY_SOLVED,
+                                                AppStatuses::$TRUCK_FULLY_SOLVED,
+                                                Utils::$SOLVED_TRUCK_DAYS,
+                                    );
 
 } catch (MeekroDBException $mdbe) {
     Utils::handleMySQLException($mdbe);

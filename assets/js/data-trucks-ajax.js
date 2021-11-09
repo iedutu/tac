@@ -146,7 +146,7 @@ var KTDatatableTruckList = function() {
                             'class': ' label-info'
                         },
                         3: {
-                            'title': 'New',
+                            'title': 'Market',
                             'class': ' label-dark'
                         },
                         4: {

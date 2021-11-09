@@ -122,7 +122,7 @@ let KTDatatableMatchesList = function() {
                                 'class': ' label-info'
                             },
                             4: {
-                                'title': 'New',
+                                'title': 'Market',
                                 'tooltip': 'Truck from the market',
                                 'class': ' label-dark'
                             },
