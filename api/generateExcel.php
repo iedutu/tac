@@ -88,9 +88,9 @@ if(!empty($_POST['_submitted'])) {
                             cargo_countries g
                        WHERE 
                         (
-                            (a.originator_id=b.id and b.office_id=d.id and d.country=f.id)
+                            (a.recipient_id=b.id and b.office_id=d.id and d.country=f.id)
                             AND
-                            (a.recipient_id=c.id and c.office_id=e.id and e.country=g.id)
+                            (a.originator_id=c.id and c.office_id=e.id and e.country=g.id)
                         )
 						AND
                         (
@@ -267,9 +267,9 @@ if(!empty($_POST['_submitted'])) {
 								    cargo_countries g
 							   WHERE 
 								(
-									(a.originator_id=b.id and b.office_id=d.id and d.country=f.id)
-									AND
-									(a.recipient_id=c.id and c.office_id=e.id and e.country=g.id)
+                                    (a.recipient_id=b.id and b.office_id=d.id and d.country=f.id)
+                                    AND
+                                    (a.originator_id=c.id and c.office_id=e.id and e.country=g.id)
 								)
 								AND
 								(
