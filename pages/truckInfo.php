@@ -38,7 +38,7 @@ $_SESSION['recipient-id'] = $truck->getRecipient();
  */
 $editable = DB_utils::isEditable($truck->getOriginator(), $truck->getRecipient());
 
-if($truck->getStatus() > AppStatuses::$TRUCK_NEW) {
+if($truck->getStatus() > AppStatuses::$TRUCK_MARKET) {
     $editable['originator'] = false;
 }
 
@@ -59,19 +59,19 @@ switch($truck->getStatus()) {
         $status_code = '<span class="label label-lg label-info label-inline mr-2 font-weight-bolder" '.$tooltip.'>Free truck</span>';
         break;
     }
-    case AppStatuses::$TRUCK_NEW: {
+    case AppStatuses::$TRUCK_MARKET: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Truck available on the market"';
         $status_code = '<span class="label label-lg label-dark label-inline mr-2 font-weight-bolder" '.$tooltip.'>Free on market</span>';
         break;
     }
     case AppStatuses::$TRUCK_PARTIALLY_SOLVED: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Partially loaded truck"';
-        $status_code = '<span class="label label-lg label-warning label-inline mr-2 font-weight-bolder" '.$tooltip.'>Partially loaded</span>';
+        $status_code = '<span class="label label-lg label-warning label-inline mr-2 font-weight-bolder" '.$tooltip.'>Partially solved</span>';
         break;
     }
     case AppStatuses::$TRUCK_FULLY_SOLVED: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Fully loaded truck"';
-        $status_code = '<span class="label label-lg label-success label-inline mr-2" '.$tooltip.'>Fully loaded</span>';
+        $status_code = '<span class="label label-lg label-success label-inline mr-2" '.$tooltip.'>Solved</span>';
         break;
     }
     case AppStatuses::$TRUCK_CANCELLED: {

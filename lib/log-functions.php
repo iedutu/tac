@@ -11,7 +11,12 @@ class AppLogger
     {
         if(empty(self::$logger)) {
             self::$logger = new Logger('cat.rohel.ro');
-            self::$logger->pushHandler(new StreamHandler($_SERVER['DOCUMENT_ROOT'].'/../log/app_'.date(Utils::$PHP_DATE_FORMAT).'.log', Logger::DEBUG));
+            if(Utils::$DEBUG) {
+                self::$logger->pushHandler(new StreamHandler($_SERVER['DOCUMENT_ROOT'] . '/../log/app_' . date(Utils::$PHP_DATE_FORMAT) . '.log', Logger::DEBUG));
+            }
+            else {
+                self::$logger->pushHandler(new StreamHandler($_SERVER['DOCUMENT_ROOT'] . '/../log/app_' . date(Utils::$PHP_DATE_FORMAT) . '.log', Logger::WARNING));
+            }
         }
 
         return self::$logger;

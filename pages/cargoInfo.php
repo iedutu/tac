@@ -53,9 +53,9 @@ switch($cargo->getStatus()) {
         $status_code = '<span class="label label-lg label-success label-inline mr-2 font-weight-bolder" '.$tooltip.'>Accepted</span>';
         break;
     }
-    case AppStatuses::$CARGO_CLOSED: {
+    case AppStatuses::$CARGO_SOLVED: {
         $tooltip = 'data-toggle="tooltip" data-placement="top" title="Closed cargo"';
-        $status_code = '<span class="label label-lg label-success label-inline mr-2" '.$tooltip.'>Closed</span>';
+        $status_code = '<span class="label label-lg label-success label-inline mr-2" '.$tooltip.'>Solved</span>';
         break;
     }
     case AppStatuses::$CARGO_CANCELLED: {
@@ -452,7 +452,7 @@ $class_text_default = '';
                                                 }
                                                 else {
                                                     if($cargo->getStatus() == 2) {
-                                                        echo '<b style="display: inline" id="plate_number" class="editable-text '.($audit->getPlateNumber()?$class_text_new:$class_text_default).'">' . $cargo->getPlateNumber() . '</b>';
+                                                        echo '<b style="display: inline" id="plate_number" class="editable-acknowledge-text '.($audit->getPlateNumber()?$class_text_new:$class_text_default).'">' . $cargo->getPlateNumber() . '</b>';
                                                     }
                                                     else {
                                                         echo '<p style="display: inline" id="plate_number" class="'.($audit->getPlateNumber()?$class_text_new:$class_text_default).'">'.$cargo->getPlateNumber().'</p>';
@@ -538,7 +538,7 @@ $class_text_default = '';
                     <?php
                 }
                 else {
-                    if($editable['recipient']) {
+                    if($editable['recipient'] && ($cargo->getStatus() == 1)) {
                         ?>
                         <div id="kt_rohel_accept_area" class="card-footer d-print-none">
                             <form class="form" id="kt_rohel_accept_form" action="/api/acknowledgeCargo.php" method="post">
@@ -546,12 +546,7 @@ $class_text_default = '';
                                 <input type="hidden" name="id" value="<?=$cargo->getId()?>">
                                 <div class="row">
                                     <div class="col-lg-8">
-                                        <?php
-                                        // NEW cargo only can be cancelled
-                                        if($cargo->getStatus() == 1) {
-                                            echo '<button type="submit" class="btn btn-primary btn-lg" data-toggle="tooltip" title="Click to acknowledge the request!">Acknowledge request</button>';
-                                        }
-                                        ?>
+                                        <button type="submit" class="btn btn-primary btn-lg" data-toggle="tooltip" title="Click to acknowledge the request!">Acknowledge request</button>
                                     </div>
                                 </div>
                             </form>

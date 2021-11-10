@@ -36,7 +36,7 @@ if (isset ( $_POST ['_submitted'] )) {
                 break;
             }
             case 'Free-on-market': {
-                $truck->setStatus(AppStatuses::$TRUCK_NEW);
+                $truck->setStatus(AppStatuses::$TRUCK_MARKET);
                 break;
             }
             default: {

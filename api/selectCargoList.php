@@ -79,8 +79,8 @@ try {
                         )
 					    order by ".$field." ".$sort,
                             Utils::$SQL_DATE_FORMAT,
-                            AppStatuses::$CARGO_CLOSED,
-                            AppStatuses::$CARGO_CLOSED,
+                            AppStatuses::$CARGO_SOLVED,
+                            AppStatuses::$CARGO_SOLVED,
                             Utils::$CARGO_PERIOD
     );
 

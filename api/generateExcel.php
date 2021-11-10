@@ -126,9 +126,9 @@ if(!empty($_POST['_submitted'])) {
                                 $txtColor = Mails::$TX_SUCCESS_COLOR;
                                 break;
                             }
-                            case AppStatuses::$CARGO_CLOSED:
+                            case AppStatuses::$CARGO_SOLVED:
                             {
-                                $status = 'Closed';
+                                $status = 'Solved';
                                 $bgColor = Mails::$BG_SUCCESS_COLOR;
                                 $txtColor = Mails::$TX_SUCCESS_COLOR;
                                 break;
@@ -320,9 +320,9 @@ if(!empty($_POST['_submitted'])) {
                                 $txtColor = Mails::$TX_INFO_COLOR;
                                 break;
                             }
-                            case AppStatuses::$TRUCK_NEW:
+                            case AppStatuses::$TRUCK_MARKET:
                             {
-                                $status = 'New';
+                                $status = 'Market';
                                 $bgColor = Mails::$BG_DARK_COLOR;
                                 $txtColor = Mails::$TX_DARK_COLOR;
                                 break;
@@ -336,7 +336,7 @@ if(!empty($_POST['_submitted'])) {
                             }
                             case AppStatuses::$TRUCK_FULLY_SOLVED:
                             {
-                                $status = 'Fully solved';
+                                $status = 'Solved';
                                 $bgColor = Mails::$BG_SUCCESS_COLOR;
                                 $txtColor = Mails::$TX_SUCCESS_COLOR;
                                 break;
@@ -509,23 +509,23 @@ if(!empty($_POST['_submitted'])) {
                                 $txtColor = Mails::$TX_INFO_COLOR;
                                 break;
                             }
-                            case AppStatuses::$MATCH_NEW:
+                            case AppStatuses::$MATCH_MARKET:
                             {
-                                $status = 'New';
+                                $status = 'Market';
                                 $bgColor = Mails::$BG_DARK_COLOR;
                                 $txtColor = Mails::$TX_DARK_COLOR;
                                 break;
                             }
                             case AppStatuses::$MATCH_PARTIAL:
                             {
-                                $status = 'Partially loaded';
+                                $status = 'Partially solved';
                                 $bgColor = Mails::$BG_WARNING_COLOR;
                                 $txtColor = Mails::$TX_WARNING_COLOR;
                                 break;
                             }
                             case AppStatuses::$MATCH_SOLVED:
                             {
-                                $status = 'Fully loaded';
+                                $status = 'Solved';
                                 $bgColor = Mails::$BG_SUCCESS_COLOR;
                                 $txtColor = Mails::$TX_SUCCESS_COLOR;
                                 break;

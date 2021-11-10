@@ -29,8 +29,8 @@ if(!(empty($_POST['id']) || empty($_POST['value']))) {
         // Status updates
         if(!empty($cargo->getPlateNumber())) {
             // Truck is already acknowledged --> moving to Closed
-            DB_utils::updateCargoStatus($cargo, AppStatuses::$CARGO_CLOSED);
-            Utils::insertCargoAuditEntry('cargo_request', 'status', $cargo->getId(), AppStatuses::$CARGO_CLOSED);
+            DB_utils::updateCargoStatus($cargo, AppStatuses::$CARGO_SOLVED);
+            Utils::insertCargoAuditEntry('cargo_request', 'status', $cargo->getId(), AppStatuses::$CARGO_SOLVED);
         }
 
         // Set the trigger for the generation of the Match page
@@ -85,6 +85,5 @@ if(!(empty($_POST['id']) || empty($_POST['value']))) {
     }
 }
 else {
-    header('Location: /index.php?page=cargo');
-    exit();
+    return null;
 }

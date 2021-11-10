@@ -6,26 +6,24 @@ session_start();
 
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
-if(!empty($_POST['id'])) {
-    // TODO: Ensure you do not need any date related checks before updating
+if(!(empty($_POST['id']) || empty($_POST['value']))) {
+    if(empty(trim($_POST['value']))) {
+        return null;
+    }
 
     $cargo = DB_utils::selectRequest($_SESSION['entry-id']);
     if (empty($cargo)) {
-        header('Location: /index.php?page=cargo');
-        exit();
+        return null;
     }
 
     if ($cargo->getStatus() > AppStatuses::$CARGO_ACCEPTED) {
-        $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'Cargo already closed or cancelled.';
-
-        header('Location: /index.php?page=cargoInfo&id=' . $cargo->getId());
-        exit();
+        return null;
     }
 
     try {
         // Aceptance fileds update
         $cargo->setAcceptedBy($_SESSION ['operator']['id']);
+        DB_utils::updateCargoPlate($cargo, $_POST['value']);
         DB_utils::acknowledgeCargo($cargo);
 
         Utils::highlightPageItem('cargo_request', 'accepted_by', $cargo->getId());
@@ -36,11 +34,11 @@ if(!empty($_POST['id'])) {
         Utils::insertCargoAuditEntry('cargo_request', 'accepted_by', $cargo->getId(), $cargo->getAcceptedBy());
 
         // Status updates
-        if(empty($cargo->getPlateNumber())) {
+        if(empty($cargo->getAmeta())) {
             Utils::insertCargoAuditEntry('cargo_request', 'status', $cargo->getId(), AppStatuses::$CARGO_ACCEPTED);
         }
         else {
-            // Truck is already acknowledged --> moving to Closed
+            // I have AMETA --> moving to Closed
             DB_utils::updateCargoStatus($cargo, AppStatuses::$CARGO_SOLVED);
             Utils::insertCargoAuditEntry('cargo_request', 'status', $cargo->getId(), AppStatuses::$CARGO_SOLVED);
         }
@@ -80,27 +78,16 @@ if(!empty($_POST['id'])) {
         Mails::emailNotification($email);
     }
     catch (ApplicationException $ae) {
-        AppLogger::getLogger()->error('Application exception: '.$ae->getMessage());
-        $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'Application error: '.$ae->getMessage();
-        header('Location: /index.php?page=cargoInfo&id='.$cargo->getId());
-        exit();
+        AppLogger::getLogger()->error('Application error: '.$ae->getMessage());
+        return null;
     }
     catch (Exception $e) {
-        Utils::handleException($e);
-        AppLogger::getLogger()->error('Application exception: '.$e->getMessage());
-        $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'Application error: '.$e->getMessage();
-        header('Location: /index.php?page=cargoInfo&id='.$cargo->getId());
-        exit();
+        AppLogger::getLogger()->error('Application error: '.$e->getMessage());
+        return null;
     }
 
-    $_SESSION['alert']['type'] = 'success';
-    $_SESSION['alert']['message'] = 'Cargo successfully acknowledged. An e-mail notification was sent to '.$originator->getName();
-    header('Location: /index.php?page=cargoInfo&id='.$cargo->getId());
-    exit();
+    echo $_POST['value'];
 }
 else {
-    header('Location: /index.php?page=cargo');
-    exit();
+    return null;
 }

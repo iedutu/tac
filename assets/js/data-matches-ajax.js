@@ -133,7 +133,7 @@ let KTDatatableMatchesList = function() {
                             },
                             6: {
                                 'title': 'Solved',
-                                'tooltip': 'Fully loaded truck',
+                                'tooltip': 'Solved truck/order',
                                 'class': ' label-success'
                             },
                         };

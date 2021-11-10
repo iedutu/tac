@@ -88,7 +88,6 @@ try {
                                                 Utils::$SQL_DATE_FORMAT,
                                                 Utils::$SQL_DATE_FORMAT,
                                                 Utils::$SQL_DATE_FORMAT,
-                                                Utils::$CARGO_PERIOD,
                                                 AppStatuses::$TRUCK_FULLY_SOLVED,
                                                 AppStatuses::$TRUCK_FULLY_SOLVED,
                                                 Utils::$SOLVED_TRUCK_DAYS,

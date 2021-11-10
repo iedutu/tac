@@ -6,7 +6,11 @@ session_start();
 
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
-if(!empty($_POST['id'])) {
+if((!empty($_POST['id'])) && (!empty($_POST['value']))) {
+    if(empty(trim($_POST['value']))) {
+        return null;
+    }
+
     try {
         $table = DB_utils::updateGenericField($_POST['id'], $_POST['value'], $_SESSION['entry-id']);
 
@@ -48,7 +52,7 @@ if(!empty($_POST['id'])) {
 
                 DB_utils::addNotification($note);
 
-                $email['subject'] = 'cargo modified by ' . $originator->getName();
+                $email['subject'] = 'Cargo modified by ' . $originator->getName();
                 $email['title'] = 'ROHEL | E-mail';
                 $email['header'] = 'A cargo was modified by ' . $originator->getName();
                 $email['body-1'] = 'has modified a field ('.$_POST['id'].' => '.$_POST['value'].') on cargo bound to <strong>' . $cargo->getToCity() . '</strong>' . '.';
@@ -95,22 +99,31 @@ if(!empty($_POST['id'])) {
             }
         }
 
-        $email['originator']['e-mail'] = $originator->getUsername();
-        $email['originator']['name'] = $originator->getName();
-        $email['recipient']['e-mail'] = $recipient->getUsername();
-        $email['recipient']['name'] = $recipient->getName();
+        if($_SESSION['role'] == 'recipient') {
+            $email['recipient']['e-mail'] = $originator->getUsername();
+            $email['recipient']['name'] = $originator->getName();
+            $email['originator']['e-mail'] = $recipient->getUsername();
+            $email['originator']['name'] = $recipient->getName();
+        }
+        else {
+            $email['originator']['e-mail'] = $originator->getUsername();
+            $email['originator']['name'] = $originator->getName();
+            $email['recipient']['e-mail'] = $recipient->getUsername();
+            $email['recipient']['name'] = $recipient->getName();
+        }
+
         $email['bg-color'] = Mails::$BG_UPDATED_COLOR;
         $email['tx-color'] = Mails::$TX_UPDATED_COLOR;
 
         Mails::emailNotification($email);
     }
-catch (ApplicationException $ae) {
-    return null;
-}
+    catch (ApplicationException $ae) {
+        return null;
+    }
     catch (Exception $e) {
-    Utils::handleException($e);
-    return null;
-}
+        Utils::handleException($e);
+        return null;
+    }
 
     echo DB_utils::returnValue($table, $_POST['id'], $_POST['value'], $_SESSION['entry-id']);
 }

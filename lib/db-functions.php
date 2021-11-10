@@ -581,28 +581,16 @@ class DB_utils
     /**
      * @throws ApplicationException
      */
-    public static function acknowledgeCargo(Request $cargo, string $field, ?string $value): bool
+    public static function acknowledgeCargo(Request $cargo): bool
     {
         try {
-            if(empty($value)) {
-                DB::getMDB()->update('cargo_request', array(
-                    'operator' => $_SESSION['operator']['username'],
-                    'acceptance' => date("Y-m-d H:i:s"),
-                    'accepted_by' => $cargo->getAcceptedBy(),
-                    'status_changed_by' => $cargo->getAcceptedBy(),
-                    'status' => AppStatuses::$CARGO_ACCEPTED
-                ), "id=%d", $cargo->getId());
-            }
-            else {
-                DB::getMDB()->update('cargo_request', array(
-                    'operator' => $_SESSION['operator']['username'],
-                    'acceptance' => date("Y-m-d H:i:s"),
-                    'accepted_by' => $cargo->getAcceptedBy(),
-                    'status_changed_by' => $cargo->getAcceptedBy(),
-                    $field => $value,
-                    'status' => AppStatuses::$CARGO_ACCEPTED
-                ), "id=%d", $cargo->getId());
-            }
+            DB::getMDB()->update('cargo_request', array(
+                'operator' => $_SESSION['operator']['username'],
+                'acceptance' => date("Y-m-d H:i:s"),
+                'accepted_by' => $cargo->getAcceptedBy(),
+                'status_changed_by' => $cargo->getAcceptedBy(),
+                'status' => AppStatuses::$CARGO_ACCEPTED
+            ), "id=%d", $cargo->getId());
             DB::getMDB()->commit();
 
             return true;
@@ -623,6 +611,26 @@ class DB_utils
                 'operator' => $_SESSION['operator']['username'],
                 'status_changed_by' => $_SESSION['operator']['id'],
                 'status' => $status
+            ), "id=%d", $cargo->getId());
+            DB::getMDB()->commit();
+
+            return true;
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe->getMessage());
+        }
+    }
+
+    /**
+     * @throws ApplicationException
+     */
+    public static function updateCargoPlate(Request $cargo, string $plate): bool
+    {
+        try {
+            DB::getMDB()->update ( 'cargo_request', array (
+                'operator' => $_SESSION['operator']['username'],
+                'plate_number' => $plate
             ), "id=%d", $cargo->getId());
             DB::getMDB()->commit();
 
@@ -1071,7 +1079,7 @@ class DB_utils
         try {
             $row = DB::getMDB()->queryOneRow("select * from cargo_notifications where id=%d", $id);
             if (empty($row)) {
- //             AppLogger::getLogger()->error("No cargo_notification was found for id=".$id);
+                //             AppLogger::getLogger()->error("No cargo_notification was found for id=".$id);
 
                 return null;
             }
@@ -1468,10 +1476,10 @@ class DB_utils
                                                 )
                                             )
                                             ORDER BY SYS_CREATION_DATE DESC',
-                                                AppStatuses::$TRUCK_FULLY_SOLVED,
-                                                AppStatuses::$TRUCK_FULLY_SOLVED,
-                                                Utils::$SOLVED_TRUCK_DAYS,
-                                          );
+                AppStatuses::$TRUCK_FULLY_SOLVED,
+                AppStatuses::$TRUCK_FULLY_SOLVED,
+                Utils::$SOLVED_TRUCK_DAYS,
+            );
             $i = 0;
             foreach($t_rows as $t_row) {
                 $truck = self::row2truck($t_row);
@@ -1514,8 +1522,8 @@ class DB_utils
 
                             break;
                         }
-                        case AppStatuses::$TRUCK_NEW: {
-                            $match->setStatus(AppStatuses::$MATCH_NEW);
+                        case AppStatuses::$TRUCK_MARKET: {
+                            $match->setStatus(AppStatuses::$MATCH_MARKET);
 
                             break;
                         }
@@ -1543,7 +1551,6 @@ class DB_utils
                 unset($truck);
             }
 
-            // Select all NEW and ACCEPTED cargo
             $c_rows = DB::getMDB()->query ('SELECT 
                                                 * 
                                             FROM 
@@ -1555,11 +1562,11 @@ class DB_utils
                                             )
                                             ORDER BY 
                                                 SYS_CREATION_DATE DESC',
-                                                    AppStatuses::$CARGO_CLOSED,
-                                                    AppStatuses::$CARGO_CLOSED,
-                                                    Utils::$CARGO_PERIOD
+                AppStatuses::$CARGO_SOLVED,
+                AppStatuses::$CARGO_SOLVED,
+                Utils::$CARGO_PERIOD
             );
-            $i = 0;
+
             foreach($c_rows as $c_row) {
                 $cargo = self::row2request($c_row);
 

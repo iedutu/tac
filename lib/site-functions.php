@@ -446,13 +446,13 @@ class AppStatuses {
 
     public static int $CARGO_NEW        = 1;
     public static int $CARGO_ACCEPTED   = 2;
-    public static int $CARGO_CLOSED     = 3;
+    public static int $CARGO_SOLVED     = 3;
     public static int $CARGO_CANCELLED  = 4;
     public static int $CARGO_EXPIRED    = 5;
 
     public static int $TRUCK_AVAILABLE          = 1;
     public static int $TRUCK_FREE               = 2;
-    public static int $TRUCK_NEW                = 3;
+    public static int $TRUCK_MARKET             = 3;
     public static int $TRUCK_PARTIALLY_SOLVED   = 4;
     public static int $TRUCK_FULLY_SOLVED       = 5;
     public static int $TRUCK_CANCELLED          = 6;
@@ -460,7 +460,7 @@ class AppStatuses {
     public static int $MATCH_AVAILABLE  = 1;
     public static int $MATCH_NEEDED     = 2;
     public static int $MATCH_FREE       = 3;
-    public static int $MATCH_NEW        = 4;
+    public static int $MATCH_MARKET     = 4;
     public static int $MATCH_PARTIAL    = 5;
     public static int $MATCH_SOLVED     = 6;
 

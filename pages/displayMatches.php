@@ -2,8 +2,8 @@
 <div class="card card-custom">
     <div class="card-header flex-wrap border-0 pt-6 pb-0">
         <div class="card-title">
-            <h3 class="card-label">Matching page
-                <span class="d-block text-muted pt-2 font-size-sm">Please note all records will be kept for up to 5 calendar days from acceptance.</span></h3>
+            <h3 class="card-label">Summary
+                <span class="d-block text-muted pt-2 font-size-sm">Please note all records will be kept for up to <?=Utils::$SOLVED_TRUCK_DAYS?> calendar days from closure.</span></h3>
         </div>
         <div class="card-toolbar d-print-none">
             <!--begin::Dropdown-->
@@ -45,10 +45,10 @@
                                     <option value="">Type</option>
                                     <option value="<?=AppStatuses::$MATCH_AVAILABLE?>">Available</option>
                                     <option value="<?=AppStatuses::$MATCH_NEEDED?>">Needed</option>
-                                    <option value="<?=AppStatuses::$MATCH_FREE?>">Free on market</option>
-                                    <option value="<?=AppStatuses::$MATCH_NEW?>">New</option>
-                                    <option value="<?=AppStatuses::$MATCH_PARTIAL?>">Partially loaded</option>
-                                    <option value="<?=AppStatuses::$MATCH_SOLVED?>">Fully loaded</option>
+                                    <option value="<?=AppStatuses::$MATCH_FREE?>">Free</option>
+                                    <option value="<?=AppStatuses::$MATCH_MARKET?>">Market</option>
+                                    <option value="<?=AppStatuses::$MATCH_PARTIAL?>">Partially solved</option>
+                                    <option value="<?=AppStatuses::$MATCH_SOLVED?>">Fully solved</option>
                                 </select>
                             </div>
                         </div>

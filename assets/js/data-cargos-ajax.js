@@ -157,7 +157,7 @@ var KTDatatableCargoList = function() {
                                 'class': ' label-success'
                             },
                             3: {
-                                'title': 'Closed',
+                                'title': 'Solved',
                                 'class': ' label-success'
                             },
                             4: {

@@ -77,7 +77,7 @@ $_REQUEST['sort']['sort'] = null;
     <!--end::Fonts-->
 
     <!--begin::Page Vendors Styles(used by this page)-->
-    <link href="/assets/plugins/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css" />';
+    <link href="/assets/plugins/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css" />
     <?php include 'pages/internal/includeStyles.php'; ?>
 
     <!--end::Page Vendors Styles-->

@@ -3,7 +3,7 @@
     <div class="card-header flex-wrap border-0 pt-6 pb-0">
         <div class="card-title">
             <h3 class="card-label">Cargo
-                <span class="d-block text-muted pt-2 font-size-sm">Please note all records will be kept for up to 5 calendar days from acceptance.</span></h3>
+                <span class="d-block text-muted pt-2 font-size-sm">Please note all records will be kept for up to <?=Utils::$SOLVED_TRUCK_DAYS?> calendar days from closure.</span></h3>
         </div>
         <div class="card-toolbar d-print-none">
             <!--begin::Button-->
@@ -53,7 +53,7 @@
                                     <option value="">Status</option>
                                     <option value="<?=AppStatuses::$CARGO_NEW?>">New</option>
                                     <option value="<?=AppStatuses::$CARGO_ACCEPTED?>">Accepted</option>
-                                    <option value="<?=AppStatuses::$CARGO_CLOSED?>">Closed</option>
+                                    <option value="<?=AppStatuses::$CARGO_SOLVED?>">Solve</option>
                                     <option value="<?=AppStatuses::$CARGO_CANCELLED?>">Cancelled</option>
                                     <option value="<?=AppStatuses::$CARGO_EXPIRED?>">Expired</option>
                                 </select>
