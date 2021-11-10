@@ -12,7 +12,16 @@ $(document).ready(function() {
         type           : 'text',
         cssclass       : 'form',
         inputcssclass  : 'form-control',
-        tooltip        : 'Click to edit'
+        tooltip        : 'Click to edit',
+        callback : function(result, settings, submitdata) {
+            if ((result != null) && (submitdata.value !== '')) {
+                if(document.getElementById('kt_cargo_status_span').innerHTML === 'Accepted') {
+                    document.getElementById('kt_cargo_status_code').innerHTML = '<span id="kt_cargo_status_span" class="label label-lg label-success label-inline mr-2" data-toggle="tooltip" data-placement="top" title="Closed cargo">Solved</span>';
+                    document.getElementById("plate_number").classList.remove('text-danger');
+                    document.getElementById("ameta").classList.remove('text-danger');
+                }
+            }
+        }
     });
 
     $('.editable-acknowledge-text').editable('api/updateCargoPlate.php', {
@@ -23,7 +32,7 @@ $(document).ready(function() {
         tooltip        : 'Click to edit',
         callback : function(result, settings, submitdata) {
             if ((result != null) && (submitdata.value !== '')) {
-                document.getElementById('kt_cargo_status_code').innerHTML = '<span class="label label-lg label-success label-inline mr-2 font-weight-bolder">ACCEPTED</span>';
+                document.getElementById('kt_cargo_status_code').innerHTML = '<span id="kt_cargo_status_span" class="label label-lg label-success label-inline mr-2 font-weight-bolder" data-toggle="tooltip" data-placement="top" title="Accepted cargo">Accepted</span>';
                 document.getElementById('kt_cargo_accepted_by').innerHTML = document.getElementById('kt_operator').value;
                 document.getElementById('kt_cargo_accepted_at').innerHTML = document.getElementById('kt_today').value;
                 document.getElementById("kt_cargo_accepted_by").classList.add('text-primary');
