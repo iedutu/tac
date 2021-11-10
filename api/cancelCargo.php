@@ -53,16 +53,16 @@ try {
     DB_utils::addNotification($note);
 
     $_SESSION['alert']['type'] = 'success';
-    $_SESSION['alert']['message'] = 'cargo was successfully cancelled.';
+    $_SESSION['alert']['message'] = 'Cargo was successfully cancelled.';
     if (!empty($cargo->getAmeta())) {
-        $_SESSION['alert']['message'] = 'cargo with ameta ' . $cargo->getAmeta() . ' was successfully cancelled.';
+        $_SESSION['alert']['message'] = 'Cargo with ameta ' . $cargo->getAmeta() . ' was successfully cancelled.';
     }
 
     // Send a notification e-mail to the recipient
     $originator = DB_utils::selectUserById($cargo->getOriginator());
     $recipient = DB_utils::selectUserById($cargo->getRecipient());
 
-    $email['subject'] = 'cargo cancelled by ' . $originator->getName();
+    $email['subject'] = 'Cargo cancelled by ' . $originator->getName();
     $email['title'] = 'ROHEL | E-mail';
     $email['header'] = 'A cargo was cancelled by ' . $originator->getName();
     $email['body-1'] = 'has cancelled a cargo bound for <strong>' . $cargo->getToCity() . '</strong>' . '.';
@@ -91,7 +91,7 @@ catch (Exception $e) {
 }
 
 
-$_SESSION['alert']['message'] .= 'Cancellation e-mail sent to '.$email['recipient']['name'].' ('.$email['recipient']['e-mail'].')';
+$_SESSION['alert']['message'] .= ' Cancellation e-mail sent to '.$email['recipient']['name'].' ('.$email['recipient']['e-mail'].')';
 
 header ( 'Location: /index.php?page=cargo' );
 exit();

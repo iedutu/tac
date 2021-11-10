@@ -101,6 +101,16 @@ let KTFormControls = function () {
 						}
 					},
 
+					freight: {
+						validators: {
+							numeric: {
+								thousandsSeparator: '',
+								decimalSeparator: '.',
+								message: 'Please enter a valid amount (numerical only: ex. 500.4)'
+							}
+						}
+					},
+
 					client: {
 						validators: {
 							notEmpty: {
