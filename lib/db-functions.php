@@ -616,6 +616,27 @@ class DB_utils
     /**
      * @throws ApplicationException
      */
+    public static function updateCargoStatus(Request $cargo, int $status): bool
+    {
+        try {
+            DB::getMDB()->update ( 'cargo_request', array (
+                'operator' => $_SESSION['operator']['username'],
+                'status_changed_by' => $_SESSION['operator']['id'],
+                'status' => $status
+            ), "id=%d", $cargo->getId());
+            DB::getMDB()->commit();
+
+            return true;
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe->getMessage());
+        }
+    }
+
+    /**
+     * @throws ApplicationException
+     */
     public static function deleteTruckStops(Truck $truck, $post): bool
     {
         try {
@@ -1523,7 +1544,21 @@ class DB_utils
             }
 
             // Select all NEW and ACCEPTED cargo
-            $c_rows = DB::getMDB()->query ('SELECT * FROM cargo_request WHERE (status = '.AppStatuses::$CARGO_NEW.') OR (status = '.AppStatuses::$CARGO_ACCEPTED.') ORDER BY SYS_CREATION_DATE DESC');
+            $c_rows = DB::getMDB()->query ('SELECT 
+                                                * 
+                                            FROM 
+                                                cargo_request 
+                                            WHERE 
+                                            (
+                                                ((status < %d) AND (NOW() < (expiration + INTERVAL 1 DAY))) OR
+                                                ((status = %d) AND (NOW() < (SYS_UPDATE_DATE + INTERVAL %d DAY)))
+                                            )
+                                            ORDER BY 
+                                                SYS_CREATION_DATE DESC',
+                                                    AppStatuses::$CARGO_CLOSED,
+                                                    AppStatuses::$CARGO_CLOSED,
+                                                    Utils::$CARGO_PERIOD
+            );
             $i = 0;
             foreach($c_rows as $c_row) {
                 $cargo = self::row2request($c_row);

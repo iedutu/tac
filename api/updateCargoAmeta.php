@@ -6,40 +6,28 @@ session_start();
 
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
-if(!empty($_POST['id'])) {
+if(!(empty($_POST['id']) || empty($_POST['value']))) {
     // TODO: Ensure you do not need any date related checks before updating
 
     $cargo = DB_utils::selectRequest($_SESSION['entry-id']);
     if (empty($cargo)) {
-        header('Location: /index.php?page=cargo');
-        exit();
+        return null;
     }
 
     if ($cargo->getStatus() > AppStatuses::$CARGO_ACCEPTED) {
-        $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'Cargo already closed or cancelled.';
-
-        header('Location: /index.php?page=cargoInfo&id=' . $cargo->getId());
-        exit();
+        return null;
     }
 
     try {
-        // Aceptance fileds update
-        $cargo->setAcceptedBy($_SESSION ['operator']['id']);
-        DB_utils::acknowledgeCargo($cargo, $_POST ['id'], empty($_POST ['value'])?null:$_POST ['value']);
+        $cargo->setAmeta($_POST['value']);
 
-        Utils::highlightPageItem('cargo_request', 'accepted_by', $cargo->getId());
-        Utils::highlightPageItem('cargo_request', 'acceptance', $cargo->getId());
-        if(!empty($_POST['value'])) Utils::highlightPageItem('cargo_request', 'plate_number', $cargo->getId());
-
-        Utils::insertCargoAuditEntry('cargo_request', 'acceptance', $cargo->getId(), date("Y-m-d H:i:s"));
-        Utils::insertCargoAuditEntry('cargo_request', 'accepted_by', $cargo->getId(), $cargo->getAcceptedBy());
+        // Ameta updates
+        $table = DB_utils::updateGenericField($_POST['id'], $cargo->getAmeta(), $cargo->getId());
+        Utils::highlightPageItem('cargo_request', 'ameta', $cargo->getId());
+        Utils::insertCargoAuditEntry('cargo_request', 'ameta', $cargo->getId(), $cargo->getAmeta());
 
         // Status updates
-        if(empty($cargo->getPlateNumber())) {
-            Utils::insertCargoAuditEntry('cargo_request', 'status', $cargo->getId(), AppStatuses::$CARGO_ACCEPTED);
-        }
-        else {
+        if(!empty($cargo->getPlateNumber())) {
             // Truck is already acknowledged --> moving to Closed
             DB_utils::updateCargoStatus($cargo, AppStatuses::$CARGO_CLOSED);
             Utils::insertCargoAuditEntry('cargo_request', 'status', $cargo->getId(), AppStatuses::$CARGO_CLOSED);
@@ -52,7 +40,12 @@ if(!empty($_POST['id'])) {
         $note = new Notification();
         $note->setUserId($cargo->getOriginator());
         $note->setOriginatorId($_SESSION['operator']['id']);
-        $note->setKind(AppStatuses::$NOTIFICATION_KIND_APPROVED);
+        if(empty($cargo->getPlateNumber())) {
+            $note->setKind(AppStatuses::$NOTIFICATION_KIND_APPROVED);
+        }
+        else {
+            $note->setKind(AppStatuses::$NOTIFICATION_KIND_CHANGED);
+        }
         $note->setEntityKind(AppStatuses::$NOTIFICATION_ENTITY_KIND_CARGO);
         $note->setEntityId($cargo->getId());
 
@@ -80,38 +73,14 @@ if(!empty($_POST['id'])) {
         Mails::emailNotification($email);
     }
     catch (ApplicationException $ae) {
-        if(empty($_POST['value'])) {
-            AppLogger::getLogger()->error('Application exception: '.$ae->getMessage());
-            $_SESSION['alert']['type'] = 'error';
-            $_SESSION['alert']['message'] = 'Application error: '.$ae->getMessage();
-            header('Location: /index.php?page=cargoInfo&id='.$cargo->getId());
-            exit();
-        }
-        else {
-            return null;
-        }
+        return null;
     }
     catch (Exception $e) {
-        if(empty($_POST['value'])) {
-            Utils::handleException($e);
-            AppLogger::getLogger()->error('Application exception: '.$e->getMessage());
-            $_SESSION['alert']['type'] = 'error';
-            $_SESSION['alert']['message'] = 'Application error: '.$ae->getMessage();
-            header('Location: /index.php?page=cargoInfo&id='.$cargo->getId());
-            exit();
-        }
-        else {
-            return null;
-        }
+        Utils::handleException($e);
+        return null;
     }
 
-    if(empty($_POST ['value'])) {
-        $_SESSION['alert']['type'] = 'success';
-        $_SESSION['alert']['message'] = 'Cargo successfully acknowledged. An e-mail notification was sent to '.$originator->getName();
-        header('Location: /index.php?page=cargoInfo&id='.$cargo->getId());
-        exit();
-    }
-    else {
+    if(!empty($_POST ['value'])) {
         echo $_POST['value'];
     }
 }

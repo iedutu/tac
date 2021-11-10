@@ -7,6 +7,14 @@ $(document).ready(function() {
         tooltip        : 'Click to edit'
     });
 
+    $('.editable-ameta-text').editable('api/updateCargoAmeta.php', {
+        indicator      : 'Saving ...',
+        type           : 'text',
+        cssclass       : 'form',
+        inputcssclass  : 'form-control',
+        tooltip        : 'Click to edit'
+    });
+
     $('.editable-acknowledge-text').editable('api/acknowledgeCargo.php', {
         indicator      : 'Saving ...',
         type           : 'text',
@@ -22,6 +30,7 @@ $(document).ready(function() {
                 document.getElementById("kt_cargo_accepted_at").classList.add('text-primary');
                 document.getElementById("plate_number").classList.remove('text-danger');
                 document.getElementById("ameta").classList.remove('text-danger');
+                document.getElementById("kt_rohel_accept_area").setAttribute('hidden', 'true');
             }
         }
     });

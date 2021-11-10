@@ -68,8 +68,8 @@ try {
                             cargo_offices e
                   WHERE 
 						(
-							((a.status = 1) AND (SYSDATE() < (a.expiration + INTERVAL 1 DAY))) OR
-							((a.status = 2) AND (SYSDATE() < (a.acceptance + INTERVAL %d DAY)))
+							((a.status < %d) AND (NOW() < (a.expiration + INTERVAL 1 DAY))) OR
+							((a.status = %d) AND (NOW() < (a.SYS_UPDATE_DATE + INTERVAL %d DAY)))
 						)
                         AND
                         (
@@ -77,7 +77,12 @@ try {
                             AND
                             (a.recipient_id=c.id and c.office_id=e.id)
                         )
-					    order by ".$field." ".$sort, Utils::$SQL_DATE_FORMAT, Utils::$CARGO_PERIOD, $_SESSION['operator']['country-id']);
+					    order by ".$field." ".$sort,
+                            Utils::$SQL_DATE_FORMAT,
+                            AppStatuses::$CARGO_CLOSED,
+                            AppStatuses::$CARGO_CLOSED,
+                            Utils::$CARGO_PERIOD
+    );
 
     // AppLogger::getLogger()->debug(DB::getMDB()->lastQuery());
 } catch (MeekroDBException $mdbe) {

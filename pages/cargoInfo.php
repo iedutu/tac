@@ -477,19 +477,19 @@ $class_text_default = '';
                                             if($editable['recipient']) {
                                                 if($cargo->getStatus() == 1) {
                                                     if(empty($cargo->getAmeta())) {
-                                                        echo '<b style="display: inline" id="ameta" class="editable-text text-danger"/>';
+                                                        echo '<b style="display:  inline" id="ameta" class="editable-ameta-text text-danger"/>';
                                                     }
                                                     else {
-                                                        echo '<b style="display: inline" id="ameta" class="editable-text text-danger">' . $cargo->getAmeta() . '</b>';
+                                                        echo '<b style="display: inline" id="ameta" class="editable-ameta-text text-danger">' . $cargo->getAmeta() . '</b>';
                                                     }
                                                 }
                                                 else {
                                                     if($cargo->getStatus() == 2) {
                                                         if(empty($cargo->getAmeta())) {
-                                                            echo '<b style="display: inline" id="ameta" class="editable-text" /b>';
+                                                            echo '<b style="display:  inline" id="ameta" class="editable-ameta-text" /b>';
                                                         }
                                                         else {
-                                                            echo '<b style="display: inline" id="ameta" class="editable-text '.($audit->getAmeta()?$class_text_new:$class_text_default).'">' . $cargo->getAmeta() . '</b>';
+                                                            echo '<b style="display: inline" id="ameta" class="editable-ameta-text '.($audit->getAmeta()?$class_text_new:$class_text_default).'">' . $cargo->getAmeta() . '</b>';
                                                         }
                                                     }
                                                     else {
@@ -512,7 +512,7 @@ $class_text_default = '';
                 <?php
                 if($editable['originator']) {
                     ?>
-                    <div class="card-footer d-print-none">
+                    <div id="kt_rohel_accept_area" class="card-footer d-print-none">
                         <form class="form" id="kt_rohel_cancel_form" action="/api/cancelCargo.php" method="post">
                             <input type="hidden" name="_submitted" value="true">
                             <input type="hidden" name="id" value="<?=$cargo->getId()?>">
@@ -540,7 +540,7 @@ $class_text_default = '';
                 else {
                     if($editable['recipient']) {
                         ?>
-                        <div class="card-footer d-print-none">
+                        <div id="kt_rohel_accept_area" class="card-footer d-print-none">
                             <form class="form" id="kt_rohel_accept_form" action="/api/acknowledgeCargo.php" method="post">
                                 <input type="hidden" name="_submitted" value="true">
                                 <input type="hidden" name="id" value="<?=$cargo->getId()?>">
