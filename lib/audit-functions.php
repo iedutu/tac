@@ -61,7 +61,6 @@ class Audit {
             $a = new RequestUpdates();
 
             if (!is_file($filename)) {
-//                AppLogger::getLogger()->error("File not found: " . $filename . ". Returning an empty object.");
                 return $a;
             }
 
@@ -74,7 +73,8 @@ class Audit {
                 $a->mergeFromString($data);
             }
         } catch (Exception $e) {
-            AppLogger::getLogger()->error("Generic read error: " . $e->getMessage());
+            AppLogger::getLogger()->error("Generic read error while loading a file for [".$for_whom."]: " . $e->getMessage());
+            AppLogger::getLogger()->debug("Trace: " . $e->getTraceAsString());
 
             return null;
         }
@@ -119,7 +119,7 @@ class Audit {
             $for_whom = 'unknown';
         }
 
-        $filename = $_SERVER["DOCUMENT_ROOT"] . '/notifications/cargo_truck_' . $for_whom.'_'.$a->getId() . '.bin';
+        $filename = $_SERVER["DOCUMENT_ROOT"] . '/notifications/cargo_truck_' . $for_whom.'_'.$_SESSION['entry-id']. '.bin';
         $ok = true;
 
         try {
