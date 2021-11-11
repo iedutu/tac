@@ -50,7 +50,7 @@ let KTDatatableRemoteAjaxDemo = function() {
                     title: 'Author',
                     width: 60,
                     template: function (row) {
-                        return '<p class="label-inline" data-toggle="tooltip" data-placement="top" title="' + row.username + '">' + row.name + '</p>';
+                        return '<a data-toggle="tooltip" data-placement="top" title="' + row.username + '">' + row.name + '</a>';
                     },
                 }, {
                     field: 'date',

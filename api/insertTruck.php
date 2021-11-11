@@ -17,6 +17,7 @@ if (isset ( $_POST ['_submitted'] )) {
     $truck = new Truck();
     
     try {
+        DB::getMDB()->startTransaction();
         $truck->setOriginator($_SESSION['operator']['id']);
         $truck->setRecipient($_POST ['recipient']);
         $truck->setFromCity($_POST ['from_city']);
@@ -51,13 +52,56 @@ if (isset ( $_POST ['_submitted'] )) {
         $truck_final_destination = '';
 
         $stops = [];
+        $error = false;
         for($i=0;$i<sizeof($_POST['stops']);$i++) {
             $stop = new TruckStop();
 
-            if(!empty($_POST['stops'][$i]['volume'])) $stop->setVolume($_POST['stops'][$i]['volume']);
-            if(!empty($_POST['stops'][$i]['weight'])) $stop->setWeight($_POST['stops'][$i]['weight']);
-            if(!empty($_POST['stops'][$i]['loading'])) $stop->setLoadingMeters($_POST['stops'][$i]['loading']);
-            $stop->setCity($_POST['stops'][$i]['to_city']);
+            if(!empty($_POST['stops'][$i]['volume'])) {
+                if(is_numeric($_POST['stops'][$i]['volume'])) {
+                    $stop->setVolume($_POST['stops'][$i]['volume']);
+                }
+                else {
+                    $error = true;
+                    $_SESSION['alert']['type'] = 'error';
+                    $_SESSION['alert']['message'] = 'Wrong number format received for: '.$_POST['stops'][$i]['volume'].'. Good number format: 1.55. Please remove the faulty stop entry from the truck details page and re-enter it.';
+                }
+            }
+
+            if(!empty($_POST['stops'][$i]['weight'])) {
+                if(is_numeric($_POST['stops'][$i]['weight'])) {
+                    $stop->setWeight($_POST['stops'][$i]['weight']);
+                }
+                else {
+                    $error = true;
+                    $_SESSION['alert']['type'] = 'error';
+                    $_SESSION['alert']['message'] = 'Wrong number format received for: '.$_POST['stops'][$i]['weight'].'. Good number format: 1.55. Please remove the faulty stop entry from the truck details page and re-enter it.';
+                }
+            }
+
+            if(!empty($_POST['stops'][$i]['loading'])) {
+                if(is_numeric($_POST['stops'][$i]['loading'])) {
+                    $stop->setLoadingMeters($_POST['stops'][$i]['loading']);
+                }
+                else {
+                    $error = true;
+                    $_SESSION['alert']['type'] = 'error';
+                    $_SESSION['alert']['message'] = 'Wrong number format received for: '.$_POST['stops'][$i]['loading'].'. Good number format: 1.55. Please remove the faulty stop entry from the truck details page and re-enter it.';
+                }
+            }
+            else {
+                $error = true;
+                $_SESSION['alert']['type'] = 'error';
+                $_SESSION['alert']['message'] = 'Loading meters is a mandatory field for each stop. Please remove the faulty stop entry from the truck details page and re-enter it.';
+            }
+
+            if(!empty($_POST['stops'][$i]['to_city'])) {
+                $stop->setCity($_POST['stops'][$i]['to_city']);
+            }
+            else {
+                $error = true;
+                $_SESSION['alert']['type'] = 'error';
+                $_SESSION['alert']['message'] = 'City name is a mandatory field for each stop. Please remove the faulty stop entry from the truck details page and re-enter it.';
+            }
             $stop->setAddress($_POST['stops'][$i]['to_address']);
             $stop->setStopId($i);
             $stop->setTruckId($truck->getId());
@@ -74,6 +118,7 @@ if (isset ( $_POST ['_submitted'] )) {
 
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');
+        DB::getMDB()->commit();
 
         // Add a notification to the receiver of the truck
         $note = new Notification();
@@ -105,20 +150,20 @@ if (isset ( $_POST ['_submitted'] )) {
 
         Mails::emailNotification($email);
     } catch (ApplicationException $ae) {
+        $error = true;
         $_SESSION['alert']['type'] = 'error';
         $_SESSION['alert']['message'] = 'Application error ('.$ae->getCode().':'.$ae->getMessage().'). Please contact your system administrator.';
-
-        return 0;
     } catch (Exception $e) {
         Utils::handleException($e);
+        $error = true;
         $_SESSION['alert']['type'] = 'error';
         $_SESSION['alert']['message'] = 'General error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
-
-        return 0;
     }
 
-    $_SESSION['alert']['type'] = 'success';
-    $_SESSION['alert']['message'] = 'A new notification was added into the system for the cargo request. '.$recipient->getName().' was notified by e-mail.';
+    if(!$error) {
+        $_SESSION['alert']['type'] = 'success';
+        $_SESSION['alert']['message'] = 'A new notification was added into the system for the cargo request. ' . $recipient->getName() . ' was notified by e-mail.';
+    }
 
     header ( "Location: /?page=trucks" );
     exit();

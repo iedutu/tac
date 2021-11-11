@@ -96,7 +96,7 @@ let KTFormControls = function () {
 							numeric: {
 								thousandsSeparator: '',
 								decimalSeparator: '.',
-								message: 'Please enter a valid number'
+								message: 'Please enter a valid number (ex. 500.4)'
 							}
 						}
 					},

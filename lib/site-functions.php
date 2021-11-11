@@ -8,7 +8,7 @@ use Rohel\TruckUpdates;
 
 class Utils
 {
-    public static bool $DEBUG = true;
+    public static bool $DEBUG = false;
     public static int $CARGO_PERIOD = 2;
     public static int $SOLVED_TRUCK_DAYS = 2;
     public static int $REPORTS_PERIOD = 180;

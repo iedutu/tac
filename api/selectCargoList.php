@@ -8,105 +8,16 @@ if(!isset($_SESSION['operator']['id'])) {
     exit ();
 }
 
-// Sorting
-// Cleaning up the request from the other pages.
-if(empty($_SESSION['previous_area'])) {
-    $_REQUEST['sort']['sort'] = 'desc';
-    $_REQUEST['sort']['field'] = 'id';
+$default_sort_order = 'desc';
+$default_sort_key = 'id';
 
-    $_SESSION['previous_area'] = 'cargo';
-}
-else {
-    if(($_SESSION['previous_area'] == 'matches') || ($_SESSION['previous_area'] == 'truck')){
-        $_REQUEST['sort']['sort'] = 'desc';
-        $_REQUEST['sort']['field'] = 'id';
+$data = $alldata = DB_utils::selectCargoList();
 
-        $_SESSION['previous_area'] = 'cargo';
-    }
-}
-
-// Settings
-$sort  = ! empty($_REQUEST['sort']['sort']) ? $_REQUEST['sort']['sort'] : 'desc';
-$field = ! empty($_REQUEST['sort']['field']) ? $_REQUEST['sort']['field'] : 'id';
-
-// Filters
-$filter = '';
-
-$query = isset($_REQUEST['query']) && is_array($_REQUEST['query']) ? $_REQUEST['query'] : null;
-if (is_array($query)) {
-    $query = array_filter($query);
-    foreach ($query as $key => $val) {
-        $filter .= '('.$key.'="'.$val.'") and ';
-    }
-}
-
-try {
-    $result = DB::getMDB()->query ( "
-                       SELECT
-                            a.id as 'id',
-                            DATE_FORMAT(a.expiration, %s) as 'expiration',
-                            a.client as 'client',
-                            a.from_city as 'from_city',
-                            a.to_city as 'to_city',
-                            a.status as 'status',
-                            a.ameta as 'ameta',
-                            a.plate_number as 'plate_number',
-                            a.order_type as 'order_type',
-                            b.name as 'originator_name',
-                            b.username as 'originator_email',
-                            c.name as 'recipient_name',
-                            c.username as 'recipient_email',  
-                            d.name as 'originator_office',
-                            e.name as 'recipient_office',
-                            d.country as 'originator_country',
-                            e.country as 'recipient_country'
-                       FROM 
-                            cargo_request a,
-                            cargo_users b, 
-                            cargo_users c, 
-                            cargo_offices d, 
-                            cargo_offices e
-                  WHERE 
-						(
-							((a.status < %d) AND (NOW() < (a.expiration + INTERVAL 1 DAY))) OR
-							((a.status = %d) AND (NOW() < (a.SYS_UPDATE_DATE + INTERVAL %d DAY)))
-						)
-                        AND
-                        (
-                            (a.originator_id=b.id and b.office_id=d.id)
-                            AND
-                            (a.recipient_id=c.id and c.office_id=e.id)
-                        )
-					    order by ".$field." ".$sort,
-                            Utils::$SQL_DATE_FORMAT,
-                            AppStatuses::$CARGO_SOLVED,
-                            AppStatuses::$CARGO_SOLVED,
-                            Utils::$CARGO_PERIOD
-    );
-
-    // AppLogger::getLogger()->debug(DB::getMDB()->lastQuery());
-} catch (MeekroDBException $mdbe) {
-    Utils::handleMySQLException($mdbe);
-    $_SESSION['alert']['type'] = 'error';
-    $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
-
-    return null;
-} catch (Exception $e) {
-    Utils::handleException($e);
-    $_SESSION['alert']['type'] = 'error';
-    $_SESSION['alert']['message'] = 'General error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
-
-    return null;
-}
-
-$data = $alldata = $result;
-
-$datatable = array_merge(['pagination' => [], 'sort' => [], 'query' => []], $_REQUEST);
+$datatable = array_merge(array('pagination' => array(), 'sort' => array(), 'query' => array()), $_REQUEST);
 
 // search filter by keywords
-$filter = isset($datatable['query']['generalSearch']) && is_string($datatable['query']['generalSearch'])
-    ? $datatable['query']['generalSearch'] : '';
-if ( ! empty($filter)) {
+$filter = isset($datatable['query']['generalSearch']) && is_string($datatable['query']['generalSearch']) ? $datatable['query']['generalSearch'] : '';
+if (!empty($filter)) {
     $data = array_filter($data, function ($a) use ($filter) {
         return (boolean)preg_grep("/$filter/i", (array)$a);
     });
@@ -118,23 +29,38 @@ $query = isset($datatable['query']) && is_array($datatable['query']) ? $datatabl
 if (is_array($query)) {
     $query = array_filter($query);
     foreach ($query as $key => $val) {
-        $data = list_filter($data, [$key => $val]);
+        $data = list_filter($data, array($key => $val));
     }
 }
 
-$meta    = [];
+$sort = !empty($datatable['sort']['sort']) ? $datatable['sort']['sort'] : $default_sort_order;
+$field = !empty($datatable['sort']['field']) ? $datatable['sort']['field'] : $default_sort_key;
 
-$page    = ! empty($datatable['pagination']['page']) ? (int)$datatable['pagination']['page'] : 1;
-$perpage = ! empty($datatable['pagination']['perpage']) ? (int)$datatable['pagination']['perpage'] : -1;
+$meta = array();
+$page = !empty($datatable['pagination']['page']) ? (int)$datatable['pagination']['page'] : 1;
+$perpage = !empty($datatable['pagination']['perpage']) ? (int)$datatable['pagination']['perpage'] : -1;
 
 $pages = 1;
 $total = count($data); // total items in array
 
+// sort
+usort($data, function ($a, $b) use ($sort, $field) {
+    if (!isset($a[$field]) || !isset($b[$field])) {
+        return -1;
+    }
+
+    if ($sort === 'asc') {
+        return $a[$field] > $b[$field] ? 1 : -1;
+    }
+
+    return $a[$field] < $b[$field] ? 1 : -1;
+});
+
 // $perpage 0; get all data
 if ($perpage > 0) {
-    $pages  = ceil($total / $perpage); // calculate total pages
-    $page   = max($page, 1); // get 1 page when $_REQUEST['page'] <= 0
-    $page   = min($page, $pages); // get last page when $_REQUEST['page'] > $totalPages
+    $pages = ceil($total / $perpage); // calculate total pages
+    $page = max($page, 1); // get 1 page when $_REQUEST['page'] <= 0
+    $page = min($page, $pages); // get last page when $_REQUEST['page'] > $totalPages
     $offset = ($page - 1) * $perpage;
     if ($offset < 0) {
         $offset = 0;
@@ -143,33 +69,33 @@ if ($perpage > 0) {
     $data = array_slice($data, $offset, $perpage, true);
 }
 
-$meta = [
-    'page'    => $page,
-    'pages'   => $pages,
+$meta = array(
+    'page' => $page,
+    'pages' => $pages,
     'perpage' => $perpage,
-    'total'   => $total,
-];
+    'total' => $total,
+);
 
 // if selected all records enabled, provide all the ids
 if (isset($datatable['requestIds']) && filter_var($datatable['requestIds'], FILTER_VALIDATE_BOOLEAN)) {
     $meta['rowIds'] = array_map(function ($row) {
-        foreach($row as $first) break;
+        foreach ($row as $first) break;
         return $first;
     }, $alldata);
 }
 
 
-header('Content-Type: application/json; charset=utf-8');
+header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description');
 
-$result = [
-    'meta' => $meta + [
-            'sort'  => $sort,
+$result = array(
+    'meta' => $meta + array(
+            'sort' => $sort,
             'field' => $field,
-        ],
-    'data' => $data,
-];
+        ),
+    'data' => $data
+);
 
-echo json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+echo json_encode($result, JSON_PRETTY_PRINT);

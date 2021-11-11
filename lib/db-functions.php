@@ -1615,9 +1615,6 @@ class DB_utils
         }
     }
 
-    /**
-     * @throws ApplicationException
-     */
     private static function beforeUpdateGenericField(string $table, string $key, string $value, int $entity_id): void
     {
         // use for any changes required before a generic update
@@ -1632,5 +1629,249 @@ class DB_utils
     {
         // ugly hack to fool the SELECT jeditor. Does not work ...
         return $value;
+    }
+
+    public static function selectCargoList() {
+        try {
+            return DB::getMDB()->query ( "
+                       SELECT
+                            a.id as 'id',
+                            DATE_FORMAT(a.expiration, %s) as 'expiration',
+                            a.client as 'client',
+                            a.from_city as 'from_city',
+                            a.to_city as 'to_city',
+                            a.status as 'status',
+                            a.ameta as 'ameta',
+                            a.plate_number as 'plate_number',
+                            a.order_type as 'order_type',
+                            b.name as 'originator_name',
+                            b.username as 'originator_email',
+                            c.name as 'recipient_name',
+                            c.username as 'recipient_email',  
+                            d.name as 'originator_office',
+                            e.name as 'recipient_office',
+                            d.country as 'originator_country',
+                            e.country as 'recipient_country'
+                       FROM 
+                            cargo_request a,
+                            cargo_users b, 
+                            cargo_users c, 
+                            cargo_offices d, 
+                            cargo_offices e
+                  WHERE 
+						(
+							((a.status < %d) AND (NOW() < (a.expiration + INTERVAL 1 DAY))) OR
+							((a.status = %d) AND (NOW() < (a.SYS_UPDATE_DATE + INTERVAL %d DAY)))
+						)
+                        AND
+                        (
+                            (a.originator_id=b.id and b.office_id=d.id)
+                            AND
+                            (a.recipient_id=c.id and c.office_id=e.id)
+                        )",
+                Utils::$SQL_DATE_FORMAT,
+                AppStatuses::$CARGO_SOLVED,
+                AppStatuses::$CARGO_SOLVED,
+                Utils::$CARGO_PERIOD
+            );
+        } catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
+
+            return null;
+        } catch (Exception $e) {
+            Utils::handleException($e);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'General error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+
+            return null;
+        }
+    }
+
+    public static function selectTruckList() {
+        try {
+            return DB::getMDB()->query ( "SELECT
+                                            a.id as 'id', 
+                                            DATE_FORMAT(a.expiration, %s) as 'expiration', 
+                                            a.from_city as 'from_city', 
+                                            f.city as 'to_city', 
+                                            a.details as 'details', 
+                                            a.status as 'status', 
+                                            a.plate_number as 'plate_number', 
+                                            a.cargo_type as 'cargo_type', 
+                                            a.truck_type as 'truck_type', 
+                                            DATE_FORMAT(a.loading_date, %s) as 'loading_date', 
+                                            DATE_FORMAT(a.unloading_date, %s) as 'unloading_date', 
+                                            a.freight as 'freight', 
+                                            a.ameta as 'ameta',
+                                            b.name as 'originator_name',
+                                            b.username as 'originator_email',
+                                            c.name as 'recipient_name', 
+                                            c.username as 'recipient_email',
+                                            d.name as 'originator_office',
+                                            e.name as 'recipient_office',
+                                            d.country as 'originator_country',
+                                            e.country as 'recipient_country'
+                                         FROM 
+                                            cargo_truck a,
+                                            cargo_users b, 
+                                            cargo_users c, 
+                                            cargo_offices d, 
+                                            cargo_offices e,
+                                            cargo_truck_stops f
+                                         WHERE
+                                            (
+                                                (a.id = f.truck_id) 
+                                                AND 
+                                                (f.stop_id = (
+                                                                SELECT max(stop_id) from cargo_truck_stops where truck_id=f.truck_id
+                                                             )
+                                                )
+                                            )
+                                            AND
+                                            (
+                                                (a.status < %d)
+                                                OR 
+                                                (
+                                                    (a.status = %d)
+                                                    AND
+                                                    (NOW() < DATE_ADD(a.SYS_UPDATE_DATE, INTERVAL %d DAY))
+                                                )
+                                            )
+                                            AND
+                                            (
+                                                (a.originator_id=b.id and b.office_id=d.id)
+                                                AND
+                                                (a.recipient_id=c.id and c.office_id=e.id)
+                                            )",
+                                                Utils::$SQL_DATE_FORMAT,
+                                                Utils::$SQL_DATE_FORMAT,
+                                                Utils::$SQL_DATE_FORMAT,
+                                                AppStatuses::$TRUCK_FULLY_SOLVED,
+                                                AppStatuses::$TRUCK_FULLY_SOLVED,
+                                                Utils::$SOLVED_TRUCK_DAYS,
+                                        );
+        } catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
+
+            return null;
+        } catch (Exception $e) {
+            Utils::handleException($e);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'General error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+
+            return null;
+        }
+    }
+
+    public static function selectMatchesList() {
+        try {
+            return DB::getMDB()->query ( "
+                                           SELECT
+                                                a.id as 'id',
+                                                DATE_FORMAT(a.availability, %s) as 'availability',
+                                                DATE_FORMAT(a.item_date, %s) as 'item_date',
+                                                a.item_id as 'item_id',
+                                                a.item_kind as 'item_kind',
+                                                a.from_city as 'from_city',
+                                                a.to_city as 'to_city',
+                                                a.status as 'status',
+                                                a.ameta as 'ameta',
+                                                a.adr as 'adr',
+                                                a.loading_meters as 'loading_meters',
+                                                a.weight as 'weight',
+                                                a.volume as 'volume',
+                                                a.plate_number as 'plate_number',
+                                                a.order_type as 'order_type',
+                                                b.name as 'originator_name',
+                                                b.username as 'originator_email',
+                                                c.name as 'recipient_name',
+                                                c.username as 'recipient_email',
+                                                d.name as 'originator_office',
+                                                e.name as 'recipient_office',
+                                                d.country as 'originator_country',
+                                                e.country as 'recipient_country'
+                                           FROM 
+                                                cargo_match a,
+                                                cargo_users b, 
+                                                cargo_users c, 
+                                                cargo_offices d, 
+                                                cargo_offices e                     
+                                           WHERE 
+                                            (
+                                                (a.originator_id=b.id and b.office_id=d.id)
+                                                AND
+                                                (a.recipient_id=c.id and c.office_id=e.id)
+                                            )",
+                                                 Utils::$SQL_DATE_FORMAT,
+                                                 Utils::$SQL_DATE_FORMAT
+                                        );
+        } catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
+
+            return null;
+        } catch (Exception $e) {
+            Utils::handleException($e);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'General error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+
+            return null;
+        }
+    }
+
+    public static function selectCargoNotificationsList() {
+        try {
+            return DB::getMDB()->query ( "SELECT
+                            b.username as 'username',
+                            b.name as 'name',
+                            DATE_FORMAT(a.SYS_CREATION_DATE, %s) as 'date',
+                            a.comment as 'comment'
+                       FROM 
+                            cargo_comments a, cargo_users b
+                       WHERE
+                            (a.cargo_id=%d) AND (a.operator_id=b.id)
+					   ORDER BY a.SYS_CREATION_DATE desc", Utils::$SQL_DATE_FORMAT, $_SESSION['entry-id']);
+        } catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
+
+            return null;
+        } catch (Exception $e) {
+            Utils::handleException($e);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'General error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+
+            return null;
+        }
+    }
+
+    public static function selectTruckStopList() {
+        try {
+            return DB::getMDB()->query ( "SELECT
+                                        *
+                                     FROM 
+                                        cargo_truck_stops
+                                     WHERE
+                                        truck_id=%d
+                                     ORDER BY stop_id", $_SESSION['entry-id']);
+        } catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'Database error ('.$mdbe->getCode().':'.$mdbe->getMessage().'). Please contact your system administrator.';
+
+            return null;
+        } catch (Exception $e) {
+            Utils::handleException($e);
+            $_SESSION['alert']['type'] = 'error';
+            $_SESSION['alert']['message'] = 'General error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
+
+            return null;
+        }
     }
 }

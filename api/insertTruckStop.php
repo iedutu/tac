@@ -20,10 +20,10 @@ if (isset ( $_POST ['_submitted'] )) {
         $stop->setTruckId($_SESSION['entry-id']);
         $stop->setCity($_POST['city']);
         $stop->setAddress($_POST['address']);
-        $stop->setLoadingMeters($_POST['loading_meters']);
-        $stop->setWeight($_POST['weight']);
-        $stop->setVolume($_POST['volume']);
-        $stop->setCmr($_POST['cmr']);
+        if(!empty($_POST['loading_meters'])) $stop->setLoadingMeters($_POST['loading_meters']);
+        if(!empty($_POST['weight'])) $stop->setWeight($_POST['weight']);
+        if(!empty($_POST['volume'])) $stop->setVolume($_POST['volume']);
+        if(!empty($_POST['cmr'])) $stop->setCmr($_POST['cmr']);
 
         $id = DB_utils::insertTruckStop($stop);
 

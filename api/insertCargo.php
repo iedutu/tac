@@ -17,6 +17,7 @@ if (isset ( $_POST ['_submitted'] )) {
     $cargo = new Request();
 
     try {
+        DB::getMDB()->startTransaction();
         $cargo->setStatus(AppStatuses::$CARGO_NEW);
         $cargo->setClient($_POST ['client']);
         $cargo->setOriginator($_SESSION['operator']['id']);
@@ -46,6 +47,7 @@ if (isset ( $_POST ['_submitted'] )) {
 
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');
+        DB::getMDB()->commit();
 
         // Add a notification to the receiver of the cargo
         $note = new Notification();
