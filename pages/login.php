@@ -105,7 +105,18 @@ else {
     <!--end::Global Theme Styles-->
     <!--begin::Layout Themes(used by all pages)-->
     <!--end::Layout Themes-->
-    <link rel="shortcut icon" href="/assets/media/logos/favicon.ico" />
+
+    <!--begin::Favicon stuff-->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/media/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/media/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/media/favicon-16x16.png">
+    <link rel="manifest" href="/assets/media/site.webmanifest">
+    <link rel="mask-icon" href="/assets/media/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/assets/media/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="/assets/media/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <!--end::Favicon stuff-->
 </head>
 <!--end::Head-->
 <!--begin::Body-->
