@@ -53,7 +53,7 @@
                                     <option value="">Status</option>
                                     <option value="<?=AppStatuses::$CARGO_NEW?>">New</option>
                                     <option value="<?=AppStatuses::$CARGO_ACCEPTED?>">Accepted</option>
-                                    <option value="<?=AppStatuses::$CARGO_SOLVED?>">Solve</option>
+                                    <option value="<?=AppStatuses::$CARGO_SOLVED?>">Solved</option>
                                     <option value="<?=AppStatuses::$CARGO_CANCELLED?>">Cancelled</option>
                                     <option value="<?=AppStatuses::$CARGO_EXPIRED?>">Expired</option>
                                 </select>

@@ -9,7 +9,7 @@ use Rohel\TruckUpdates;
 class Utils
 {
     public static bool $DEBUG = false;
-    public static int $CARGO_PERIOD = 2;
+    public static int $CARGO_PERIOD = 7;
     public static int $SOLVED_TRUCK_DAYS = 2;
     public static int $REPORTS_PERIOD = 180;
     public static int $QUERY = 1;
@@ -23,6 +23,7 @@ class Utils
     public static int $REPORTS = 11;
     public static int $OPERATIONAL = 12;
     public static string $CANCELLED = 'CANCELLED';
+    public static int $DECIMALS = 2;
 
     public static function clean_up()
     {

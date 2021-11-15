@@ -36,13 +36,7 @@ class Audit {
         $ok = true;
 
         try {
-            $data = '';
-            if (Utils::$DEBUG) {
-                $data = $a->serializeToJsonString();
-            } else {
-                $data = $a->serializeToString();
-            }
-
+            $data = $a->serializeToJsonString();
             file_put_contents($filename, $data);
         } catch (Exception $e) {
             AppLogger::getLogger()->error("Generic write error: " . $e->getMessage());
@@ -65,18 +59,12 @@ class Audit {
             }
 
             $data = file_get_contents($filename);
-//            AppLogger::getLogger()->error("Data read: " . $data);
-
-            if (Utils::$DEBUG) {
-                $a->mergeFromJsonString($data);
-            } else {
-                $a->mergeFromString($data);
-            }
+            $a->mergeFromJsonString($data);
         } catch (Exception $e) {
             AppLogger::getLogger()->error("Generic read error while loading a file for [".$for_whom."]: " . $e->getMessage());
             AppLogger::getLogger()->debug("Trace: " . $e->getTraceAsString());
 
-            return null;
+            return new RequestUpdates();
         }
 
         $a->setId($id);
@@ -123,13 +111,7 @@ class Audit {
         $ok = true;
 
         try {
-            if (Utils::$DEBUG) {
-                $data = $a->serializeToJsonString();
-            } else {
-                $data = $a->serializeToString();
-            }
-
-//            AppLogger::getLogger()->error("Data to be written: " . $data);
+            $data = $a->serializeToJsonString();
             file_put_contents($filename, $data);
         } catch (Exception $e) {
             AppLogger::getLogger()->error("Generic write error: " . $e->getMessage());
@@ -153,17 +135,11 @@ class Audit {
             }
 
             $data = file_get_contents($filename);
-//            AppLogger::getLogger()->error("Data read: " . $data);
-
-            if (Utils::$DEBUG) {
-                $a->mergeFromJsonString($data);
-            } else {
-                $a->mergeFromString($data);
-            }
+            $a->mergeFromJsonString($data);
         } catch (Exception $e) {
             AppLogger::getLogger()->error("Generic read error: " . $e->getMessage());
-
-            return null;
+            
+            return new TruckUpdates();
         }
 
         $a->setId($id);

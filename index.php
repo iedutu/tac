@@ -104,6 +104,13 @@ $_REQUEST['sort']['sort'] = null;
     <meta name="msapplication-config" content="/assets/media/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
     <!--end::Favicon stuff-->
+    <style>
+        @media print {
+            td {
+                font-size: 20px;
+            }
+        }
+    </style>
 </head>
 
 <!--end::Head-->

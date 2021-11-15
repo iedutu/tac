@@ -148,7 +148,7 @@ $class_text_default = '';
                     </div>
                 </div>
                 <div class="card-body">
-                    <table class="table table-borderless">
+                    <table class="table table-borderless d-print-table">
                         <tr>
                             <td>
                                 <table class="table table-borderless">
@@ -247,10 +247,10 @@ $class_text_default = '';
                                         <td>
                                             <?php
                                             if($editable['originator']) {
-                                                echo '<b style="display: inline" id="loading_meters" class="editable-text '.($audit->getLoadingMeters()?$class_text_new:$class_text_default).'">'.number_format($cargo->getLoadingMeters(), 2).'</b> m';
+                                                echo '<b style="display: inline" id="loading_meters" class="editable-text '.($audit->getLoadingMeters()?$class_text_new:$class_text_default).'">'.number_format($cargo->getLoadingMeters(), Utils::$DECIMALS).'</b> m';
                                             }
                                             else {
-                                                echo '<p style="display: inline" id="loading_meters" class="'.($audit->getLoadingMeters()?$class_text_new:$class_text_default).'">'.number_format($cargo->getLoadingMeters(), 2).' m</p>';
+                                                echo '<p style="display: inline" id="loading_meters" class="'.($audit->getLoadingMeters()?$class_text_new:$class_text_default).'">'.number_format($cargo->getLoadingMeters(), Utils::$DECIMALS).' m</p>';
                                             }
                                             ?>
                                         </td>
@@ -421,10 +421,10 @@ $class_text_default = '';
                                         <td>
                                             <?php
                                             if($editable['originator']) {
-                                                echo '<b style="display: inline" id="volume" class="editable-text '.($audit->getVolume()?$class_text_new:$class_text_default).'">'.$cargo->getVolume().'</b> m&sup3';
+                                                echo '<b style="display: inline" id="volume" class="editable-text '.($audit->getVolume()?$class_text_new:$class_text_default).'">'.number_format($cargo->getVolume(), Utils::$DECIMALS).'</b> m&sup3';
                                             }
                                             else {
-                                                echo '<p style="display: inline" id="volume" class="'.($audit->getVolume()?$class_text_new:$class_text_default).'">'.$cargo->getVolume().' m&sup3</p>';
+                                                echo '<p style="display: inline" id="volume" class="'.($audit->getVolume()?$class_text_new:$class_text_default).'">'.number_format($cargo->getVolume(), Utils::$DECIMALS).' m&sup3</p>';
                                             }
                                             ?>
                                         </td>
@@ -434,10 +434,10 @@ $class_text_default = '';
                                         <td>
                                             <?php
                                             if($editable['originator']) {
-                                                echo '&euro; <b style="display: inline" id="freight" class="editable-text '.($audit->getFreight()?$class_text_new:$class_text_default).'">'.number_format($cargo->getFreight(), 2).'</b>';
+                                                echo '&euro; <b style="display: inline" id="freight" class="editable-text '.($audit->getFreight()?$class_text_new:$class_text_default).'">'.number_format($cargo->getFreight(), Utils::$DECIMALS).'</b>';
                                             }
                                             else {
-                                                echo '&euro; <p style="display: inline" id="freight" class="'.($audit->getFreight()?$class_text_new:$class_text_default).'">'.number_format($cargo->getFreight(), 2).'</p>';
+                                                echo '&euro; <p style="display: inline" id="freight" class="'.($audit->getFreight()?$class_text_new:$class_text_default).'">'.number_format($cargo->getFreight(), Utils::$DECIMALS).'</p>';
                                             }
                                             ?>
                                         </td>
