@@ -67,6 +67,7 @@ class DB_utils
         $request->setPackage($row['package']);
         $request->setOperator($row['operator']);
         $request->setStatusChangedBy($row['status_changed_by']);
+        $request->setShipper($row['shipper']);
         $request->setOrderType($row['order_type']);
         $request->setOriginator($row['originator_id']);
         $request->setPlateNumber($row['plate_number']);
@@ -326,6 +327,7 @@ class DB_utils
                 'to_city' => $entry->getToCity(),
                 'from_address' => $entry->getFromAddress(),
                 'to_address' => $entry->getToAddress(),
+                'shipper' => $entry->getShipper(),
                 'expiration' => DB::getMDB()->sqleval("from_unixtime(%d)",$entry->getExpiration()),
                 'loading_date' => DB::getMDB()->sqleval("from_unixtime(%d)",$entry->getLoadingDate()),
                 'unloading_date' => DB::getMDB()->sqleval("from_unixtime(%d)",$entry->getUnloadingDate()),
@@ -825,6 +827,7 @@ class DB_utils
                 'recipient_id' => $match->getRecipientId(),
                 'from_city' => $match->getFromCity(),
                 'to_city' => $match->getToCity(),
+                'shipper' => $match->getShipper(),
                 'availability' => (empty($match->getAvailability()) ? null : DB::getMDB()->sqleval("FROM_UNIXTIME(%d)",$match->getAvailability())),
                 'order_type' => $match->getOrderType(),
                 'adr' => $match->getAdr(),
@@ -1557,14 +1560,17 @@ class DB_utils
                                                 cargo_request 
                                             WHERE 
                                             (
-                                                ((status < %d) AND (NOW() < (expiration + INTERVAL 1 DAY))) OR
+                                                ((status = %d) AND (NOW() < (expiration + INTERVAL 1 DAY))) OR
+                                                ((status = %d) AND (NOW() < (SYS_UPDATE_DATE + INTERVAL %d DAY))) OR
                                                 ((status = %d) AND (NOW() < (SYS_UPDATE_DATE + INTERVAL %d DAY)))
                                             )
                                             ORDER BY 
                                                 SYS_CREATION_DATE DESC',
+                AppStatuses::$CARGO_NEW,
+                AppStatuses::$CARGO_ACCEPTED,
+                Utils::$CARGO_PERIOD_ACCEPTED,
                 AppStatuses::$CARGO_SOLVED,
-                AppStatuses::$CARGO_SOLVED,
-                Utils::$CARGO_PERIOD
+                Utils::$CARGO_PERIOD_SOLVED
             );
 
             foreach($c_rows as $c_row) {
@@ -1590,6 +1596,7 @@ class DB_utils
                 $match->setOperator($_SESSION['operator']['username']);
                 $match->setOriginatorId($cargo->getOriginator());
                 $match->setRecipientId($cargo->getRecipient());
+                $match->setShipper($cargo->getShipper());
 
                 if(empty($cargo->getPlateNumber())) {
                     $match->setStatus(AppStatuses::$MATCH_NEEDED);
@@ -1642,6 +1649,7 @@ class DB_utils
                             a.to_city as 'to_city',
                             a.status as 'status',
                             a.ameta as 'ameta',
+                            a.shipper as 'shipper',
                             a.plate_number as 'plate_number',
                             a.order_type as 'order_type',
                             b.name as 'originator_name',
@@ -1660,7 +1668,8 @@ class DB_utils
                             cargo_offices e
                   WHERE 
 						(
-							((a.status < %d) AND (NOW() < (a.expiration + INTERVAL 1 DAY))) OR
+							((a.status = %d) AND (NOW() < (a.expiration + INTERVAL 1 DAY))) OR
+							((a.status = %d) AND (NOW() < (a.SYS_UPDATE_DATE + INTERVAL %d DAY))) OR
 							((a.status = %d) AND (NOW() < (a.SYS_UPDATE_DATE + INTERVAL %d DAY)))
 						)
                         AND
@@ -1670,9 +1679,11 @@ class DB_utils
                             (a.recipient_id=c.id and c.office_id=e.id)
                         )",
                 Utils::$SQL_DATE_FORMAT,
+                AppStatuses::$CARGO_NEW,
+                AppStatuses::$CARGO_ACCEPTED,
+                Utils::$CARGO_PERIOD_ACCEPTED,
                 AppStatuses::$CARGO_SOLVED,
-                AppStatuses::$CARGO_SOLVED,
-                Utils::$CARGO_PERIOD
+                Utils::$CARGO_PERIOD_SOLVED
             );
         } catch (MeekroDBException $mdbe) {
             Utils::handleMySQLException($mdbe);

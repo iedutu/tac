@@ -3,7 +3,7 @@
     <div class="card-header flex-wrap border-0 pt-6 pb-0">
         <div class="card-title">
             <h3 class="card-label">Cargo
-                <span class="d-block text-muted pt-2 font-size-sm">Please note all records will be kept for up to <?=Utils::$SOLVED_TRUCK_DAYS?> calendar days from closure.</span></h3>
+                <span class="d-block text-muted pt-2 font-size-sm">Please note all records will be kept for up to <?=Utils::$CARGO_PERIOD_SOLVED?> calendar days from closure or <?=Utils::$CARGO_PERIOD_ACCEPTED?> calendar days from acceptance</span></h3>
         </div>
         <div class="card-toolbar d-print-none">
             <!--begin::Button-->

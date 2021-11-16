@@ -106,32 +106,6 @@ var KTDatatableTruckList = function() {
                     return output;
                 },
             }, {
-                field: 'from_city',
-                title: 'Departure from',
-            }, {
-                field: 'to_city',
-                title: 'Destination',
-            }, {
-                field: 'loading_date',
-                title: 'Loading date',
-                type: 'date',
-                width: 75,
-                format: 'DD-MM-YYYY',
-            }, {
-                field: 'unloading_date',
-                title: 'Unloading date',
-                type: 'date',
-                width: 85,
-                format: 'DD-MM-YYYY',
-            }, {
-                field: 'plate_number',
-                title: 'License plate',
-                width: 150,
-            }, {
-                field: 'ameta',
-                title: 'Ameta',
-                width: 75,
-            }, {
                 field: 'status',
                 title: 'Status',
                 // callback function support for column rendering
@@ -164,8 +138,33 @@ var KTDatatableTruckList = function() {
                     };
                     return '<span class="label font-weight-bold label-lg ' + status[row.status].class + ' label-inline">' + status[row.status].title + '</span>';
                 },
+            }, {
+                field: 'from_city',
+                title: 'Departure from',
+            }, {
+                field: 'to_city',
+                title: 'Destination',
+            }, {
+                field: 'loading_date',
+                title: 'Loading date',
+                type: 'date',
+                width: 75,
+                format: 'DD-MM-YYYY',
+            }, {
+                field: 'unloading_date',
+                title: 'Unloading date',
+                type: 'date',
+                width: 85,
+                format: 'DD-MM-YYYY',
+            }, {
+                field: 'plate_number',
+                title: 'License plate',
+                width: 150,
+            }, {
+                field: 'ameta',
+                title: 'Ameta',
+                width: 75,
             }],
-
         });
 
         datatable.on('datatable-on-layout-updated', function() {

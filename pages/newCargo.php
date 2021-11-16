@@ -29,17 +29,13 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-lg-4">
-                            <label class="form-control-label" for="order_type">Order type: <span class="text-danger">*</span></label>
-                            <select class="form-control" id="order_type" name="order_type">
-                                <option value="Bid">Bid</option>
-                                <option value="Confirmed">Confirmed</option>
-                                <option value="Forecast">Forecast</option>
-                            </select>
-                            <span class="form-text text-muted">Please select the type of the order</span>
+                            <label class="form-control-label" for="shipper">Shipper: <span class="text-danger">*</span></label>
+                            <input type="text" id="shipper" name="shipper" class="form-control" placeholder="Shipper company name"/>
+                            <span class="form-text text-muted">Please enter the shipper name</span>
                         </div>
                         <div class="col-lg-4">
-                            <label class="form-control-label" for="from_address">Origin: <span class="text-danger">*</span></label>
-                            <input type="text" id="from_address" name="from_address" class="form-control" placeholder="Company name & address"/>
+                            <label class="form-control-label" for="from_address">Origin address: <span class="text-danger">*</span></label>
+                            <input type="text" id="from_address" name="from_address" class="form-control" placeholder="Company address"/>
                             <span class="form-text text-muted">Please enter the cargo origin</span>
                         </div>
                         <div class="col-lg-4">
@@ -153,6 +149,15 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <div class="col-lg-4">
+                            <label class="form-control-label" for="order_type">Order type: <span class="text-danger">*</span></label>
+                            <select class="form-control" id="order_type" name="order_type">
+                                <option value="Bid">Bid</option>
+                                <option value="Confirmed">Confirmed</option>
+                                <option value="Forecast">Forecast</option>
+                            </select>
+                            <span class="form-text text-muted">Please select the type of the order</span>
+                        </div>
                         <div class="col-lg-4">
                             <label class="form-control-label" for="dimensions">Cargo dimensions:</label>
                             <input type="text" id="dimensions" name="dimensions" class="form-control" placeholder="L x W x H"/>

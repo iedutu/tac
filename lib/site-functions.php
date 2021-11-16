@@ -9,7 +9,8 @@ use Rohel\TruckUpdates;
 class Utils
 {
     public static bool $DEBUG = false;
-    public static int $CARGO_PERIOD = 7;
+    public static int $CARGO_PERIOD_ACCEPTED = 7;
+    public static int $CARGO_PERIOD_SOLVED = 2;
     public static int $SOLVED_TRUCK_DAYS = 2;
     public static int $REPORTS_PERIOD = 180;
     public static int $QUERY = 1;
@@ -328,6 +329,7 @@ class Utils
                     case 'accepted_by':     { $a->setAcceptedBy(true); break;}
                     case 'dimensions':      { $a->setDimensions(true); break;}
                     case 'package':         { $a->setPackage(true); break;}
+                    case 'shipper':         { $a->setShipper(true); break;}
                     default:                { AppLogger::getLogger()->error('Wrong data row received in Utils::highlightPageItem() => '.$row); break;}
                 }
                 Audit::writeCargo($a);

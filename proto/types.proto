@@ -34,6 +34,7 @@ message Request {
   string dimensions = 29;
   string package = 30;
   int32 status_changed_by = 31;
+  string shipper = 32;
 }
 
 message RequestUpdates {
@@ -65,6 +66,7 @@ message RequestUpdates {
   bool accepted_by = 26;
   bool dimensions = 27;
   bool package = 28;
+  bool shipper = 29;
 }
 
 message Truck {
@@ -115,6 +117,7 @@ message TruckMatch {
   int32 originator_id = 17;
   int32 recipient_id = 18;
   string details = 19;
+  string shipper = 20;
 }
 
 message TruckUpdates {

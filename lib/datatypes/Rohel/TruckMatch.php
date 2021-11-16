@@ -89,6 +89,10 @@ class TruckMatch extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>string details = 19;</code>
      */
     protected $details = '';
+    /**
+     * Generated from protobuf field <code>string shipper = 20;</code>
+     */
+    protected $shipper = '';
 
     /**
      * Constructor.
@@ -115,6 +119,7 @@ class TruckMatch extends \Google\Protobuf\Internal\Message
      *     @type int $originator_id
      *     @type int $recipient_id
      *     @type string $details
+     *     @type string $shipper
      * }
      */
     public function __construct($data = NULL) {
@@ -536,6 +541,28 @@ class TruckMatch extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkString($var, True);
         $this->details = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>string shipper = 20;</code>
+     * @return string
+     */
+    public function getShipper()
+    {
+        return $this->shipper;
+    }
+
+    /**
+     * Generated from protobuf field <code>string shipper = 20;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setShipper($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->shipper = $var;
 
         return $this;
     }

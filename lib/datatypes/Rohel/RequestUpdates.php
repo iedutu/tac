@@ -125,6 +125,10 @@ class RequestUpdates extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>bool package = 28;</code>
      */
     protected $package = false;
+    /**
+     * Generated from protobuf field <code>bool shipper = 29;</code>
+     */
+    protected $shipper = false;
 
     /**
      * Constructor.
@@ -160,6 +164,7 @@ class RequestUpdates extends \Google\Protobuf\Internal\Message
      *     @type bool $accepted_by
      *     @type bool $dimensions
      *     @type bool $package
+     *     @type bool $shipper
      * }
      */
     public function __construct($data = NULL) {
@@ -779,6 +784,28 @@ class RequestUpdates extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkBool($var);
         $this->package = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>bool shipper = 29;</code>
+     * @return bool
+     */
+    public function getShipper()
+    {
+        return $this->shipper;
+    }
+
+    /**
+     * Generated from protobuf field <code>bool shipper = 29;</code>
+     * @param bool $var
+     * @return $this
+     */
+    public function setShipper($var)
+    {
+        GPBUtil::checkBool($var);
+        $this->shipper = $var;
 
         return $this;
     }

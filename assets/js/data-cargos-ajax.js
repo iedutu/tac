@@ -111,37 +111,6 @@ var KTDatatableCargoList = function() {
                         return output;
                     },
                 }, {
-                    field: 'order_type',
-                    title: 'Order type',
-                }, {
-                    field: 'client',
-                    title: 'Customer',
-                }, {
-                    field: 'from_city',
-                    title: 'Loading from',
-                }, {
-                    field: 'to_city',
-                    title: 'Unloading to',
-                }, {
-                    field: 'plate_number',
-                    title: 'License plate',
-                    template: function(row) {
-                        if(row.plate_number === null) {
-                            return 'N/A';
-                        }
-                        return row.plate_number;
-                    },
-                }, {
-                    field: 'ameta',
-                    width: 60,
-                    title: 'Ameta',
-                    template: function(row) {
-                        if(row.ameta === null) {
-                            return 'N/A';
-                        }
-                        return row.ameta;
-                    },
-                }, {
                     field: 'status',
                     width: 95,
                     title: 'Status',
@@ -171,8 +140,47 @@ var KTDatatableCargoList = function() {
                         };
                         return '<span class="label font-weight-bold label-lg ' + status[row.status].class + ' label-inline">' + status[row.status].title + '</span>';
                     },
+                }, {
+                    field: 'order_type',
+                    title: 'Order type',
+                }, {
+                    field: 'client',
+                    title: 'Customer',
+                }, {
+                    field: 'shipper',
+                    title: 'Shipper',
+                    template: function(row) {
+                        if((row.shipper === null) || (row.shipper === '')){
+                            return 'N/A';
+                        }
+                        return row.shipper;
+                    },
+                }, {
+                    field: 'from_city',
+                    title: 'Loading from',
+                }, {
+                    field: 'to_city',
+                    title: 'Unloading to',
+                }, {
+                    field: 'plate_number',
+                    title: 'License plate',
+                    template: function(row) {
+                        if(row.plate_number === null) {
+                            return 'N/A';
+                        }
+                        return row.plate_number;
+                    },
+                }, {
+                    field: 'ameta',
+                    width: 60,
+                    title: 'Ameta',
+                    template: function(row) {
+                        if(row.ameta === null) {
+                            return 'N/A';
+                        }
+                        return row.ameta;
+                    },
                 }],
-
         });
 
         datatable.on('datatable-on-layout-updated', function() {

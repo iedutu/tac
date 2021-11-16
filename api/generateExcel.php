@@ -35,37 +35,38 @@ if(!empty($_POST['_submitted'])) {
 
                     // Header format
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:S1')->getAlignment()->setHorizontal('center');
+                        ->getStyle('A1:T1')->getAlignment()->setHorizontal('center');
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:S1')->getFont()->setBold(true);
+                        ->getStyle('A1:T1')->getFont()->setBold(true);
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:S1')->getFont()->getColor()->setRGB(substr(Mails::$TX_FULLY_LOADED_COLOR,1));
+                        ->getStyle('A1:T1')->getFont()->getColor()->setRGB(substr(Mails::$TX_FULLY_LOADED_COLOR,1));
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:S1')->getFill()->setFillType(Fill::FILL_SOLID);
+                        ->getStyle('A1:T1')->getFill()->setFillType(Fill::FILL_SOLID);
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:S1')->getFill()->getStartColor()->setRGB(substr(Mails::$BG_FULLY_LOADED_COLOR,1));
-                    $spreadsheet->getActiveSheet()->setAutoFilter('A1:S1');
+                        ->getStyle('A1:T1')->getFill()->getStartColor()->setRGB(substr(Mails::$BG_FULLY_LOADED_COLOR,1));
+                    $spreadsheet->getActiveSheet()->setAutoFilter('A1:T1');
 
                     $spreadsheet->getActiveSheet()
                         ->setCellValue('A1', 'From')
                         ->setCellValue('B1', 'To')
                         ->setCellValue('C1', 'Client')
-                        ->setCellValue('D1', 'Loading from')
-                        ->setCellValue('E1', 'Unloading to')
-                        ->setCellValue('F1', 'Loading on')
-                        ->setCellValue('G1', 'Unloading on')
-                        ->setCellValue('H1', 'Goods description')
-                        ->setCellValue('I1', 'Number of collies')
-                        ->setCellValue('J1', 'Gross weight')
-                        ->setCellValue('K1', 'Volume')
-                        ->setCellValue('L1', 'Loading meters')
-                        ->setCellValue('M1', 'Dimensions')
-                        ->setCellValue('N1', 'Package')
-                        ->setCellValue('O1', 'ADR')
-                        ->setCellValue('P1', 'Freight')
-                        ->setCellValue('Q1', 'Plate number')
-                        ->setCellValue('R1', 'AMETA')
-                        ->setCellValue('S1', 'Status');
+                        ->setCellValue('D1', 'Shipper')
+                        ->setCellValue('E1', 'Loading from')
+                        ->setCellValue('F1', 'Unloading to')
+                        ->setCellValue('G1', 'Loading on')
+                        ->setCellValue('H1', 'Unloading on')
+                        ->setCellValue('I1', 'Goods description')
+                        ->setCellValue('J1', 'Number of collies')
+                        ->setCellValue('K1', 'Gross weight')
+                        ->setCellValue('L1', 'Volume')
+                        ->setCellValue('M1', 'Loading meters')
+                        ->setCellValue('N1', 'Dimensions')
+                        ->setCellValue('O1', 'Package')
+                        ->setCellValue('P1', 'ADR')
+                        ->setCellValue('Q1', 'Freight')
+                        ->setCellValue('R1', 'Plate number')
+                        ->setCellValue('S1', 'AMETA')
+                        ->setCellValue('T1', 'Status');
 
                     $results = DB::getMDB()->query("
                        SELECT
@@ -155,17 +156,17 @@ if(!empty($_POST['_submitted'])) {
                             }
                         }
 
-                        $spreadsheet->getActiveSheet()->getStyle('F' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
                         $spreadsheet->getActiveSheet()->getStyle('G' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
+                        $spreadsheet->getActiveSheet()->getStyle('H' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
 
                         $spreadsheet->getActiveSheet()
-                            ->getStyle('S' . $i)->getFont()->setBold(true);
+                            ->getStyle('T' . $i)->getFont()->setBold(true);
                         $spreadsheet->getActiveSheet()
-                            ->getStyle('S' . $i)->getFont()->getColor()->setRGB(substr($txtColor,1));
+                            ->getStyle('T' . $i)->getFont()->getColor()->setRGB(substr($txtColor,1));
                         $spreadsheet->getActiveSheet()
-                            ->getStyle('S' . $i)->getFill()->setFillType(Fill::FILL_SOLID);
+                            ->getStyle('T' . $i)->getFill()->setFillType(Fill::FILL_SOLID);
                         $spreadsheet->getActiveSheet()
-                            ->getStyle('S' . $i)->getFill()->getStartColor()->setRGB(substr($bgColor,1));
+                            ->getStyle('T' . $i)->getFill()->getStartColor()->setRGB(substr($bgColor,1));
 
                         Date::setDefaultTimezone('Europe/Bucharest');
 
@@ -173,22 +174,23 @@ if(!empty($_POST['_submitted'])) {
                             ->setCellValue('A' . $i, $row ['originator_name'])
                             ->setCellValue('B' . $i, $row ['recipient_name'])
                             ->setCellValue('C' . $i, $row ['client'])
-                            ->setCellValue('D' . $i, $row ['from_city'])
-                            ->setCellValue('E' . $i, $row ['to_city'])
-                            ->setCellValue('F' . $i, (empty($row ['loading_date']) ? 'N/A' : Date::PHPToExcel(new DateTime($row ['loading_date'], new DateTimeZone(Utils::$TIMEZONE)))))
-                            ->setCellValue('G' . $i, (empty($row ['unloading_date']) ? 'N/A' : Date::PHPToExcel(new DateTime($row ['unloading_date'], new DateTimeZone(Utils::$TIMEZONE)))))
-                            ->setCellValue('H' . $i, (empty($row ['description']) ? 'N/A' : $row ['description']))
-                            ->setCellValue('I' . $i, (empty($row ['collies']) ? 'N/A' : $row ['collies']))
-                            ->setCellValue('J' . $i, $row ['weight'])
-                            ->setCellValue('K' . $i, $row ['volume'])
-                            ->setCellValue('L' . $i, $row ['loading_meters'])
-                            ->setCellValue('M' . $i, $row ['dimensions'])
-                            ->setCellValue('N' . $i, $row ['package'])
-                            ->setCellValue('O' . $i, (empty($row ['adr']) ? 'N/A' : $row ['adr']))
-                            ->setCellValue('P' . $i, (empty($row ['freight']) ? 'N/A' : $row ['freight']))
-                            ->setCellValue('Q' . $i, (empty($row ['plate_number']) ? 'N/A' : $row ['plate_number']))
-                            ->setCellValue('R' . $i, (empty($row ['ameta']) ? 'N/A' : $row ['ameta']))
-                            ->setCellValue('S' . $i, $status);
+                            ->setCellValue('D' . $i, (empty($row ['shipper']) ? 'N/A' : $row ['shipper']))
+                            ->setCellValue('E' . $i, $row ['from_city'])
+                            ->setCellValue('F' . $i, $row ['to_city'])
+                            ->setCellValue('G' . $i, (empty($row ['loading_date']) ? 'N/A' : Date::PHPToExcel(new DateTime($row ['loading_date'], new DateTimeZone(Utils::$TIMEZONE)))))
+                            ->setCellValue('H' . $i, (empty($row ['unloading_date']) ? 'N/A' : Date::PHPToExcel(new DateTime($row ['unloading_date'], new DateTimeZone(Utils::$TIMEZONE)))))
+                            ->setCellValue('I' . $i, (empty($row ['description']) ? 'N/A' : $row ['description']))
+                            ->setCellValue('J' . $i, (empty($row ['collies']) ? 'N/A' : $row ['collies']))
+                            ->setCellValue('K' . $i, $row ['weight'])
+                            ->setCellValue('L' . $i, $row ['volume'])
+                            ->setCellValue('M' . $i, $row ['loading_meters'])
+                            ->setCellValue('N' . $i, $row ['dimensions'])
+                            ->setCellValue('O' . $i, $row ['package'])
+                            ->setCellValue('P' . $i, (empty($row ['adr']) ? 'N/A' : $row ['adr']))
+                            ->setCellValue('Q' . $i, (empty($row ['freight']) ? 'N/A' : $row ['freight']))
+                            ->setCellValue('R' . $i, (empty($row ['plate_number']) ? 'N/A' : $row ['plate_number']))
+                            ->setCellValue('S' . $i, (empty($row ['ameta']) ? 'N/A' : $row ['ameta']))
+                            ->setCellValue('T' . $i, $status);
 
                         /*
                         $hyperlink = new Hyperlink();
@@ -423,16 +425,16 @@ if(!empty($_POST['_submitted'])) {
 
                     // Header format
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:N1')->getAlignment()->setHorizontal('center');
+                        ->getStyle('A1:O1')->getAlignment()->setHorizontal('center');
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:N1')->getFont()->setBold(true);
+                        ->getStyle('A1:O1')->getFont()->setBold(true);
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:N1')->getFont()->getColor()->setRGB(substr(Mails::$TX_FULLY_LOADED_COLOR,1));
+                        ->getStyle('A1:O1')->getFont()->getColor()->setRGB(substr(Mails::$TX_FULLY_LOADED_COLOR,1));
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:N1')->getFill()->setFillType(Fill::FILL_SOLID);
+                        ->getStyle('A1:O1')->getFill()->setFillType(Fill::FILL_SOLID);
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:N1')->getFill()->getStartColor()->setRGB(substr(Mails::$BG_FULLY_LOADED_COLOR,1));
-                    $spreadsheet->getActiveSheet()->setAutoFilter('A1:N1');
+                        ->getStyle('A1:O1')->getFill()->getStartColor()->setRGB(substr(Mails::$BG_FULLY_LOADED_COLOR,1));
+                    $spreadsheet->getActiveSheet()->setAutoFilter('A1:O1');
 
                     $spreadsheet->getActiveSheet()
                         ->setCellValue('A1', 'Originator')
@@ -441,14 +443,15 @@ if(!empty($_POST['_submitted'])) {
                         ->setCellValue('D1', 'On')
                         ->setCellValue('E1', 'In')
                         ->setCellValue('F1', 'To')
-                        ->setCellValue('G1', 'Order type')
-                        ->setCellValue('H1', 'Loading meters')
-                        ->setCellValue('I1', 'Weight')
-                        ->setCellValue('J1', 'Volume')
-                        ->setCellValue('K1', 'ADR')
-                        ->setCellValue('L1', 'Truck no')
-                        ->setCellValue('M1', 'Driver details')
-                        ->setCellValue('N1', 'AMETA');
+                        ->setCellValue('G1', 'Shipper')
+                        ->setCellValue('H1', 'Order type')
+                        ->setCellValue('I1', 'Loading meters')
+                        ->setCellValue('J1', 'Weight')
+                        ->setCellValue('K1', 'Volume')
+                        ->setCellValue('L1', 'ADR')
+                        ->setCellValue('M1', 'Truck no')
+                        ->setCellValue('N1', 'Driver details')
+                        ->setCellValue('O1', 'AMETA');
                     ;
 
                     $results = DB::getMDB()->query("
@@ -557,14 +560,15 @@ if(!empty($_POST['_submitted'])) {
                             ->setCellValue('D' . $i, (empty($row ['availability']) ? 'N/A' : Date::PHPToExcel(new DateTime($row ['availability'], new DateTimeZone(Utils::$TIMEZONE)))))
                             ->setCellValue('E' . $i, $row ['from_city'])
                             ->setCellValue('F' . $i, $row ['to_city'])
-                            ->setCellValue('G' . $i, $row ['order_type'])
-                            ->setCellValue('H' . $i, $row ['loading_meters'])
-                            ->setCellValue('I' . $i, $row ['weight'])
-                            ->setCellValue('J' . $i, $row ['volume'])
-                            ->setCellValue('K' . $i, (empty($row ['adr']) ? 'N/A' : $row ['adr']))
-                            ->setCellValue('L' . $i, (empty($row ['plate_number']) ? 'N/A' : $row ['plate_number']))
-                            ->setCellValue('M' . $i, (empty($row ['details']) ? 'N/A' : $row ['details']))
-                            ->setCellValue('N' . $i, (empty($row ['ameta']) ? 'N/A' : $row ['ameta']));
+                            ->setCellValue('G' . $i, (empty($row ['shipper']) ? 'N/A' : $row ['shipper']))
+                            ->setCellValue('H' . $i, $row ['order_type'])
+                            ->setCellValue('I' . $i, $row ['loading_meters'])
+                            ->setCellValue('J' . $i, $row ['weight'])
+                            ->setCellValue('K' . $i, $row ['volume'])
+                            ->setCellValue('L' . $i, (empty($row ['adr']) ? 'N/A' : $row ['adr']))
+                            ->setCellValue('M' . $i, (empty($row ['plate_number']) ? 'N/A' : $row ['plate_number']))
+                            ->setCellValue('N' . $i, (empty($row ['details']) ? 'N/A' : $row ['details']))
+                            ->setCellValue('O' . $i, (empty($row ['ameta']) ? 'N/A' : $row ['ameta']));
                         $i++;
                     }
 

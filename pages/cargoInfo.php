@@ -36,8 +36,16 @@ $_SESSION['recipient-id'] = $cargo->getRecipient();
  * $editable['recipient]
  */
 $editable = DB_utils::isEditable($cargo->getOriginator(), $cargo->getRecipient());
+// Only people from the same country can cancel this
+$cancellable = $editable['originator'];
+
 if($cargo->getStatus() > 1) {
     $editable['originator'] = false;
+}
+
+// We can cancel only NEW and ACCEPTED cargos
+if($cargo->getStatus() > 2) {
+    $cancellable = false;
 }
 
 $status_code = '';
@@ -173,6 +181,19 @@ $class_text_default = '';
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td class="text-right">Shipper</td>
+                                        <td>
+                                            <?php
+                                            if($editable['originator']) {
+                                                echo '<b style="display: inline" id="shipper" class="editable-text '.($audit->getShipper()?$class_text_new:$class_text_default).'">'.$cargo->getShipper().'</b>';
+                                            }
+                                            else {
+                                                echo '<p style="display: inline" id="shipper" class="'.($audit->getShipper()?$class_text_new:$class_text_default).'">'.$cargo->getShipper().'</p>';
+                                            }
+                                            ?>
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td class="text-right">Origin address</td>
                                         <td>
                                             <?php
@@ -217,27 +238,14 @@ $class_text_default = '';
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="text-right">Delivery instructions</td>
-                                        <td>
-                                            <?php
-                                            if($editable['originator']) {
-                                                echo '<b style="display: inline" id="instructions" class="editable-select-1 '.($audit->getInstructions()?$class_text_new:$class_text_default).'">'.$cargo->getInstructions().'</b>';
-                                            }
-                                            else {
-                                                echo '<p style="display: inline" id="instructions" class="'.($audit->getInstructions()?$class_text_new:$class_text_default).'">'.$cargo->getInstructions().'</p>';
-                                            }
-                                            ?>
-                                        </td>
-                                    </tr>
-                                    <tr>
                                         <td class="text-right">Gross weight</td>
                                         <td>
                                             <?php
                                             if($editable['originator']) {
-                                                echo '<b style="display: inline" id="weight" class="editable-text '.($audit->getWeight()?$class_text_new:$class_text_default).'">'.$cargo->getWeight().'</b> kg';
+                                                echo '<b style="display: inline" id="weight" class="editable-text '.($audit->getWeight()?$class_text_new:$class_text_default).'">'.number_format($cargo->getWeight(), Utils::$DECIMALS).'</b> kg';
                                             }
                                             else {
-                                                echo '<p style="display: inline" id="weight" class="'.($audit->getWeight()?$class_text_new:$class_text_default).'">'.$cargo->getWeight().' kg</p>';
+                                                echo '<p style="display: inline" id="weight" class="'.($audit->getWeight()?$class_text_new:$class_text_default).'">'.number_format($cargo->getWeight(), Utils::$DECIMALS, '.', '').' kg</p>';
                                             }
                                             ?>
                                         </td>
@@ -340,6 +348,19 @@ $class_text_default = '';
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td class="text-right">Delivery instructions</td>
+                                        <td>
+                                            <?php
+                                            if($editable['originator']) {
+                                                echo '<b style="display: inline" id="instructions" class="editable-select-1 '.($audit->getInstructions()?$class_text_new:$class_text_default).'">'.$cargo->getInstructions().'</b>';
+                                            }
+                                            else {
+                                                echo '<p style="display: inline" id="instructions" class="'.($audit->getInstructions()?$class_text_new:$class_text_default).'">'.$cargo->getInstructions().'</p>';
+                                            }
+                                            ?>
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td class="text-right">Order type</td>
                                         <td>
                                             <?php
@@ -372,19 +393,6 @@ $class_text_default = '';
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="text-right">Description</td>
-                                        <td>
-                                            <?php
-                                            if($editable['originator']) {
-                                                echo '<b style="display: inline" id="description" class="editable-text '.($audit->getDescription()?$class_text_new:$class_text_default).'">'.$cargo->getDescription().'</b>';
-                                            }
-                                            else {
-                                                echo '<p style="display: inline" id="description" class="'.($audit->getDescription()?$class_text_new:$class_text_default).'">'.$cargo->getDescription().'</p>';
-                                            }
-                                            ?>
-                                        </td>
-                                    </tr>
-                                    <tr>
                                         <td class="text-right">Unloading date</td>
                                         <td>
                                             <?php
@@ -394,6 +402,19 @@ $class_text_default = '';
                                             }
                                             else {
                                                 echo '<p style="display: inline" id="unloading_date" class="'.($audit->getUnloadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$PHP_DATE_FORMAT, $cargo->getUnloadingDate()).'</p>';
+                                            }
+                                            ?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right">Description</td>
+                                        <td>
+                                            <?php
+                                            if($editable['originator']) {
+                                                echo '<b style="display: inline" id="description" class="editable-text '.($audit->getDescription()?$class_text_new:$class_text_default).'">'.$cargo->getDescription().'</b>';
+                                            }
+                                            else {
+                                                echo '<p style="display: inline" id="description" class="'.($audit->getDescription()?$class_text_new:$class_text_default).'">'.$cargo->getDescription().'</p>';
                                             }
                                             ?>
                                         </td>
@@ -510,7 +531,7 @@ $class_text_default = '';
                     </table>
                 </div>
                 <?php
-                if($editable['originator']) {
+                if($cancellable) {
                     ?>
                     <div id="kt_rohel_accept_area" class="card-footer d-print-none">
                         <form class="form" id="kt_rohel_cancel_form" action="/api/cancelCargo.php" method="post">
@@ -518,19 +539,7 @@ $class_text_default = '';
                             <input type="hidden" name="id" value="<?=$cargo->getId()?>">
                             <div class="row">
                                 <div class="col-lg-8">
-                                    <?php
-                                    // NEW cargo only can be cancelled
-                                    if($cargo->getStatus() == 1) {
-                                        echo '<button type="submit" class="btn btn-primary btn-danger btn-lg" data-toggle="tooltip" title="Click to cancel!">Remove/Cancel cargo</button>';
-                                    }
-                                    else {
-                                        echo '
-                                            <span class="d-inline-block" data-toggle="tooltip" title="Only status NEW cargo can be cancelled.">
-                                                <button type="submit" class="btn btn-primary btn-danger btn-lg" style="pointer-events: none;" disabled>Remove/Cancel cargo</button>
-                                            </span>
-                                                    ';
-                                    }
-                                    ?>
+                                    <button type="submit" class="btn btn-primary btn-danger btn-lg" data-toggle="tooltip" title="Click to cancel!">Remove/Cancel cargo</button>
                                 </div>
                             </div>
                         </form>

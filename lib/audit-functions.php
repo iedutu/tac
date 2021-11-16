@@ -138,7 +138,7 @@ class Audit {
             $a->mergeFromJsonString($data);
         } catch (Exception $e) {
             AppLogger::getLogger()->error("Generic read error: " . $e->getMessage());
-            
+
             return new TruckUpdates();
         }
 

@@ -34,6 +34,7 @@ if (isset ( $_POST ['_submitted'] )) {
         $cargo->setWeight($_POST ['weight']);
         $cargo->setLoadingMeters($_POST ['loading']);
         $cargo->setVolume($_POST ['volume']);
+        $cargo->setShipper($_POST ['shipper']);
         $cargo->setInstructions($_POST ['instructions']);
         if(!empty($_POST['freight'])) $cargo->setFreight($_POST ['freight']);
         if(!empty($_POST['adr'])) $cargo->setAdr($_POST ['adr']);

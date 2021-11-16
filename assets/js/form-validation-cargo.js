@@ -88,6 +88,14 @@ let KTFormControls = function () {
 						}
 					},
 
+					shipper: {
+						validators: {
+							notEmpty: {
+								message: 'Field cannot be empty.'
+							},
+						}
+					},
+
 					loading: {
 						validators: {
 							notEmpty: {
