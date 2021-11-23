@@ -301,10 +301,10 @@ else {
                                 <td>
                                     <?php
                                     if($editable['originator']) {
-                                        echo '<b style="display: inline" id="description" class="editable-text '.($audit->getDetails()?$class_text_new:$class_text_default).'">'.$truck->getDetails().'</b>';
+                                        echo '<b style="display: inline" id="details" class="editable-text '.($audit->getDetails()?$class_text_new:$class_text_default).'">'.$truck->getDetails().'</b>';
                                     }
                                     else {
-                                        echo '<p style="display: inline" id="description" class="'.($audit->getDetails()?$class_text_new:$class_text_default).'">'.$truck->getDetails().'</p>';
+                                        echo '<p style="display: inline" id="details" class="'.($audit->getDetails()?$class_text_new:$class_text_default).'">'.$truck->getDetails().'</p>';
                                     }
                                     ?>
                                 </td>

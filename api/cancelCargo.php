@@ -20,9 +20,9 @@ try {
         exit();
     }
 
-    if ($cargo->getStatus() >= AppStatuses::$CARGO_ACCEPTED) {
+    if ($cargo->getStatus() > AppStatuses::$CARGO_ACCEPTED) {
         $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'Cargo already acknowledged/cancelled and cannot be cancelled. Please contact the recipient directly.';
+        $_SESSION['alert']['message'] = 'Cargo already cancelled or marked as solved and cannot be cancelled. Please contact the recipient directly.';
 
         header('Location: /index.php?page=cargoInfo&id=' . $cargo->getId());
         exit();
