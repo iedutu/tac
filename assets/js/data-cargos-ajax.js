@@ -119,26 +119,31 @@ var KTDatatableCargoList = function() {
                         var status = {
                             1: {
                                 'title': 'New',
+                                'tooltip': 'New cargo.',
                                 'class': ' label-danger'
                             },
                             2: {
                                 'title': 'Accepted',
+                                'tooltip': 'Accepted cargo.',
                                 'class': ' label-success'
                             },
                             3: {
                                 'title': 'Solved',
+                                'tooltip': 'Closed cargo.',
                                 'class': ' label-success'
                             },
                             4: {
                                 'title': 'Cancelled',
+                                'tooltip': 'Cancelled cargo.',
                                 'class': ' label-light'
                             },
                             5: {
                                 'title': 'Expired',
+                                'tooltip': 'Expired cargo.',
                                 'class': ' label-light'
                             },
                         };
-                        return '<span class="label font-weight-bold label-lg ' + status[row.status].class + ' label-inline">' + status[row.status].title + '</span>';
+                        return '<span class="label font-weight-bold label-lg ' + status[row.status].class + ' label-inline" data-toggle="tooltip" data-placement="top" title="' + status[row.status].tooltip + '">' + status[row.status].title + '</span>';
                     },
                 }, {
                     field: 'order_type',

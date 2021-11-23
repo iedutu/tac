@@ -113,30 +113,36 @@ var KTDatatableTruckList = function() {
                     var status = {
                         1: {
                             'title': 'Available',
+                            'tooltip': 'Round-trip booked truck.',
                             'class': ' label-secondary'
                         },
                         2: {
                             'title': 'Free',
+                            'tooltip': 'One-way booked truck.',
                             'class': ' label-info'
                         },
                         3: {
                             'title': 'Market',
+                            'tooltip': 'Truck available on the market.',
                             'class': ' label-dark'
                         },
                         4: {
                             'title': 'Partial',
+                            'tooltip': 'Partially loaded truck.',
                             'class': ' label-warning'
                         },
                         5: {
                             'title': 'Solved',
+                            'tooltip': 'Fully loaded truck.',
                             'class': ' label-success'
                         },
                         6: {
                             'title': 'Cancelled',
+                            'tooltip': 'This is not supposed to come up.',
                             'class': ' label-light'
                         },
                     };
-                    return '<span class="label font-weight-bold label-lg ' + status[row.status].class + ' label-inline">' + status[row.status].title + '</span>';
+                    return '<span class="label font-weight-bold label-lg ' + status[row.status].class + ' label-inline" data-toggle="tooltip" data-placement="top" title="' + status[row.status].tooltip + '">' + status[row.status].title + '</span>';
                 },
             }, {
                 field: 'from_city',
