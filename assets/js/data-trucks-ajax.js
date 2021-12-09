@@ -47,6 +47,30 @@ var KTDatatableTruckList = function() {
             // allows horizontal scrolling
             rows: {
                 autoHide: false,
+                beforeTemplate: function (row, data, index) {
+                    switch(data.originator_office) {
+                        case "Athens": {
+                            row.addClass("table-danger");
+                            break;
+                        }
+                        case "Salonic": {
+                            row.addClass("table-warning");
+                            break;
+                        }
+                        case "Bucharest": {
+                            row.addClass("table-info");
+                            break;
+                        }
+                        case "Deva": {
+                            row.addClass("table-active");
+                            break;
+                        }
+                        case "Pucioasa": {
+                            row.addClass("table-success");
+                            break;
+                        }
+                    }
+                },
             },
 
             search: {
@@ -64,7 +88,7 @@ var KTDatatableTruckList = function() {
                 selector: false,
                 textAlign: 'center',
                 template: function(row) {
-                    return '<a href="/?page=truckInfo&id='+row.id+'">'+row.id+'</a>';
+                    return '<a target=”_blank” href="/?page=truckInfo&id='+row.id+'">'+row.id+'</a>';
                 },
             }, {
                 field: 'originator_office',
@@ -144,6 +168,9 @@ var KTDatatableTruckList = function() {
                     };
                     return '<span class="label font-weight-bold label-lg ' + status[row.status].class + ' label-inline" data-toggle="tooltip" data-placement="top" title="' + status[row.status].tooltip + '">' + status[row.status].title + '</span>';
                 },
+            }, {
+                field: 'contract_type',
+                title: 'Contract',
             }, {
                 field: 'from_city',
                 title: 'Departure from',

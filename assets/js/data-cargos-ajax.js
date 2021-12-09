@@ -49,6 +49,30 @@ var KTDatatableCargoList = function() {
             // allows horizontal scrolling
             rows: {
                 autoHide: false,
+                beforeTemplate: function (row, data, index) {
+                    switch(data.originator_office) {
+                        case "Athens": {
+                            row.addClass("table-danger");
+                            break;
+                        }
+                        case "Salonic": {
+                            row.addClass("table-warning");
+                            break;
+                        }
+                        case "Bucharest": {
+                            row.addClass("table-info");
+                            break;
+                        }
+                        case "Deva": {
+                            row.addClass("table-active");
+                            break;
+                        }
+                        case "Pucioasa": {
+                            row.addClass("table-success");
+                            break;
+                        }
+                    }
+                },
             },
 
             pagination: true,
@@ -69,7 +93,7 @@ var KTDatatableCargoList = function() {
                     sortable: 'desc',
                     textAlign: 'center',
                     template: function(row) {
-                        return '<a href="/?page=cargoInfo&id='+row.id+'">'+row.id+'</a>';
+                        return '<a target=”_blank” href="/?page=cargoInfo&id='+row.id+'">'+row.id+'</a>';
                     },
                 }, {
                     field: 'originator_office',

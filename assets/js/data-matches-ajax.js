@@ -137,7 +137,7 @@ let KTDatatableMatchesList = function() {
                                 'class': ' label-success'
                             },
                         };
-                        return '<a href="/?page='+row.item_kind+'&id='+row.item_id+'" class="label font-weight-bold label-lg ' + status[row.status].class + ' label-inline" data-toggle="tooltip" data-placement="top" title="' + status[row.status].tooltip + '">' + status[row.status].title + '</a>';
+                        return '<a target=”_blank” href="/?page='+row.item_kind+'&id='+row.item_id+'" class="label font-weight-bold label-lg ' + status[row.status].class + ' label-inline" data-toggle="tooltip" data-placement="top" title="' + status[row.status].tooltip + '">' + status[row.status].title + '</a>';
                     },
                 }, {
                     field: 'availability',
