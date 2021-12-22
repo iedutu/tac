@@ -82,6 +82,10 @@ class TruckUpdates extends \Google\Protobuf\Internal\Message
      */
     protected $ameta = false;
     /**
+     * Generated from protobuf field <code>bool adr = 18;</code>
+     */
+    protected $adr = false;
+    /**
      * Generated from protobuf field <code>bool cargo_type = 19;</code>
      */
     protected $cargo_type = false;
@@ -94,9 +98,29 @@ class TruckUpdates extends \Google\Protobuf\Internal\Message
      */
     protected $contract_type = false;
     /**
-     * Generated from protobuf field <code>bool adr = 18;</code>
+     * Generated from protobuf field <code>bool unloading_zone = 22;</code>
      */
-    protected $adr = false;
+    protected $unloading_zone = false;
+    /**
+     * Generated from protobuf field <code>bool retour_loading_from = 23;</code>
+     */
+    protected $retour_loading_from = false;
+    /**
+     * Generated from protobuf field <code>bool retour_unloading_from = 24;</code>
+     */
+    protected $retour_unloading_from = false;
+    /**
+     * Generated from protobuf field <code>bool retour_loading_date = 25;</code>
+     */
+    protected $retour_loading_date = false;
+    /**
+     * Generated from protobuf field <code>bool retour_unloading_date = 26;</code>
+     */
+    protected $retour_unloading_date = false;
+    /**
+     * Generated from protobuf field <code>bool client = 27;</code>
+     */
+    protected $client = false;
 
     /**
      * Constructor.
@@ -121,10 +145,16 @@ class TruckUpdates extends \Google\Protobuf\Internal\Message
      *     @type bool $freight
      *     @type bool $plate_number
      *     @type bool $ameta
+     *     @type bool $adr
      *     @type bool $cargo_type
      *     @type bool $truck_type
      *     @type bool $contract_type
-     *     @type bool $adr
+     *     @type bool $unloading_zone
+     *     @type bool $retour_loading_from
+     *     @type bool $retour_unloading_from
+     *     @type bool $retour_loading_date
+     *     @type bool $retour_unloading_date
+     *     @type bool $client
      * }
      */
     public function __construct($data = NULL) {
@@ -507,6 +537,28 @@ class TruckUpdates extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     * Generated from protobuf field <code>bool adr = 18;</code>
+     * @return bool
+     */
+    public function getAdr()
+    {
+        return $this->adr;
+    }
+
+    /**
+     * Generated from protobuf field <code>bool adr = 18;</code>
+     * @param bool $var
+     * @return $this
+     */
+    public function setAdr($var)
+    {
+        GPBUtil::checkBool($var);
+        $this->adr = $var;
+
+        return $this;
+    }
+
+    /**
      * Generated from protobuf field <code>bool cargo_type = 19;</code>
      * @return bool
      */
@@ -573,23 +625,133 @@ class TruckUpdates extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>bool adr = 18;</code>
+     * Generated from protobuf field <code>bool unloading_zone = 22;</code>
      * @return bool
      */
-    public function getAdr()
+    public function getUnloadingZone()
     {
-        return $this->adr;
+        return $this->unloading_zone;
     }
 
     /**
-     * Generated from protobuf field <code>bool adr = 18;</code>
+     * Generated from protobuf field <code>bool unloading_zone = 22;</code>
      * @param bool $var
      * @return $this
      */
-    public function setAdr($var)
+    public function setUnloadingZone($var)
     {
         GPBUtil::checkBool($var);
-        $this->adr = $var;
+        $this->unloading_zone = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>bool retour_loading_from = 23;</code>
+     * @return bool
+     */
+    public function getRetourLoadingFrom()
+    {
+        return $this->retour_loading_from;
+    }
+
+    /**
+     * Generated from protobuf field <code>bool retour_loading_from = 23;</code>
+     * @param bool $var
+     * @return $this
+     */
+    public function setRetourLoadingFrom($var)
+    {
+        GPBUtil::checkBool($var);
+        $this->retour_loading_from = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>bool retour_unloading_from = 24;</code>
+     * @return bool
+     */
+    public function getRetourUnloadingFrom()
+    {
+        return $this->retour_unloading_from;
+    }
+
+    /**
+     * Generated from protobuf field <code>bool retour_unloading_from = 24;</code>
+     * @param bool $var
+     * @return $this
+     */
+    public function setRetourUnloadingFrom($var)
+    {
+        GPBUtil::checkBool($var);
+        $this->retour_unloading_from = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>bool retour_loading_date = 25;</code>
+     * @return bool
+     */
+    public function getRetourLoadingDate()
+    {
+        return $this->retour_loading_date;
+    }
+
+    /**
+     * Generated from protobuf field <code>bool retour_loading_date = 25;</code>
+     * @param bool $var
+     * @return $this
+     */
+    public function setRetourLoadingDate($var)
+    {
+        GPBUtil::checkBool($var);
+        $this->retour_loading_date = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>bool retour_unloading_date = 26;</code>
+     * @return bool
+     */
+    public function getRetourUnloadingDate()
+    {
+        return $this->retour_unloading_date;
+    }
+
+    /**
+     * Generated from protobuf field <code>bool retour_unloading_date = 26;</code>
+     * @param bool $var
+     * @return $this
+     */
+    public function setRetourUnloadingDate($var)
+    {
+        GPBUtil::checkBool($var);
+        $this->retour_unloading_date = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>bool client = 27;</code>
+     * @return bool
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    /**
+     * Generated from protobuf field <code>bool client = 27;</code>
+     * @param bool $var
+     * @return $this
+     */
+    public function setClient($var)
+    {
+        GPBUtil::checkBool($var);
+        $this->client = $var;
 
         return $this;
     }

@@ -26,8 +26,8 @@ if(!(empty($_POST['id']) || empty($_POST['value']))) {
         DB_utils::updateCargoPlate($cargo, $_POST['value']);
         DB_utils::acknowledgeCargo($cargo);
 
-        Utils::highlightPageItem('cargo_request', 'accepted_by', $cargo->getId());
-        Utils::highlightPageItem('cargo_request', 'acceptance', $cargo->getId());
+        Audit::highlightPageItem('cargo_request', 'accepted_by', $cargo->getId());
+        Audit::highlightPageItem('cargo_request', 'acceptance', $cargo->getId());
         if(!empty($_POST['value'])) Utils::highlightPageItem('cargo_request', 'plate_number', $cargo->getId());
 
         Utils::insertCargoAuditEntry('cargo_request', 'acceptance', $cargo->getId(), date("Y-m-d H:i:s"));

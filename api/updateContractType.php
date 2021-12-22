@@ -31,7 +31,7 @@ if(!empty($_POST['id'])) {
         DB_utils::updateTruckStatus($truck, $status);
 
         Utils::insertCargoAuditEntry($table, $_POST['id'], $_SESSION['entry-id'], $_POST['value']);
-        Utils::highlightPageItem($table, $_POST['id'], $_SESSION['entry-id']);
+        Audit::highlightPageItem($table, $_POST['id'], $_SESSION['entry-id']);
 
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');

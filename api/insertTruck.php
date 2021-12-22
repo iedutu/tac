@@ -47,6 +47,12 @@ if (isset ( $_POST ['_submitted'] )) {
         $truck->setAmeta($_POST ['ameta']);
         $truck->setPlateNumber($_POST ['plate_number']);
         $truck->setDetails($_POST ['details']);
+        $truck->setClient($_POST ['client']);
+        $truck->setUnloadingZone($_POST ['unloading_zone']);
+        $truck->setRetourLoadingFrom($_POST ['retour_loading_from']);
+        $truck->setRetourUnloadingFrom($_POST ['retour_unloading_from']);
+        if(!empty($_POST ['retour_loading_date'])) $truck->setRetourLoadingDate(strtotime($_POST ['retour_loading_date']));
+        if(!empty($_POST ['retour_unloading_date'])) $truck->setRetourUnloadingDate(strtotime($_POST ['retour_unloading_date']));
 
         $truck->setId(DB_utils::insertTruck($truck));
         $truck_final_destination = '';

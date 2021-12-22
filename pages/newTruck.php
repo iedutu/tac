@@ -103,6 +103,52 @@
                             <span class="form-text text-muted">Please enter the driver details.</span>
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <div class="col-lg-4">
+                            <label class="form-control-label" for="unloading_zone">Un-loading zone:</label>
+                            <input type="text" id="unloading_zone" name="unloading_zone" class="form-control" placeholder="Un-loading zone"/>
+                            <span class="form-text text-muted">Please enter the unloading zone</span>
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="form-control-label" for="retour_loading_from">Retour loading from:</label>
+                            <input type="text" id="retour_loading_from" name="retour_loading_from" class="form-control" placeholder="Retour loading location"/>
+                            <span class="form-text text-muted">Please enter the retour loading location.</span>
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="form-control-label" for="retour_unloading_from">Retour un-loading to:</label>
+                            <input type="text" id="retour_unloading_from" name="retour_unloading_from" class="form-control" placeholder="Retour unloading location"/>
+                            <span class="form-text text-muted">Please enter the retour unloading location.</span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-4">
+                            <label class="form-control-label" for="client">Client:</label>
+                            <input type="text" id="client" name="client" class="form-control" placeholder="Client name"/>
+                            <span class="form-text text-muted">Please enter the client name</span>
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="form-control-label" for="retour_loading_date">Retour loading date:</label>
+                            <div class="input-group date mb-2">
+                                <div class="input-group-prepend">
+                                               <span class="input-group-text">
+                                               <i class="la la-calendar"></i>
+                                               </span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Click to select a date." id="retour_loading_date" name="retour_loading_date"/>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="form-control-label" for="retour_unloading_date">Retour unloading date:</label>
+                            <div class="input-group date mb-2">
+                                <div class="input-group-prepend">
+                                               <span class="input-group-text">
+                                               <i class="la la-calendar"></i>
+                                               </span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Click to select a date." id="retour_unloading_date" name="retour_unloading_date"/>
+                            </div>
+                        </div>
+                    </div>
                     <div class="h5">
                         <label>Add all truck stops in the below form. If there are no additional stops, simply fill in one row as the final destination.</label>
                     </div>

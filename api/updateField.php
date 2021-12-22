@@ -15,7 +15,7 @@ if((!empty($_POST['id'])) && (!empty($_POST['value']))) {
         $table = DB_utils::updateGenericField($_POST['id'], $_POST['value'], $_SESSION['entry-id']);
 
         Utils::insertCargoAuditEntry($table, $_POST['id'], $_SESSION['entry-id'], $_POST['value']);
-        Utils::highlightPageItem($table, $_POST['id'], $_SESSION['entry-id']);
+        Audit::highlightPageItem($table, $_POST['id'], $_SESSION['entry-id']);
 
         // Set the trigger for the generation of the Match page
         DB_utils::writeValue('changes', '1');

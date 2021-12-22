@@ -25,6 +25,22 @@ let KTBootstrapDatepicker = function () {
             format: "dd-mm-yyyy"
         });
 
+        $('#retour_loading_date').datepicker({
+            rtl: KTUtil.isRTL(),
+            orientation: "top right",
+            todayHighlight: true,
+            templates: arrows,
+            format: "dd-mm-yyyy"
+        });
+
+        $('#retour_unloading_date').datepicker({
+            rtl: KTUtil.isRTL(),
+            orientation: "top right",
+            todayHighlight: true,
+            templates: arrows,
+            format: "dd-mm-yyyy"
+        });
+
         $('#rohel_truck_unloading').datepicker({
             rtl: KTUtil.isRTL(),
             orientation: "top right",

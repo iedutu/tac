@@ -169,14 +169,16 @@ var KTDatatableTruckList = function() {
                     return '<span class="label font-weight-bold label-lg ' + status[row.status].class + ' label-inline" data-toggle="tooltip" data-placement="top" title="' + status[row.status].tooltip + '">' + status[row.status].title + '</span>';
                 },
             }, {
-                field: 'contract_type',
-                title: 'Contract',
+                field: 'ameta',
+                title: 'Ameta',
+                width: 75,
             }, {
-                field: 'from_city',
-                title: 'Departure from',
+                field: 'plate_number',
+                title: 'License plate',
+                width: 150,
             }, {
-                field: 'to_city',
-                title: 'Destination',
+                field: 'details',
+                title: 'Driver details',
             }, {
                 field: 'loading_date',
                 title: 'Loading date',
@@ -190,13 +192,35 @@ var KTDatatableTruckList = function() {
                 width: 85,
                 format: 'DD-MM-YYYY',
             }, {
-                field: 'plate_number',
-                title: 'License plate',
-                width: 150,
+                field: 'unloading_zone',
+                title: 'Unloading zone',
             }, {
-                field: 'ameta',
-                title: 'Ameta',
-                width: 75,
+                field: 'to_city',
+                title: 'Destination',
+            }, {
+                field: 'contract_type',
+                title: 'Contract',
+            }, {
+                field: 'client',
+                title: 'Client',
+            }, {
+                field: 'retour_loading_from',
+                title: 'Retour loading from',
+            }, {
+                field: 'retour_unloading_from',
+                title: 'Retour unloading from',
+            }, {
+                field: 'retour_loading_date',
+                title: 'Retour loading date',
+                type: 'date',
+                width: 85,
+                format: 'DD-MM-YYYY',
+            }, {
+                field: 'retour_unloading_date',
+                title: 'Retour unloading date',
+                type: 'date',
+                width: 85,
+                format: 'DD-MM-YYYY',
             }],
         });
 

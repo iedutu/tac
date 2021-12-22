@@ -5,8 +5,14 @@ if(!isset($_GET['id'])) {
     return;
 }
 
-$cargo = DB_utils::selectRequest(intval($_GET['id']));
-if(empty($cargo)) {
+try {
+    DB_utils::clearNotifications($_SESSION['operator']['id'], AppStatuses::$NOTIFICATION_ENTITY_KIND_CARGO, $_GET['id']);
+} catch (ApplicationException $e) {
+    Utils::handleApplicationException($e);
+}
+
+if(empty($cargo = DB_utils::selectRequest(intval($_GET['id'])))) {
+    Utils::updateNotifications();
     AppLogger::getLogger()->info('Unknown cargo', ['id' => $_GET['id']]);
 
     return;

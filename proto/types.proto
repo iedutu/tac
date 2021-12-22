@@ -95,6 +95,12 @@ message Truck {
   repeated TruckStop stop = 23;
   uint64 creation_date = 24;
   int32 status_changed_by = 25;
+  string unloading_zone = 26;
+  string retour_loading_from = 27;
+  string retour_unloading_from = 28;
+  uint64 retour_loading_date = 29;
+  uint64 retour_unloading_date = 30;
+  string client = 31;
 }
 
 message TruckMatch {
@@ -138,10 +144,16 @@ message TruckUpdates {
   bool freight = 15;
   bool plate_number = 16;
   bool ameta = 17;
+  bool adr = 18;
   bool cargo_type = 19;
   bool truck_type = 20;
   bool contract_type = 21;
-  bool adr = 18;
+  bool unloading_zone = 22;
+  bool retour_loading_from = 23;
+  bool retour_unloading_from = 24;
+  bool retour_loading_date = 25;
+  bool retour_unloading_date = 26;
+  bool client = 27;
 }
 
 message TruckStop {

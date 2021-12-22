@@ -163,4 +163,103 @@ class Audit {
 
         return true;
     }
+
+    public static function highlightPageItem(string $table, string $row, int $id) {
+        switch($table) {
+            case 'cargo_request': {
+                if($_SESSION['role'] == 'originator') {
+                    $a = self::readCargo($id, 'recipient');
+                }
+                else {
+                    if($_SESSION['role'] == 'recipient') {
+                        $a = self::readCargo($id, 'originator');
+                    }
+                    else {
+                        AppLogger::getLogger()->error('Cannot determine to whom I shall write the audit file to.');
+                        return;
+                    }
+                }
+
+                switch($row) {
+                    case 'id':              { $a->setId(true); break;}
+                    case 'operator':        { $a->setOperator(true); break;}
+                    case 'originator_id':   { $a->setOriginator(true); break;}
+                    case 'client':          { $a->setClient(true); break;}
+                    case 'from_city':       { $a->setFromCity(true); break;}
+                    case 'from_address':    { $a->setFromAddress(true); break;}
+                    case 'to_city':         { $a->setToCity(true); break;}
+                    case 'to_address':      { $a->setToAddress(true); break;}
+                    case 'loading_date':    { $a->setLoadingDate(true); break;}
+                    case 'unloading_date':  { $a->setUnloadingDate(true); break;}
+                    case 'description':     { $a->setDescription(true); break;}
+                    case 'collies':         { $a->setCollies(true); break;}
+                    case 'weight':          { $a->setWeight(true); break;}
+                    case 'volume':          { $a->setVolume(true); break;}
+                    case 'loading_meters':  { $a->setLoadingMeters(true); break;}
+                    case 'freight':         { $a->setFreight(true); break;}
+                    case 'instructions':    { $a->setInstructions(true); break;}
+                    case 'acceptance':      { $a->setAcceptance(true); break;}
+                    case 'expiration':      { $a->setExpiration(true); break;}
+                    case 'plate_number':    { $a->setPlateNumber(true); break;}
+                    case 'ameta':           { $a->setAmeta(true); break;}
+                    case 'order_type':      { $a->setOrderType(true); break;}
+                    case 'adr':             { $a->setAdr(true); break;}
+                    case 'recipient_id':    { $a->setRecipient(true); break;}
+                    case 'status':          { $a->setStatus(true); break;}
+                    case 'accepted_by':     { $a->setAcceptedBy(true); break;}
+                    case 'dimensions':      { $a->setDimensions(true); break;}
+                    case 'package':         { $a->setPackage(true); break;}
+                    case 'shipper':         { $a->setShipper(true); break;}
+                    default:                { AppLogger::getLogger()->error('Wrong data row received in Utils::highlightPageItem() => '.$row); break;}
+                }
+                self::writeCargo($a);
+
+                break;
+            }
+            case 'cargo_truck': {
+                $a = self::readTruck($id);
+
+                switch($row) {
+                    case 'id':                      { $a->setId(true); break;}
+                    case 'operator':                { $a->setOperator(true); break;}
+                    case 'originator_id':           { $a->setOriginator(true); break;}
+                    case 'recipient_id':            { $a->setRecipient(true); break;}
+                    case 'accepted_by':             { $a->setAcceptedBy(true); break;}
+                    case 'status':                  { $a->setStatus(true); break;}
+                    case 'from_city':               { $a->setFromCity(true); break;}
+                    case 'from_address':            { $a->setFromAddress(true); break;}
+                    case 'loading_date':            { $a->setLoadingDate(true); break;}
+                    case 'unloading_date':          { $a->setUnloadingDate(true); break;}
+                    case 'availability':            { $a->setAvailability(true); break;}
+                    case 'acceptance':              { $a->setAcceptance(true); break;}
+                    case 'expiration':              { $a->setExpiration(true); break;}
+                    case 'details':                 { $a->setDetails(true); break;}
+                    case 'freight':                 { $a->setFreight(true); break;}
+                    case 'plate_number':            { $a->setPlateNumber(true); break;}
+                    case 'ameta':                   { $a->setAmeta(true); break;}
+                    case 'cargo_type':              { $a->setCargoType(true); break;}
+                    case 'truck_type':              { $a->setTruckType(true); break;}
+                    case 'contract_type':           { $a->setContractType(true); break;}
+                    case 'adr':                     { $a->setAdr(true); break;}
+                    case 'unloading_zone':          { $a->setUnloadingZone(true); break;}
+                    case 'retour_loading_from':     { $a->setRetourLoadingFrom(true); break;}
+                    case 'retour_unloading_from':   { $a->setRetourUnloadingFrom(true); break;}
+                    case 'retour_loading_date':     { $a->setRetourLoadingDate(true); break;}
+                    case 'retour_unloading_date':   { $a->setRetourUnloadingDate(true); break;}
+                    case 'client':                  { $a->setClient(true); break;}
+                    default:                        { AppLogger::getLogger()->error('Wrong data row received: '.$row); break;}
+                }
+
+                self::writeTruck($a);
+
+                break;
+            }
+            default: {
+                AppLogger::getLogger()->error('Wrong table received: '.$table);
+
+                break;
+            }
+        }
+    }
+
 }

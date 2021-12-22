@@ -15,7 +15,7 @@ class Mails
     // .secondary: #E4E6EF  #3F4254
     // .light: #F3F6F9      #7E8299
 
-    public static bool $DEBUG = true;
+    public static bool $DEBUG = false;
     public static bool $ALLOW_MAILS = true;
     public static string $BASE_HREF = 'https://cat.rohel.ro';
 

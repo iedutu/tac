@@ -23,7 +23,7 @@ if(!(empty($_POST['id']) || empty($_POST['value']))) {
 
         // Ameta updates
         $table = DB_utils::updateGenericField($_POST['id'], $cargo->getAmeta(), $cargo->getId());
-        Utils::highlightPageItem('cargo_request', 'ameta', $cargo->getId());
+        Audit::highlightPageItem('cargo_request', 'ameta', $cargo->getId());
         Utils::insertCargoAuditEntry('cargo_request', 'ameta', $cargo->getId(), $cargo->getAmeta());
 
         // Status updates

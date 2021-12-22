@@ -113,6 +113,30 @@ class Truck extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>int32 status_changed_by = 25;</code>
      */
     protected $status_changed_by = 0;
+    /**
+     * Generated from protobuf field <code>string unloading_zone = 26;</code>
+     */
+    protected $unloading_zone = '';
+    /**
+     * Generated from protobuf field <code>string retour_loading_from = 27;</code>
+     */
+    protected $retour_loading_from = '';
+    /**
+     * Generated from protobuf field <code>string retour_unloading_from = 28;</code>
+     */
+    protected $retour_unloading_from = '';
+    /**
+     * Generated from protobuf field <code>uint64 retour_loading_date = 29;</code>
+     */
+    protected $retour_loading_date = 0;
+    /**
+     * Generated from protobuf field <code>uint64 retour_unloading_date = 30;</code>
+     */
+    protected $retour_unloading_date = 0;
+    /**
+     * Generated from protobuf field <code>string client = 31;</code>
+     */
+    protected $client = '';
 
     /**
      * Constructor.
@@ -145,6 +169,12 @@ class Truck extends \Google\Protobuf\Internal\Message
      *     @type \Rohel\TruckStop[]|\Google\Protobuf\Internal\RepeatedField $stop
      *     @type int|string $creation_date
      *     @type int $status_changed_by
+     *     @type string $unloading_zone
+     *     @type string $retour_loading_from
+     *     @type string $retour_unloading_from
+     *     @type int|string $retour_loading_date
+     *     @type int|string $retour_unloading_date
+     *     @type string $client
      * }
      */
     public function __construct($data = NULL) {
@@ -698,6 +728,138 @@ class Truck extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkInt32($var);
         $this->status_changed_by = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>string unloading_zone = 26;</code>
+     * @return string
+     */
+    public function getUnloadingZone()
+    {
+        return $this->unloading_zone;
+    }
+
+    /**
+     * Generated from protobuf field <code>string unloading_zone = 26;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setUnloadingZone($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->unloading_zone = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>string retour_loading_from = 27;</code>
+     * @return string
+     */
+    public function getRetourLoadingFrom()
+    {
+        return $this->retour_loading_from;
+    }
+
+    /**
+     * Generated from protobuf field <code>string retour_loading_from = 27;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setRetourLoadingFrom($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->retour_loading_from = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>string retour_unloading_from = 28;</code>
+     * @return string
+     */
+    public function getRetourUnloadingFrom()
+    {
+        return $this->retour_unloading_from;
+    }
+
+    /**
+     * Generated from protobuf field <code>string retour_unloading_from = 28;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setRetourUnloadingFrom($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->retour_unloading_from = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>uint64 retour_loading_date = 29;</code>
+     * @return int|string
+     */
+    public function getRetourLoadingDate()
+    {
+        return $this->retour_loading_date;
+    }
+
+    /**
+     * Generated from protobuf field <code>uint64 retour_loading_date = 29;</code>
+     * @param int|string $var
+     * @return $this
+     */
+    public function setRetourLoadingDate($var)
+    {
+        GPBUtil::checkUint64($var);
+        $this->retour_loading_date = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>uint64 retour_unloading_date = 30;</code>
+     * @return int|string
+     */
+    public function getRetourUnloadingDate()
+    {
+        return $this->retour_unloading_date;
+    }
+
+    /**
+     * Generated from protobuf field <code>uint64 retour_unloading_date = 30;</code>
+     * @param int|string $var
+     * @return $this
+     */
+    public function setRetourUnloadingDate($var)
+    {
+        GPBUtil::checkUint64($var);
+        $this->retour_unloading_date = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>string client = 31;</code>
+     * @return string
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    /**
+     * Generated from protobuf field <code>string client = 31;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setClient($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->client = $var;
 
         return $this;
     }

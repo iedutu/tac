@@ -111,6 +111,12 @@ class DB_utils
         $truck->setRecipient($row['recipient_id']);
         $truck->setTruckType($row['truck_type']);
         if(!empty($row['unloading_date'])) $truck->setUnloadingDate(strtotime($row['unloading_date']));
+        $truck->setClient($row['client']);
+        $truck->setUnloadingZone($row['unloading_zone']);
+        $truck->setRetourLoadingFrom($row['retour_loading_from']);
+        $truck->setRetourUnloadingFrom($row['retour_unloading_from']);
+        if(!empty($row['retour_loading_date'])) $truck->setRetourLoadingDate(strtotime($row['retour_loading_date']));
+        if(!empty($row['retour_unloading_date'])) $truck->setRetourUnloadingDate(strtotime($row['retour_unloading_date']));
 
         return $truck;
     }
@@ -484,7 +490,13 @@ class DB_utils
                 'details' => $entry->getDetails(),
                 'plate_number' => $entry->getPlateNumber(),
                 'ameta' => $entry->getAmeta(),
-                'adr' => (empty($entry->getAdr())?null:$entry->getAdr())
+                'adr' => (empty($entry->getAdr())?null:$entry->getAdr()),
+                'client' => $entry->getClient(),
+                'unloading_zone' => $entry->getUnloadingZone(),
+                'retour_loading_from' => $entry->getRetourLoadingFrom(),
+                'retour_unloading_from' => $entry->getRetourUnloadingFrom(),
+                'retour_loading_date' => (empty($entry->getRetourLoadingDate())?null:DB::getMDB()->sqleval("from_unixtime(%d)",$entry->getRetourLoadingDate())),
+                'retour_unloading_date' => (empty($entry->getRetourUnloadingDate())?null:DB::getMDB()->sqleval("from_unixtime(%d)",$entry->getRetourUnloadingDate()))
             ));
 
             return DB::getMDB()->insertId();
@@ -739,6 +751,8 @@ class DB_utils
                 case 'expiration':
                 case 'loading_date':
                 case 'unloading_date':
+                case 'retour_loading_date':
+                case 'retour_unloading_date':
                 {
                     DB::getMDB()->update($table, array(
                         $key => DB::getMDB()->sqleval("str_to_date(%s, %s)", $value, Utils::$SQL_DATE_FORMAT),
@@ -1718,7 +1732,14 @@ class DB_utils
                                             DATE_FORMAT(a.loading_date, %s) as 'loading_date', 
                                             DATE_FORMAT(a.unloading_date, %s) as 'unloading_date', 
                                             a.freight as 'freight', 
+                                            a.unloading_zone as 'unloading_zone',
+                                            a.client as 'client',
+                                            a.retour_loading_from as 'retour_loading_from',
+                                            a.retour_unloading_from as 'retour_unloading_from',
+                                            DATE_FORMAT(a.retour_loading_date, %s) as 'retour_loading_date', 
+                                            DATE_FORMAT(a.retour_unloading_date, %s) as 'retour_unloading_date', 
                                             a.ameta as 'ameta',
+                                            
                                             b.name as 'originator_name',
                                             b.username as 'originator_email',
                                             c.name as 'recipient_name', 
@@ -1759,6 +1780,8 @@ class DB_utils
                                                 AND
                                                 (a.recipient_id=c.id and c.office_id=e.id)
                                             )",
+                Utils::$SQL_DATE_FORMAT,
+                Utils::$SQL_DATE_FORMAT,
                 Utils::$SQL_DATE_FORMAT,
                 Utils::$SQL_DATE_FORMAT,
                 Utils::$SQL_DATE_FORMAT,

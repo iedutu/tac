@@ -5,7 +5,14 @@ if(empty($_GET['id'])) {
     return;
 }
 
+try {
+    DB_utils::clearNotifications($_SESSION['operator']['id'], AppStatuses::$NOTIFICATION_ENTITY_KIND_TRUCK, $_GET['id']);
+} catch (ApplicationException $e) {
+    Utils::handleApplicationException($e);
+}
+
 if(empty($truck = DB_utils::selectTruck(intval($_GET['id'])))) {
+    Utils::updateNotifications();
     AppLogger::getLogger()->info('Unknown truck', ['id' => $_GET['id']]);
 
     return;
@@ -162,6 +169,19 @@ else {
                                 </td>
                             </tr>
                             <tr>
+                                <td class="text-right">Truck recipient</td>
+                                <td>
+                                    <?php
+                                    if($editable['originator']) {
+                                        echo '<b style="display: inline" id="recipient_id" class="editable-select-3 '.($audit->getRecipient()?$class_text_new:$class_text_default).'">'.$recipient->getUsername().'</b>';
+                                    }
+                                    else {
+                                        echo '<p style="display: inline" id="recipient_id" class="'.($audit->getRecipient()?$class_text_new:$class_text_default).'">'.$recipient->getUsername().'</p>';
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td class="text-right">Origin city</td>
                                 <td>
                                     <?php
@@ -183,6 +203,33 @@ else {
                                     }
                                     else {
                                         echo '<p style="display: inline" id="loading_date" class="'.($audit->getLoadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$PHP_DATE_FORMAT, $truck->getLoadingDate()).'</p>';
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Unloading date</td>
+                                <td>
+                                    <?php
+                                    if($editable['originator']) {
+                                        // TODO: See if you can add validators for date format here (add a form, add the JS to validate the fields)
+                                        echo '<b style="display: inline" id="unloading_date" class="editable-date '.($audit->getUnloadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$PHP_DATE_FORMAT, $truck->getUnloadingDate()).'</b>';
+                                    }
+                                    else {
+                                        echo '<p style="display: inline" id="unloading_date" class="'.($audit->getUnloadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$PHP_DATE_FORMAT, $truck->getUnloadingDate()).'</p>';
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Unloading zone</td>
+                                <td>
+                                    <?php
+                                    if($editable['originator']) {
+                                        echo '<b style="display: inline" id="unloading_zone" class="editable-text '.($audit->getUnloadingZone()?$class_text_new:$class_text_default).'">'.$truck->getUnloadingZone().'</b>';
+                                    }
+                                    else {
+                                        echo '<p style="display: inline" id="unloading_zone" class="'.($audit->getUnloadingZone()?$class_text_new:$class_text_default).'">'.(empty($truck->getUnloadingZone())?"N/A":$truck->getUnloadingZone()).'</p>';
                                     }
                                     ?>
                                 </td>
@@ -239,33 +286,6 @@ else {
                                 </td>
                             </tr>
                             <tr>
-                                <td class="text-right">Truck recipient</td>
-                                <td>
-                                    <?php
-                                    if($editable['originator']) {
-                                        echo '<b style="display: inline" id="recipient_id" class="editable-select-3 '.($audit->getRecipient()?$class_text_new:$class_text_default).'">'.$recipient->getUsername().'</b>';
-                                    }
-                                    else {
-                                        echo '<p style="display: inline" id="recipient_id" class="'.($audit->getRecipient()?$class_text_new:$class_text_default).'">'.$recipient->getUsername().'</p>';
-                                    }
-                                    ?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-right">Unloading date</td>
-                                <td>
-                                    <?php
-                                    if($editable['originator']) {
-                                        // TODO: See if you can add validators for date format here (add a form, add the JS to validate the fields)
-                                        echo '<b style="display: inline" id="unloading_date" class="editable-date '.($audit->getUnloadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$PHP_DATE_FORMAT, $truck->getUnloadingDate()).'</b>';
-                                    }
-                                    else {
-                                        echo '<p style="display: inline" id="unloading_date" class="'.($audit->getUnloadingDate()?$class_text_new:$class_text_default).'">'.date(Utils::$PHP_DATE_FORMAT, $truck->getUnloadingDate()).'</p>';
-                                    }
-                                    ?>
-                                </td>
-                            </tr>
-                            <tr>
                                 <td class="text-right">ADR</td>
                                 <td>
                                     <?php
@@ -305,6 +325,71 @@ else {
                                     }
                                     else {
                                         echo '<p style="display: inline" id="details" class="'.($audit->getDetails()?$class_text_new:$class_text_default).'">'.$truck->getDetails().'</p>';
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Client</td>
+                                <td>
+                                    <?php
+                                    if($editable['originator'] || $editable['recipient']) {
+                                        echo '<b style="display: inline" id="client" class="editable-text '.($audit->getClient()?$class_text_new:$class_text_default).'">'.$truck->getClient().'</b>';
+                                    }
+                                    else {
+                                        echo '<p style="display: inline" id="client" class="'.($audit->getClient()?$class_text_new:$class_text_default).'">'.$truck->getClient().'</p>';
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Retour loading from</td>
+                                <td>
+                                    <?php
+                                    if($editable['originator'] || $editable['recipient']) {
+                                        echo '<b style="display: inline" id="retour_loading_from" class="editable-text '.($audit->getRetourLoadingFrom()?$class_text_new:$class_text_default).'">'.$truck->getRetourLoadingFrom().'</b>';
+                                    }
+                                    else {
+                                        echo '<p style="display: inline" id="retour_loading_from" class="'.($audit->getRetourLoadingFrom()?$class_text_new:$class_text_default).'">'.$truck->getRetourLoadingFrom().'</p>';
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Retour loading date</td>
+                                <td>
+                                    <?php
+                                    if($editable['originator'] || $editable['recipient']) {
+                                        echo '<b style="display: inline" id="retour_loading_date" class="editable-date '.($audit->getRetourLoadingDate()?$class_text_new:$class_text_default).'">'.(empty($truck->getRetourLoadingDate())?null:date(Utils::$PHP_DATE_FORMAT, $truck->getRetourLoadingDate())).'</b>';
+                                    }
+                                    else {
+                                        echo '<p style="display: inline" id="retour_loading_date" class="'.($audit->getRetourLoadingDate()?$class_text_new:$class_text_default).'">'.empty($truck->getRetourLoadingDate())?"N/A":date(Utils::$PHP_DATE_FORMAT, $truck->getRetourLoadingDate()).'</p>';
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Retour un-loading from</td>
+                                <td>
+                                    <?php
+                                    if($editable['originator'] || $editable['recipient']) {
+                                        echo '<b style="display: inline" id="retour_unloading_from" class="editable-text '.($audit->getRetourUnloadingFrom()?$class_text_new:$class_text_default).'">'.$truck->getRetourUnloadingFrom().'</b>';
+                                    }
+                                    else {
+                                        echo '<p style="display: inline" id="retour_unloading_from" class="'.($audit->getRetourUnloadingFrom()?$class_text_new:$class_text_default).'">'.$truck->getRetourUnloadingFrom().'</p>';
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Retour un-loading date</td>
+                                <td>
+                                    <?php
+                                    if($editable['originator'] || $editable['recipient']) {
+                                        echo '<b style="display: inline" id="retour_unloading_date" class="editable-date '.($audit->getRetourUnloadingDate()?$class_text_new:$class_text_default).'">'.(empty($truck->getRetourUnloadingDate())?null:date(Utils::$PHP_DATE_FORMAT, $truck->getRetourUnloadingDate())).'</b>';
+                                    }
+                                    else {
+                                        echo '<p style="display: inline" id="retour_unloading_date" class="'.($audit->getRetourUnloadingDate()?$class_text_new:$class_text_default).'">'.empty($truck->getRetourUnloadingDate())?"N/A":date(Utils::$PHP_DATE_FORMAT, $truck->getRetourUnloadingDate()).'</p>';
                                     }
                                     ?>
                                 </td>
