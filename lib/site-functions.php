@@ -10,8 +10,11 @@ class Utils
 {
     public static bool $DEBUG = false;
     public static int $CARGO_PERIOD_ACCEPTED = 7;
+    public static int $CARGO_PERIOD_ACCEPTED_EXCEL = 7;
     public static int $CARGO_PERIOD_SOLVED = 2;
+    public static int $CARGO_PERIOD_SOLVED_EXCEL = 2;
     public static int $SOLVED_TRUCK_DAYS = 2;
+    public static int $SOLVED_TRUCK_DAYS_EXCEL = 2;
     public static int $REPORTS_PERIOD = 180;
     public static int $QUERY = 1;
     public static int $INSERT = 5;

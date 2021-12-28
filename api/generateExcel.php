@@ -89,6 +89,12 @@ if(!empty($_POST['_submitted'])) {
                             cargo_countries f,
                             cargo_countries g
                        WHERE 
+						(
+							((a.status = %d) AND (NOW() < (a.expiration + INTERVAL 1 DAY))) OR
+							((a.status = %d) AND (NOW() < (a.SYS_UPDATE_DATE + INTERVAL %d DAY))) OR
+							((a.status = %d) AND (NOW() < (a.SYS_UPDATE_DATE + INTERVAL %d DAY)))
+						)
+                        AND
                         (
                             (a.recipient_id=b.id and b.office_id=d.id and d.country=f.id)
                             AND
@@ -98,7 +104,15 @@ if(!empty($_POST['_submitted'])) {
                         (
                              (a.SYS_CREATION_DATE >= STR_TO_DATE(%s, '%%d-%%m-%%Y')) and (a.SYS_CREATION_DATE < (STR_TO_DATE(%s, '%%d-%%m-%%Y') + INTERVAL 1 DAY))
                         )     
-						order by a.SYS_CREATION_DATE desc", $start_date, $end_date);
+						order by a.SYS_CREATION_DATE desc",
+                            AppStatuses::$CARGO_NEW,
+                            AppStatuses::$CARGO_ACCEPTED,
+                            Utils::$CARGO_PERIOD_ACCEPTED_EXCEL,
+                            AppStatuses::$CARGO_SOLVED,
+                            Utils::$CARGO_PERIOD_SOLVED_EXCEL,
+                            $start_date,
+                            $end_date
+                    );
 
                     $i = 2;
                     foreach ($results as $row) {
@@ -301,7 +315,7 @@ if(!empty($_POST['_submitted'])) {
 				    		    order by a.SYS_CREATION_DATE desc",
                                     AppStatuses::$TRUCK_FULLY_SOLVED,
                                     AppStatuses::$TRUCK_FULLY_SOLVED,
-                                    Utils::$SOLVED_TRUCK_DAYS,
+                                    Utils::$SOLVED_TRUCK_DAYS_EXCEL,
                                     $start_date,
                                     $end_date);
 
