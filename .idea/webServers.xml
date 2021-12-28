@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="a3b2879f-ff23-4558-bf32-b3575580a256" name="rohel.iedutu.com" url="http://rohel.iedutu.com">
+        <fileTransfer rootFolder="/home/cristian/code/tac" accessType="SFTP" host="rohel.iedutu.com" port="22" sshConfigId="47952631-55f2-4fc1-847f-adb0ee94c461" sshConfig="cristian@rohel.iedutu.com:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="4aeeed6a-8a6b-40f9-9b35-f32b4b7595af" name="cat.rohel.ro" url="http://cat.rohel.ro/">
+        <fileTransfer accessType="SFTP" host="cat.rohel.ro" port="223" sshConfigId="7d72edc8-5504-4230-acdf-ab08cfa00712" sshConfig="u36477catr@cat.rohel.ro:223 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

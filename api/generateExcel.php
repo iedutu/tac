@@ -35,16 +35,16 @@ if(!empty($_POST['_submitted'])) {
 
                     // Header format
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:T1')->getAlignment()->setHorizontal('center');
+                        ->getStyle('A1:U1')->getAlignment()->setHorizontal('center');
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:T1')->getFont()->setBold(true);
+                        ->getStyle('A1:U1')->getFont()->setBold(true);
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:T1')->getFont()->getColor()->setRGB(substr(Mails::$TX_FULLY_LOADED_COLOR,1));
+                        ->getStyle('A1:U1')->getFont()->getColor()->setRGB(substr(Mails::$TX_FULLY_LOADED_COLOR,1));
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:T1')->getFill()->setFillType(Fill::FILL_SOLID);
+                        ->getStyle('A1:U1')->getFill()->setFillType(Fill::FILL_SOLID);
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:T1')->getFill()->getStartColor()->setRGB(substr(Mails::$BG_FULLY_LOADED_COLOR,1));
-                    $spreadsheet->getActiveSheet()->setAutoFilter('A1:T1');
+                        ->getStyle('A1:U1')->getFill()->getStartColor()->setRGB(substr(Mails::$BG_FULLY_LOADED_COLOR,1));
+                    $spreadsheet->getActiveSheet()->setAutoFilter('A1:U1');
 
                     $spreadsheet->getActiveSheet()
                         ->setCellValue('A1', 'From')
@@ -66,7 +66,8 @@ if(!empty($_POST['_submitted'])) {
                         ->setCellValue('Q1', 'Freight')
                         ->setCellValue('R1', 'Plate number')
                         ->setCellValue('S1', 'AMETA')
-                        ->setCellValue('T1', 'Status');
+                        ->setCellValue('T1', 'Status')
+                        ->setCellValue('U1', 'System entry date');
 
                     $results = DB::getMDB()->query("
                        SELECT
@@ -158,6 +159,7 @@ if(!empty($_POST['_submitted'])) {
 
                         $spreadsheet->getActiveSheet()->getStyle('G' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
                         $spreadsheet->getActiveSheet()->getStyle('H' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
+                        $spreadsheet->getActiveSheet()->getStyle('U' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
 
                         $spreadsheet->getActiveSheet()
                             ->getStyle('T' . $i)->getFont()->setBold(true);
@@ -190,7 +192,8 @@ if(!empty($_POST['_submitted'])) {
                             ->setCellValue('Q' . $i, (empty($row ['freight']) ? 'N/A' : $row ['freight']))
                             ->setCellValue('R' . $i, (empty($row ['plate_number']) ? 'N/A' : $row ['plate_number']))
                             ->setCellValue('S' . $i, (empty($row ['ameta']) ? 'N/A' : $row ['ameta']))
-                            ->setCellValue('T' . $i, $status);
+                            ->setCellValue('T' . $i, $status)
+                            ->setCellValue('U' . $i, (empty($row ['SYS_CREATION_DATE']) ? 'N/A' : Date::PHPToExcel(new DateTime($row ['SYS_CREATION_DATE'], new DateTimeZone(Utils::$TIMEZONE)))));
 
                         /*
                         $hyperlink = new Hyperlink();
@@ -220,16 +223,16 @@ if(!empty($_POST['_submitted'])) {
 
                     // Header format
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:T1')->getAlignment()->setHorizontal('center');
+                        ->getStyle('A1:U1')->getAlignment()->setHorizontal('center');
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:T1')->getFont()->setBold(true);
+                        ->getStyle('A1:U1')->getFont()->setBold(true);
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:T1')->getFont()->getColor()->setRGB(substr(Mails::$TX_FULLY_LOADED_COLOR,1));
+                        ->getStyle('A1:U1')->getFont()->getColor()->setRGB(substr(Mails::$TX_FULLY_LOADED_COLOR,1));
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:T1')->getFill()->setFillType(Fill::FILL_SOLID);
+                        ->getStyle('A1:U1')->getFill()->setFillType(Fill::FILL_SOLID);
                     $spreadsheet->getActiveSheet()
-                        ->getStyle('A1:T1')->getFill()->getStartColor()->setRGB(substr(Mails::$BG_FULLY_LOADED_COLOR,1));
-                    $spreadsheet->getActiveSheet()->setAutoFilter('A1:T1');
+                        ->getStyle('A1:U1')->getFill()->getStartColor()->setRGB(substr(Mails::$BG_FULLY_LOADED_COLOR,1));
+                    $spreadsheet->getActiveSheet()->setAutoFilter('A1:U1');
 
                     $spreadsheet->getActiveSheet()
                         ->setCellValue('A1', 'From')
@@ -252,7 +255,9 @@ if(!empty($_POST['_submitted'])) {
                         ->setCellValue('Q1', 'Truck stop (city)')
                         ->setCellValue('R1', 'Loading meters')
                         ->setCellValue('S1', 'Weight')
-                        ->setCellValue('T1', 'Volume');
+                        ->setCellValue('T1', 'Volume')
+
+                        ->setCellValue('U1', 'System entry date');
 
                     $results = DB::getMDB()->query("
 								SELECT 
@@ -378,6 +383,7 @@ if(!empty($_POST['_submitted'])) {
                             $spreadsheet->getActiveSheet()->getStyle('E' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
                             $spreadsheet->getActiveSheet()->getStyle('O' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
                             $spreadsheet->getActiveSheet()->getStyle('P' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
+                            $spreadsheet->getActiveSheet()->getStyle('U' . $i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_XLSX15);
 
                             $spreadsheet->getActiveSheet()
                                 ->getStyle('J' . $i)->getFont()->setBold(true);
@@ -409,8 +415,9 @@ if(!empty($_POST['_submitted'])) {
                                 ->setCellValue('Q' . $i, $stop['city'])
                                 ->setCellValue('R' . $i, $stop['loading_meters'])
                                 ->setCellValue('S' . $i, $stop['weight'])
-                                ->setCellValue('T' . $i, $stop['volume']);
+                                ->setCellValue('T' . $i, $stop['volume'])
 
+                                ->setCellValue('U' . $i, (empty($row ['SYS_CREATION_DATE']) ? 'N/A' : Date::PHPToExcel(new DateTime($row ['SYS_CREATION_DATE'], new DateTimeZone(Utils::$TIMEZONE)))));
                             /*
                             $hyperlink = new Hyperlink();
                             $hyperlink->setUrl(Utils::$BASE_URL . '?page=truckInfo&id=' . $row['id']);
