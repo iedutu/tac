@@ -15,6 +15,8 @@ class Utils
     public static int $CARGO_PERIOD_SOLVED_EXCEL = 2;
     public static int $SOLVED_TRUCK_DAYS = 2;
     public static int $SOLVED_TRUCK_DAYS_EXCEL = 2;
+    public static int $PARTIAL_TRUCK_DAYS = 5;
+    public static int $PARTIAL_TRUCK_DAYS_EXCEL = 5;
     public static int $REPORTS_PERIOD = 180;
     public static int $QUERY = 1;
     public static int $INSERT = 5;

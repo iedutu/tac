@@ -306,14 +306,22 @@ if(!empty($_POST['_submitted'])) {
                                             AND
                                             (NOW() < DATE_ADD(a.SYS_UPDATE_DATE, INTERVAL %d DAY))
                                         )
+                                        OR 
+                                        (
+                                            (a.status = %d)
+                                            AND
+                                            (NOW() < DATE_ADD(a.SYS_UPDATE_DATE, INTERVAL %d DAY))
+                                        )
                                     )
 								)
 								AND
 								(
                                     (a.SYS_CREATION_DATE >= STR_TO_DATE(%s, '%%d-%%m-%%Y')) and (a.SYS_CREATION_DATE < (STR_TO_DATE(%s, '%%d-%%m-%%Y') + INTERVAL 1 DAY))
-                                )     
+                                )
 				    		    order by a.SYS_CREATION_DATE desc",
-                                    AppStatuses::$TRUCK_FULLY_SOLVED,
+                                    AppStatuses::$TRUCK_PARTIALLY_SOLVED,
+                                    AppStatuses::$TRUCK_PARTIALLY_SOLVED,
+                                    Utils::$PARTIAL_TRUCK_DAYS_EXCEL,
                                     AppStatuses::$TRUCK_FULLY_SOLVED,
                                     Utils::$SOLVED_TRUCK_DAYS_EXCEL,
                                     $start_date,

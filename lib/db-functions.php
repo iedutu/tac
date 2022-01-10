@@ -1490,9 +1490,17 @@ class DB_utils
                                                     AND
                                                     (NOW() < DATE_ADD(SYS_UPDATE_DATE, INTERVAL %d DAY))
                                                 )
+                                                OR 
+                                                (
+                                                    (status = %d)
+                                                    AND
+                                                    (NOW() < DATE_ADD(SYS_UPDATE_DATE, INTERVAL %d DAY))
+                                                )
                                             )
                                             ORDER BY SYS_CREATION_DATE DESC',
-                AppStatuses::$TRUCK_FULLY_SOLVED,
+                AppStatuses::$TRUCK_PARTIALLY_SOLVED,
+                AppStatuses::$TRUCK_PARTIALLY_SOLVED,
+                Utils::$PARTIAL_TRUCK_DAYS,
                 AppStatuses::$TRUCK_FULLY_SOLVED,
                 Utils::$SOLVED_TRUCK_DAYS,
             );
@@ -1773,6 +1781,12 @@ class DB_utils
                                                     AND
                                                     (NOW() < DATE_ADD(a.SYS_UPDATE_DATE, INTERVAL %d DAY))
                                                 )
+                                                OR 
+                                                (
+                                                    (a.status = %d)
+                                                    AND
+                                                    (NOW() < DATE_ADD(a.SYS_UPDATE_DATE, INTERVAL %d DAY))
+                                                )
                                             )
                                             AND
                                             (
@@ -1785,7 +1799,9 @@ class DB_utils
                 Utils::$SQL_DATE_FORMAT,
                 Utils::$SQL_DATE_FORMAT,
                 Utils::$SQL_DATE_FORMAT,
-                AppStatuses::$TRUCK_FULLY_SOLVED,
+                AppStatuses::$TRUCK_PARTIALLY_SOLVED,
+                AppStatuses::$TRUCK_PARTIALLY_SOLVED,
+                Utils::$PARTIAL_TRUCK_DAYS,
                 AppStatuses::$TRUCK_FULLY_SOLVED,
                 Utils::$SOLVED_TRUCK_DAYS,
             );
