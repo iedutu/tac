@@ -1956,6 +1956,7 @@ class DB_utils
                 'class' => $user->getClass(),
                 'insert' => $user->getInsert(),
                 'reports' => $user->getReports(),
+                'office_id' => $user->getOfficeId(),
                 'password' => hash(Utils::$HASH_ALGORITHM, $user->getPassword())
             ));
 
