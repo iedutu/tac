@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="cat.rohel.ro" remoteFilesAllowedToDisappearOnAutoupload="false" showAutoUploadSettingsWarning="false">
+  <component name="PublishConfigData" autoUpload="Always" serverName="demo.iedutu.com" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false" showAutoUploadSettingsWarning="false">
+    <option name="confirmBeforeUploading" value="false" />
     <serverData>
       <paths name="cat.rohel.ro">
         <serverdata>
@@ -9,7 +10,7 @@
           </mappings>
         </serverdata>
       </paths>
-      <paths name="rohel.iedutu.com">
+      <paths name="demo.iedutu.com">
         <serverdata>
           <mappings>
             <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
@@ -17,5 +18,6 @@
         </serverdata>
       </paths>
     </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
   </component>
 </project>

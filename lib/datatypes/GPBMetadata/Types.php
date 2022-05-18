@@ -16,7 +16,7 @@ class Types
         }
         $pool->internalAddGeneratedFile(
             '
-¥
+¸
 types.protoRohel"ï
 Request
 
@@ -210,7 +210,7 @@ truck_type (
 creation_date	 (
 update_date
  (
-operator (	"®
+operator (	"Á
 User
 
 id (
@@ -224,7 +224,8 @@ truck_type (
 
 country_id
  (
-country_name (	"£
+country_name (	
+	office_id ("£
 Notification
 
 id (

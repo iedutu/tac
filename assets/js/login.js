@@ -81,40 +81,20 @@ let KTLogin = function () {
 			form,
 			{
 				fields: {
-					fullname: {
+					name: {
 						validators: {
 							notEmpty: {
-								message: 'Username is required'
+								message: 'Name is required'
 							}
 						}
 					},
-					email: {
+					email2: {
 						validators: {
 							notEmpty: {
 								message: 'Email address is required'
 							},
 							emailAddress: {
 								message: 'The value is not a valid email address'
-							}
-						}
-					},
-					password: {
-						validators: {
-							notEmpty: {
-								message: 'The password is required.'
-							}
-						}
-					},
-					cpassword: {
-						validators: {
-							notEmpty: {
-								message: 'The password confirmation is required'
-							},
-							identical: {
-								compare: function () {
-									return form.querySelector('[name="password"]').value;
-								},
-								message: 'The password and its confirm are not the same'
 							}
 						}
 					},
@@ -128,6 +108,8 @@ let KTLogin = function () {
 				},
 				plugins: {
 					trigger: new FormValidation.plugins.Trigger(),
+					submitButton: new FormValidation.plugins.SubmitButton(),
+					defaultSubmit: new FormValidation.plugins.DefaultSubmit(), // Uncomment this line to enable normal button submit after form validation
 					bootstrap: new FormValidation.plugins.Bootstrap()
 				}
 			}
@@ -137,31 +119,7 @@ let KTLogin = function () {
 			e.preventDefault();
 
 			validation.validate().then(function (status) {
-				if (status === 'Valid') {
-					swal.fire({
-						text: "All is cool! Now you submit this form",
-						icon: "success",
-						buttonsStyling: false,
-						confirmButtonText: "Ok, got it!",
-						customClass: {
-							confirmButton: "btn font-weight-bold btn-light-primary"
-						}
-					}).then(function () {
-						KTUtil.scrollTop();
-					});
-				} else {
-					swal.fire({
-						text: "Sorry, looks like there are some errors detected, please try again.",
-						icon: "error",
-						buttonsStyling: false,
-						confirmButtonText: "Ok, got it!",
-						customClass: {
-							confirmButton: "btn font-weight-bold btn-light-primary"
-						}
-					}).then(function () {
-						KTUtil.scrollTop();
-					});
-				}
+				KTUtil.scrollTop();
 			});
 		});
 

@@ -53,6 +53,10 @@ class User extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>string country_name = 11;</code>
      */
     protected $country_name = '';
+    /**
+     * Generated from protobuf field <code>int32 office_id = 12;</code>
+     */
+    protected $office_id = 0;
 
     /**
      * Constructor.
@@ -70,6 +74,7 @@ class User extends \Google\Protobuf\Internal\Message
      *     @type string $office
      *     @type int $country_id
      *     @type string $country_name
+     *     @type int $office_id
      * }
      */
     public function __construct($data = NULL) {
@@ -293,6 +298,28 @@ class User extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkString($var, True);
         $this->country_name = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>int32 office_id = 12;</code>
+     * @return int
+     */
+    public function getOfficeId()
+    {
+        return $this->office_id;
+    }
+
+    /**
+     * Generated from protobuf field <code>int32 office_id = 12;</code>
+     * @param int $var
+     * @return $this
+     */
+    public function setOfficeId($var)
+    {
+        GPBUtil::checkInt32($var);
+        $this->office_id = $var;
 
         return $this;
     }

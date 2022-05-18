@@ -8,6 +8,9 @@ use Rohel\TruckUpdates;
 
 class Utils
 {
+    public static int $USER_CLASS_REGULAR = 1;
+    public static int $USER_CLASS_ADMIN = 2;
+    public static int $USER_CLASS_RETIRED = 3;
     public static bool $DEBUG = false;
     public static int $CARGO_PERIOD_ACCEPTED = 7;
     public static int $CARGO_PERIOD_ACCEPTED_EXCEL = 7;
@@ -30,6 +33,7 @@ class Utils
     public static int $OPERATIONAL = 12;
     public static string $CANCELLED = 'CANCELLED';
     public static int $DECIMALS = 2;
+    public static string $HASH_ALGORITHM = 'sha256';
 
     public static function clean_up()
     {
@@ -38,7 +42,7 @@ class Utils
         unset($_SESSION['email-recipient']);
     }
 
-    private static function randomString(int $length, string $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'): ?string
+    public static function randomString(int $length, string $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'): ?string
     {
         $str = '';
         $max = mb_strlen($keyspace, '8bit') - 1;
@@ -126,7 +130,7 @@ class Utils
             if(empty($recipient)) return false;
             $password = self::randomString(self::$PASSWORD_LENGTH);
 
-            if (DB_utils::changeUserPassword($recipient->getUsername(), hash('sha256', $password))) {
+            if (DB_utils::changeUserPassword($recipient->getUsername(), hash(Utils::$HASH_ALGORITHM, $password))) {
                 $email['subject'] = 'ROHEL | New application password ';
                 $email['title'] = 'ROHEL | E-mail';
                 $email['header'] = 'New application password generated';
@@ -134,8 +138,8 @@ class Utils
                 $email['body-2'] = 'Please use the following password for your next visit to our application: <strong>' . $password . '</strong>';
                 $email['recipient']['e-mail'] = $recipient->getUsername();
                 $email['recipient']['name'] = $recipient->getName();
-                $email['originator']['e-mail'] = Utils::$WEBMASTER_EMAIL;
-                $email['originator']['name'] = Utils::$WEBMASTER_NAME;
+                $email['originator']['e-mail'] = Mails::$WEBMASTER_EMAIL;
+                $email['originator']['name'] = Mails::$WEBMASTER_NAME;
                 $email['link']['url'] = self::$BASE_URL;
                 $email['link']['text'] = 'Application link';
                 $email['bg-color'] = Mails::$BG_ACKNOWLEDGED_COLOR;
@@ -238,17 +242,30 @@ class Utils
     /**
      * @throws ApplicationException
      */
-    public static function insertCargoAuditEntry($table, $field, $key, $new) {
+    public static function insertCargoAuditEntry($table, $field, $key, $new, $user=null) {
         try {
-            DB::getMDB()->insert('cargo_audit', array(
-                'operator_id' => $_SESSION ['operator']['id'],
-                'operator' => $_SESSION ['operator']['username'],
-                'IP' => $_SERVER['REMOTE_ADDR'],
-                'table' => $table,
-                'field' => $field,
-                'key' => $key,
-                'new' => $new
-            ));
+            if(empty($user)) {
+                DB::getMDB()->insert('cargo_audit', array(
+                    'operator_id' => $_SESSION ['operator']['id'],
+                    'operator' => $_SESSION ['operator']['username'],
+                    'IP' => $_SERVER['REMOTE_ADDR'],
+                    'table' => $table,
+                    'field' => $field,
+                    'key' => $key,
+                    'new' => $new
+                ));
+            }
+            else {
+                DB::getMDB()->insert('cargo_audit', array(
+                    'operator_id' => $user->getId(),
+                    'operator' => $user->getUsername(),
+                    'IP' => $_SERVER['REMOTE_ADDR'],
+                    'table' => $table,
+                    'field' => $field,
+                    'key' => $key,
+                    'new' => $new
+                ));
+            }
         }
         catch(MeekroDBException $mdbe) {
             self::handleMySQLException($mdbe);

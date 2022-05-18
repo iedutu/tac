@@ -182,6 +182,7 @@ message User {
   string office = 9;
   int32 country_id = 10;
   string country_name = 11;
+  int32 office_id = 12;
 }
 
 message Notification {

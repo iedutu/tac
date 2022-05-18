@@ -217,6 +217,26 @@ class DB_utils
         return true;
     }
 
+    public static function selectOfficeIds(): bool
+    {
+        try {
+            $offices = DB::getMDB()->query('select * from cargo_offices order by importance');
+            foreach ($offices as $office) {
+                echo '<option value="'.$office['id'].'">'.$office['name'].'</option>';
+            }
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            return false;
+        }
+        catch (Exception $e) {
+            Utils::handleException($e);
+            return false;
+        }
+
+        return true;
+    }
+
     public static function selectActiveUsers(): bool
     {
         try {
@@ -1925,6 +1945,25 @@ class DB_utils
             $_SESSION['alert']['message'] = 'General error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
 
             return null;
+        }
+    }
+
+    public static function insertUser(User $user): int {
+        try {
+            DB::getMDB()->insert('cargo_users', array(
+                'username' => $user->getUsername(),
+                'name' => $user->getName(),
+                'class' => $user->getClass(),
+                'insert' => $user->getInsert(),
+                'reports' => $user->getReports(),
+                'password' => hash(Utils::$HASH_ALGORITHM, $user->getPassword())
+            ));
+
+            return DB::getMDB()->insertId();
+        }
+        catch (MeekroDBException $mdbe) {
+            Utils::handleMySQLException($mdbe);
+            throw new ApplicationException($mdbe->getMessage());
         }
     }
 }

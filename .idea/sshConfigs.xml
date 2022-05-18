@@ -2,7 +2,7 @@
 <project version="4">
   <component name="SshConfigs">
     <configs>
-      <sshConfig host="rohel.iedutu.com" id="47952631-55f2-4fc1-847f-adb0ee94c461" keyPath="$USER_HOME$/.ssh/google_rsa" port="22" nameFormat="DESCRIPTIVE" username="cristian" />
+      <sshConfig host="demo.iedutu.com" id="47952631-55f2-4fc1-847f-adb0ee94c461" keyPath="$USER_HOME$/.ssh/google_rsa" port="22" nameFormat="DESCRIPTIVE" username="cristian" useOpenSSHConfig="true" />
       <sshConfig host="cat.rohel.ro" id="7d72edc8-5504-4230-acdf-ab08cfa00712" keyPath="$USER_HOME$/.ssh/rohel_rsa" port="223" nameFormat="DESCRIPTIVE" username="u36477catr" />
     </configs>
   </component>
