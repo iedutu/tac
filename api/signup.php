@@ -43,14 +43,21 @@ if (isset ( $_POST ['_submitted'] )) {
     }
     catch (ApplicationException $ae) {
         $_SESSION['alert']['type'] = 'error';
-        $_SESSION['alert']['message'] = 'Application error ('.$ae->getCode().':'.$ae->getMessage().'). Please contact your system administrator.';
-        return;
+        if($ae->getCode() == 1062) {
+            $_SESSION['alert']['message'] = 'Desired username (' . $user->getUsername() . ' already exists in the database. Please use the -Forgot password?-' . ' functionality to retrieve it.';
+        }
+        else {
+            $_SESSION['alert']['message'] = 'Application error (' . $ae->getCode() . ':' . $ae->getMessage() . '). Please contact your system administrator.';
+        }
+        header ( "Location: /" );
+        exit();
     }
     catch (Exception $e) {
         Utils::handleException($e);
         $_SESSION['alert']['type'] = 'error';
         $_SESSION['alert']['message'] = 'Application error ('.$e->getCode().':'.$e->getMessage().'). Please contact your system administrator.';
-        return;
+        header ( "Location: /" );
+        exit();
     }
 
     $_SESSION['alert']['type'] = 'success';

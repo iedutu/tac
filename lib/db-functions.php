@@ -1948,6 +1948,9 @@ class DB_utils
         }
     }
 
+    /**
+     * @throws ApplicationException
+     */
     public static function insertUser(User $user): int {
         try {
             DB::getMDB()->insert('cargo_users', array(
@@ -1964,7 +1967,7 @@ class DB_utils
         }
         catch (MeekroDBException $mdbe) {
             Utils::handleMySQLException($mdbe);
-            throw new ApplicationException($mdbe->getMessage());
+            throw new ApplicationException($mdbe->getMessage(), $mdbe->getCode());
         }
     }
 }
