@@ -283,8 +283,10 @@ else {
             <!--end::Content body-->
             <!--begin::Content footer-->
             <div class="d-flex justify-content-lg-start justify-content-center align-items-end py-7 py-lg-0">
+                <!-- removed the Help link. 06.08.2023
                 <a href="/?page=help" class="text-primary font-weight-bolder font-size-h5">Help</a>
-                <a href="http://www.rohel.ro/contact/" class="text-primary ml-10 font-weight-bolder font-size-h5">Contact Us</a>
+                -->
+                <a href="http://www.rohel.ro/contact/" class="text-primary font-weight-bolder font-size-h5">Contact Us</a>
             </div>
             <!--end::Content footer-->
         </div>
