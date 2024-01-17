@@ -1,13 +1,9 @@
 <?php
 // This is for testing e-mail dispatch
 
-use PHPMailer\PHPMailer\PHPMailer;
-use Rohel\Notification;
-
 session_start();
 
 include $_SERVER["DOCUMENT_ROOT"] . "/lib/includes.php";
-include $_SERVER["DOCUMENT_ROOT"] . "/lib/mail-settings.php";
 
 try {
     // Send a notification e-mail to the recipient
@@ -27,10 +23,10 @@ try {
 
     Mails::emailNotification($email);
 } catch (ApplicationException $ae) {
-    echo 'Application error (' . $ae->getCode() . ':' . $ae->getMessage() . '). ';
+    echo 'Application error (' . $ae->getCode() . ': ' . $ae->getMessage() . '). ';
     return 0;
 } catch (Exception $e) {
     Utils::handleException($e);
-    echo 'Application error (' . $e->getCode() . ':' . $e->getMessage() . '). ';
+    echo 'Application error (' . $e->getCode() . ': ' . $e->getMessage() . '). ';
     return 0;
 }

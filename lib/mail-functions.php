@@ -79,7 +79,11 @@ class Mails
             $mail->msgHTML($body, dirname(__FILE__), true); // Create message bodies and embed images
             if (self::$ALLOW_MAILS) {
                 if(!$mail->send()) {
-                    AppLogger::getLogger()->error('Unable to send mail.');
+                    $me = new \PHPMailer\PHPMailer\Exception($mail->ErrorInfo,-1);
+                    Utils::handleMailException($me);
+                    $_SESSION['alert']['type'] = 'error';
+                    $_SESSION['alert']['message'] = 'E-mail error (code: '.$me->getCode().'). '.$me->errorMessage().'Please contact your system administrator.';
+                    throw new ApplicationException(($me->errorMessage()));
                 }
             }
         } catch (\PHPMailer\PHPMailer\Exception $me) {
