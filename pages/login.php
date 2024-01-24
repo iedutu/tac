@@ -12,6 +12,10 @@ if(!empty($_GET['id'])) {
 }
 
 if (!empty( $_POST ['_signin'] )) { // Regular sign-in
+    if(!empty($_POST['g-recaptcha-response'])) {
+        AppLogger::getLogger()->debug('g-recaptcha-response for username ['.$_POST ['username'].']: ' . $_POST['g-recaptcha-response']);
+    }
+
     $username = $_POST ['username'];
     $password = hash("sha256", $_POST ['password']);
 
@@ -286,7 +290,7 @@ else {
                 <!-- removed the Help link. 06.08.2023
                 <a href="/?page=help" class="text-primary font-weight-bolder font-size-h5">Help</a>
                 -->
-                <a href="http://www.rohel.ro/contact/" class="text-primary font-weight-bolder font-size-h5">Contact Us</a>
+                <a href="https://www.rohel.ro/contact/" class="text-primary font-weight-bolder font-size-h5">Contact Us</a>
             </div>
             <!--end::Content footer-->
         </div>
@@ -295,7 +299,7 @@ else {
     <!--end::Login-->
 </div>
 <!--end::Main-->
-<script>const HOST_URL = "https://preview.keenthemes.com/keen/theme/tools/preview";</script>
+<script>const HOST_URL = "https://cat.rohel.ro/";</script>
 <!--begin::Global Config(global config for global JS scripts)-->
 <script>const KTAppSettings = { "breakpoints": { "sm": 576, "md": 768, "lg": 992, "xl": 1200, "xxl": 1200 }, "colors": { "theme": { "base": { "white": "#ffffff", "primary": "#0BB783", "secondary": "#E5EAEE", "success": "#1BC5BD", "info": "#8950FC", "warning": "#FFA800", "danger": "#F64E60", "light": "#F3F6F9", "dark": "#212121" }, "light": { "white": "#ffffff", "primary": "#D7F9EF", "secondary": "#ECF0F3", "success": "#C9F7F5", "info": "#EEE5FF", "warning": "#FFF4DE", "danger": "#FFE2E5", "light": "#F3F6F9", "dark": "#D6D6E0" }, "inverse": { "white": "#ffffff", "primary": "#ffffff", "secondary": "#212121", "success": "#ffffff", "info": "#ffffff", "warning": "#ffffff", "danger": "#ffffff", "light": "#464E5F", "dark": "#ffffff" } }, "gray": { "gray-100": "#F3F6F9", "gray-200": "#ECF0F3", "gray-300": "#E5EAEE", "gray-400": "#D6D6E0", "gray-500": "#B5B5C3", "gray-600": "#80808F", "gray-700": "#464E5F", "gray-800": "#1B283F", "gray-900": "#212121" } }, "font-family": "Poppins" };</script>
 <!--end::Global Config-->

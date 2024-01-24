@@ -1,19 +1,29 @@
 {
     "config": {
         "platform": {
-            "php": "7.4"
+            "php": "8.2"
         }
     },
 
     "require": {
-    	"php": "^7.4",
-        "phpmailer/phpmailer": "^v6.5.1",
-        "phpoffice/phpspreadsheet": "^1.18.0",
-        "sergeytsalkov/meekrodb": "^2.4",
-        "google/protobuf": "^3.18",
-        "monolog/monolog": "^2.3.5",
+    	"php": "^8.2",
+        "phpmailer/phpmailer": "^v6.9.1",
+        "phpoffice/phpspreadsheet": "^1.29.0",
+        "sergeytsalkov/meekrodb": "^2.5.1",
+        "google/protobuf": "^3.25.2",
+        "monolog/monolog": "^2.9.2",
         "ext-json": "*",
+        "ext-bcmath": "*",
+        "ext-mbstring": "*",
+        "ext-fileinfo": "*",
+        "ext-gd": "*",
+        "ext-pdo": "*",
+        "ext-phar": "*",
+        "ext-posix": "*",
+        "ext-oauth": "*",
+        "ext-dom": "*",
         "ext-zip" : "*",
-        "ext-gettext": "*"
+        "ext-gettext": "*",
+        "ext-mysqli": "*"
     }
 }

@@ -9,8 +9,8 @@ class AppLogger
 
     public static function getLogger(): Logger
     {
-        // $log_path = $_SERVER['DOCUMENT_ROOT'] . '/../log'; // remote
-        $log_path = '/usr/local/var/log/httpd'; // localhost
+        $log_path = $_SERVER['DOCUMENT_ROOT'] . '/../log'; // remote
+        //$log_path = '/usr/local/var/log/httpd'; // localhost
 
         if(empty(self::$logger)) {
             self::$logger = new Logger('cat.rohel.ro');
