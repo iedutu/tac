@@ -20,13 +20,13 @@ if (isset ( $_POST ['_submitted'] )) {
         DB::getMDB()->startTransaction();
         $truck->setOriginator($_SESSION['operator']['id']);
         $truck->setRecipient($_POST ['recipient']);
-        $truck->setFromCity($_POST ['from_city']);
-        $truck->setFromAddress($_POST ['from_address']);
+        $truck->setFromCity(mb_convert_encoding($_POST ['from_city'], 'UTF-8'));
+        $truck->setFromAddress(mb_convert_encoding($_POST ['from_address'], 'UTF-8'));
         if(!empty($_POST ['rohel_truck_loading'])) $truck->setLoadingDate(strtotime($_POST ['rohel_truck_loading']));
         if(!empty($_POST ['rohel_truck_unloading'])) $truck->setUnloadingDate(strtotime($_POST ['rohel_truck_unloading']));
         $truck->setFreight($_POST ['freight']);
         if(!empty($_POST['adr'])) $truck->setAdr($_POST ['adr']);
-        $truck->setContractType($_POST ['contract_type']);
+        $truck->setContractType(mb_convert_encoding($_POST ['contract_type'], 'UTF-8'));
         switch($truck->getContractType()) {
             case 'Round-trip': {
                 $truck->setStatus(AppStatuses::$TRUCK_AVAILABLE);
@@ -44,13 +44,13 @@ if (isset ( $_POST ['_submitted'] )) {
                 $truck->setStatus(0);
             }
         }
-        $truck->setAmeta($_POST ['ameta']);
-        $truck->setPlateNumber($_POST ['plate_number']);
-        $truck->setDetails($_POST ['details']);
-        $truck->setClient($_POST ['client']);
-        $truck->setUnloadingZone($_POST ['unloading_zone']);
-        $truck->setRetourLoadingFrom($_POST ['retour_loading_from']);
-        $truck->setRetourUnloadingFrom($_POST ['retour_unloading_from']);
+        $truck->setAmeta(mb_convert_encoding($_POST ['ameta'], 'UTF-8'));
+        $truck->setPlateNumber(mb_convert_encoding($_POST ['plate_number'], 'UTF-8'));
+        $truck->setDetails(mb_convert_encoding($_POST ['details'], 'UTF-8'));
+        $truck->setClient(mb_convert_encoding($_POST ['client'], 'UTF-8'));
+        $truck->setUnloadingZone(mb_convert_encoding($_POST ['unloading_zone'], 'UTF-8'));
+        $truck->setRetourLoadingFrom(mb_convert_encoding($_POST ['retour_loading_from'], 'UTF-8'));
+        $truck->setRetourUnloadingFrom(mb_convert_encoding($_POST ['retour_unloading_from'], 'UTF-8'));
         if(!empty($_POST ['retour_loading_date'])) $truck->setRetourLoadingDate(strtotime($_POST ['retour_loading_date']));
         if(!empty($_POST ['retour_unloading_date'])) $truck->setRetourUnloadingDate(strtotime($_POST ['retour_unloading_date']));
 
@@ -101,14 +101,14 @@ if (isset ( $_POST ['_submitted'] )) {
             }
 
             if(!empty($_POST['stops'][$i]['to_city'])) {
-                $stop->setCity($_POST['stops'][$i]['to_city']);
+                $stop->setCity(mb_convert_encoding($_POST['stops'][$i]['to_city'], 'UTF-8'));
             }
             else {
                 $error = true;
                 $_SESSION['alert']['type'] = 'error';
                 $_SESSION['alert']['message'] = 'City name is a mandatory field for each stop. Please remove the faulty stop entry from the truck details page and re-enter it.';
             }
-            $stop->setAddress($_POST['stops'][$i]['to_address']);
+            $stop->setAddress(mb_convert_encoding($_POST['stops'][$i]['to_address'], 'UTF-8'));
             $stop->setStopId($i);
             $stop->setTruckId($truck->getId());
 

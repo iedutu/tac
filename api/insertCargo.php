@@ -15,32 +15,34 @@ if (! Utils::authorized(Utils::$INSERT)) {
 
 if (isset ( $_POST ['_submitted'] )) {
     $cargo = new Request();
+    $cargo->setCollies(0);
+    $cargo->setFreight(0);
 
     try {
         DB::getMDB()->startTransaction();
         $cargo->setStatus(AppStatuses::$CARGO_NEW);
-        $cargo->setClient($_POST ['client']);
+        $cargo->setClient(mb_convert_encoding($_POST ['client'], 'UTF-8'));
         $cargo->setOriginator($_SESSION['operator']['id']);
         $cargo->setRecipient($_POST ['recipient']);
-        $cargo->setFromCity($_POST ['from_city']);
-        $cargo->setFromAddress($_POST ['from_address']);
-        $cargo->setToCity($_POST ['to_city']);
-        $cargo->setToAddress($_POST ['to_address']);
+        $cargo->setFromCity(mb_convert_encoding($_POST ['from_city'], 'UTF-8'));
+        $cargo->setFromAddress(mb_convert_encoding($_POST ['from_address'], 'UTF-8'));
+        $cargo->setToCity(mb_convert_encoding($_POST ['to_city'], 'UTF-8'));
+        $cargo->setToAddress(mb_convert_encoding($_POST ['to_address'], 'UTF-8'));
         if(!empty($_POST ['rohel_cargo_expiration'])) $cargo->setExpiration(strtotime($_POST ['rohel_cargo_expiration']));
         if(!empty($_POST ['rohel_cargo_loading'])) $cargo->setLoadingDate(strtotime($_POST ['rohel_cargo_loading']));
         if(!empty($_POST ['rohel_cargo_unloading'])) $cargo->setUnloadingDate(strtotime($_POST ['rohel_cargo_unloading']));
-        $cargo->setDescription($_POST ['description']);
-        $cargo->setCollies($_POST ['collies']);
+        $cargo->setDescription(mb_convert_encoding($_POST ['description'], 'UTF-8'));
+        if(!empty($_POST ['collies'])) $cargo->setCollies($_POST ['collies']);
         $cargo->setWeight($_POST ['weight']);
         $cargo->setLoadingMeters($_POST ['loading']);
         $cargo->setVolume($_POST ['volume']);
-        $cargo->setShipper($_POST ['shipper']);
-        $cargo->setInstructions($_POST ['instructions']);
+        $cargo->setShipper(mb_convert_encoding($_POST ['shipper'], 'UTF-8'));
+        $cargo->setInstructions(mb_convert_encoding($_POST ['instructions'], 'UTF-8'));
         if(!empty($_POST['freight'])) $cargo->setFreight($_POST ['freight']);
         if(!empty($_POST['adr'])) $cargo->setAdr($_POST ['adr']);
-        $cargo->setOrderType($_POST ['order_type']);
-        $cargo->setDimensions($_POST ['dimensions']);
-        $cargo->setPackage($_POST ['package']);
+        $cargo->setOrderType(mb_convert_encoding($_POST ['order_type'], 'UTF-8'));
+        $cargo->setDimensions(mb_convert_encoding($_POST ['dimensions'], 'UTF-8'));
+        $cargo->setPackage(mb_convert_encoding($_POST ['package'], 'UTF-8'));
 
         $cargo->setId(DB_utils::insertRequest($cargo));
         // Keep a record of what happened

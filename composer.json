@@ -20,7 +20,6 @@
         "ext-pdo": "*",
         "ext-phar": "*",
         "ext-posix": "*",
-        "ext-oauth": "*",
         "ext-dom": "*",
         "ext-zip" : "*",
         "ext-gettext": "*",

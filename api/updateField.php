@@ -6,13 +6,13 @@ session_start();
 
 include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 
-if((!empty($_POST['id'])) && (!empty($_POST['value']))) {
+if((!empty($_POST['id'])) && (!empty($_POST['value']) && (!empty($_SESSION['entry-id'])))) {
     if(empty(trim($_POST['value']))) {
         return null;
     }
 
     try {
-        $table = DB_utils::updateGenericField($_POST['id'], $_POST['value'], $_SESSION['entry-id']);
+        $table = DB_utils::updateGenericField($_POST['id'], mb_convert_encoding($_POST['value'], 'UTF-8'), $_SESSION['entry-id']);
 
         Utils::insertCargoAuditEntry($table, $_POST['id'], $_SESSION['entry-id'], $_POST['value']);
         Audit::highlightPageItem($table, $_POST['id'], $_SESSION['entry-id']);

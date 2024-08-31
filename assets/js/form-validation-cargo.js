@@ -88,6 +88,16 @@ let KTFormControls = function () {
 						}
 					},
 
+					collies: {
+						validators: {
+							numeric: {
+								thousandsSeparator: '',
+								decimalSeparator: '.',
+								message: 'Please enter a valid number'
+							}
+						}
+					},
+
 					shipper: {
 						validators: {
 							notEmpty: {
