@@ -1898,6 +1898,10 @@ class DB_utils
     }
 
     public static function selectCargoNotificationsList() {
+        if(empty($_SESSION['entry-id'])) {
+            return null;
+        }
+
         try {
             return DB::getMDB()->query ( "SELECT
                             b.username as 'username',

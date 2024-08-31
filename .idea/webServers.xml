@@ -2,8 +2,8 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="a3b2879f-ff23-4558-bf32-b3575580a256" name="demo.iedutu.com" url="http://demo.iedutu.com">
-        <fileTransfer rootFolder="/home/cristian/code/demo" accessType="SFTP" host="demo.iedutu.com" port="22" sshConfigId="47952631-55f2-4fc1-847f-adb0ee94c461" sshConfig="cristian@demo.iedutu.com:22 key" keyPair="true">
+      <webServer id="a3b2879f-ff23-4558-bf32-b3575580a256" name="demo.iedutu.com" url="https://rohel.iedutu.com">
+        <fileTransfer rootFolder="/home/cristian/code/cat.rohel.ro" accessType="SFTP" host="rohel.iedutu.com" port="22" sshConfigId="30fe850b-886c-4af7-9d17-86a6bdfe2660" sshConfig="cristian@rohel.iedutu.com:22 key" keyPair="true">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>

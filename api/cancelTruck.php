@@ -83,7 +83,7 @@ if (isset ( $_POST ['id'] )) {
     }
 
     $_SESSION['alert']['type'] = 'success';
-    $_SESSION['alert']['message'] .= 'Cancellation e-mail sent to '.$email['recipient']['name'].' ('.$email['recipient']['e-mail'].')';
+    $_SESSION['alert']['message'] = 'Cancellation e-mail sent to '.$email['recipient']['name'].' ('.$email['recipient']['e-mail'].')';
 }
 
 header ( 'Location: /index.php?page=trucks' );
