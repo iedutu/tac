@@ -5,8 +5,8 @@
     <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between">
         <!--begin::Copyright-->
         <div class="text-dark order-2 order-md-1">
-            <span class="text-muted font-weight-bold mr-2">2021©</span>
-            <a href="http://www.rohel.ro/" target="_blank" class="text-dark-75 text-hover-primary">Rohel-Trans</a>
+            <span class="text-muted font-weight-bold mr-2"><?=date("Y");?>©</span>
+            <a href="http://www.rohel.ro/" target="_blank" class="text-dark-75 text-hover-primary">Rohel-Trans International</a>
         </div>
         <!--end::Copyright-->
 
