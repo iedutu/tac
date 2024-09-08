@@ -41,7 +41,10 @@ $page = !empty($datatable['pagination']['page']) ? (int)$datatable['pagination']
 $perpage = !empty($datatable['pagination']['perpage']) ? (int)$datatable['pagination']['perpage'] : -1;
 
 $pages = 1;
-$total = count($data); // total items in array
+$total = 0;
+if(!empty($data)) {
+    $total = count($data); // total items in array
+}
 
 // sort
 usort($data, function ($a, $b) use ($sort, $field) {
