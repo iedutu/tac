@@ -44,20 +44,20 @@ $pages = 1;
 $total = 0;
 if(!empty($data)) {
     $total = count($data); // total items in array
-}
 
 // sort
-usort($data, function ($a, $b) use ($sort, $field) {
-    if (!isset($a[$field]) || !isset($b[$field])) {
-        return -1;
-    }
+    usort($data, function ($a, $b) use ($sort, $field) {
+        if (!isset($a[$field]) || !isset($b[$field])) {
+            return -1;
+        }
 
-    if ($sort === 'asc') {
-        return $a[$field] > $b[$field] ? 1 : -1;
-    }
+        if ($sort === 'asc') {
+            return $a[$field] > $b[$field] ? 1 : -1;
+        }
 
-    return $a[$field] < $b[$field] ? 1 : -1;
-});
+        return $a[$field] < $b[$field] ? 1 : -1;
+    });
+}
 
 // $perpage 0; get all data
 if ($perpage > 0) {
