@@ -310,7 +310,7 @@ class DB_utils
     public static function selectRequest(int $id): ?Request
     {
         try {
-            $row = DB::getMDB()->queryOneRow("select * from cargo_request where id=%d", $id);
+            $row = DB::getMDB()->queryFirstRow("select * from cargo_request where id=%d", $id);
 
             if (empty($row)) {
                 return null;
@@ -433,7 +433,7 @@ class DB_utils
     public static function selectTruck(int $id): ?Truck
     {
         try {
-            $row = DB::getMDB()->queryOneRow("select * 
+            $row = DB::getMDB()->queryFirstRow("select * 
                                                   from 
                                                      cargo_truck 
                                                   where 
@@ -935,7 +935,7 @@ class DB_utils
     public static function selectUser(string $username): ?User
     {
         try {
-            $row = DB::getMDB()->queryOneRow("select a.*, b.name as 'office_name', c.name as 'country_name', c.id as 'country_id' 
+            $row = DB::getMDB()->queryFirstRow("select a.*, b.name as 'office_name', c.name as 'country_name', c.id as 'country_id' 
                                                   from 
                                                      cargo_users a,
                                                      cargo_offices b,
@@ -1003,7 +1003,7 @@ class DB_utils
     public static function selectUserById(int $id): ?User
     {
         try {
-            $row = DB::getMDB()->queryOneRow("select a.*, b.name as 'office_name', c.name as 'country_name', c.id as 'country_id' 
+            $row = DB::getMDB()->queryFirstRow("select a.*, b.name as 'office_name', c.name as 'country_name', c.id as 'country_id' 
                                                   from 
                                                      cargo_users a,
                                                      cargo_offices b,
@@ -1041,7 +1041,7 @@ class DB_utils
     public static function selectUserByResetKey(string $reset_key): ?User
     {
         try {
-            $row = DB::getMDB()->queryOneRow("select a.*, b.name as 'office_name', c.name as 'country_name', c.id as 'country_id' 
+            $row = DB::getMDB()->queryFirstRow("select a.*, b.name as 'office_name', c.name as 'country_name', c.id as 'country_id' 
                                                   from 
                                                      cargo_users a,
                                                      cargo_offices b,
@@ -1054,6 +1054,8 @@ class DB_utils
                                                      (a.reset_key=%s)", $reset_key);
             if (empty($row)) {
                 AppLogger::getLogger()->error("No cargo_users was found for reset_key=".$reset_key);
+                $_SESSION['alert']['type'] = 'error';
+                $_SESSION['alert']['message'] = 'Database error: Unable to find the user who requested a password change. Please contact your system administrator.';
 
                 return null;
             }
@@ -1113,7 +1115,7 @@ class DB_utils
     public static function selectNotification(int $id): ?Notification
     {
         try {
-            $row = DB::getMDB()->queryOneRow("select * from cargo_notifications where id=%d", $id);
+            $row = DB::getMDB()->queryFirstRow("select * from cargo_notifications where id=%d", $id);
             if (empty($row)) {
                 //             AppLogger::getLogger()->error("No cargo_notification was found for id=".$id);
 
