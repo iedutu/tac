@@ -91,7 +91,7 @@ class Utils
             $recipient = DB_utils::selectUser($username);
             if(empty($recipient)) return false;
 
-            $reset_key = hash('sha256', self::randomString(self::$PASSWORD_LENGTH));
+            $reset_key = hash(self::$HASH_ALGORITHM, self::randomString(self::$PASSWORD_LENGTH));
 
             if (DB_utils::addResetKey($username, $reset_key)) {
                 $email['subject'] = 'ROHEL | New application password ';

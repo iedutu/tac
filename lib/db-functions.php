@@ -1040,6 +1040,12 @@ class DB_utils
 
     public static function selectUserByResetKey(string $reset_key): ?User
     {
+        if(empty($reset_key)) {
+            AppLogger::getLogger()->error("Call to selectUserByResetKey without reset_key");
+
+            return null;
+        }
+
         try {
             $row = DB::getMDB()->queryFirstRow("select a.*, b.name as 'office_name', c.name as 'country_name', c.id as 'country_id' 
                                                   from 
@@ -1053,7 +1059,7 @@ class DB_utils
                                                      and
                                                      (a.reset_key=%s)", $reset_key);
             if (empty($row)) {
-                AppLogger::getLogger()->error("No cargo_users was found for reset_key=".$reset_key);
+                AppLogger::getLogger()->error("No cargo_users was found for reset_key=".$reset_key.". Last DB query: ".DB::getMDB()->last_query);
                 $_SESSION['alert']['type'] = 'error';
                 $_SESSION['alert']['message'] = 'Database error: Unable to find the user who requested a password change. Please contact your system administrator.';
 

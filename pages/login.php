@@ -17,7 +17,7 @@ if (!empty( $_POST ['_signin'] )) { // Regular sign-in
     }
 
     $username = $_POST ['username'];
-    $password = hash("sha256", $_POST ['password']);
+    $password = hash(Utils::$HASH_ALGORITHM, $_POST ['password']);
 
     try {
         $user = DB_utils::selectUser($username);
@@ -60,7 +60,7 @@ if (!empty( $_POST ['_signin'] )) { // Regular sign-in
         } else {
             $_SESSION['alert']['type'] = 'error';
             $_SESSION['alert']['width'] = 12;
-            $_SESSION['alert']['message'] = 'No such user found in the system.';
+            $_SESSION['alert']['message'] = 'Wrong username/password.';
         }
     }
     catch(ApplicationException $ae) {
