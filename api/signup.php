@@ -8,6 +8,19 @@ use Rohel\Notification;
 if (isset ( $_POST ['_submitted'] )) {
     $user = new \Rohel\User();
 
+    $domainName = Mails::getDomainFromEmail($_POST['email2']);
+    if(($domainName != 'rohel.ro') &&
+        ($domainName != 'orbit-streem.com') &&
+        ($domainName != 'ob-streem.com') &&
+        ($domainName != 'streemglobal.com')) {
+
+        $_SESSION['alert']['type'] = 'error';
+        $_SESSION['alert']['message'] = 'E-mail address domain '.$domainName.' is not allowed.';
+
+        header ( "Location: /" );
+        exit();
+    }
+
     try {
         DB::getMDB()->startTransaction();
         $user->setClass(Utils::$USER_CLASS_REGULAR);

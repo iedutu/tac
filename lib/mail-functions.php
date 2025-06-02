@@ -52,12 +52,16 @@ class Mails
     public static string $TX_DELETED_COLOR = '#ffffff';
     public static string $TX_UPDATED_COLOR = '#3F4254';
 
-    public static string $WEBMASTER_EMAIL = 'webapp@rohel.ro';
+    public static string $WEBMASTER_EMAIL = 'iedutu@gmail.com';
     public static string $WEBMASTER_NAME = 'Team ROHEL';
 
     public static function clean_up()
     {
         unset($_SESSION['email-recipient']);
+    }
+
+    public static function getDomainFromEmail(string $email): string {
+        return ltrim(strrchr($email, '@'), '@');
     }
 
     /**

@@ -9,8 +9,9 @@ include $_SERVER["DOCUMENT_ROOT"]."/lib/includes.php";
 if(!empty($_POST['id'])) {
     // TODO: Ensure you do not need any date related checks before updating
 
-    $cargo = DB_utils::selectRequest($_SESSION['entry-id']);
+    $cargo = DB_utils::selectRequest($_POST['id']);
     if (empty($cargo)) {
+        AppLogger::getLogger()->error('acknowledgeCargo could not find a cargo entry having id = '.$_POST['id']);;
         header('Location: /index.php?page=cargo');
         exit();
     }

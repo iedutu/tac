@@ -50,7 +50,7 @@ if(!empty($data)) {
         if (!isset($a[$field]) || !isset($b[$field])) {
             return -1;
         }
-
+    
         if ($sort === 'asc') {
             return $a[$field] > $b[$field] ? 1 : -1;
         }
